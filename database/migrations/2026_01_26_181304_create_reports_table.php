@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
+            $table->foreignId('patient_id')
+                ->constrained('patients')
+                ->onDelete('cascade');
+            $table->foreignId('doctor_id')
+                ->constrained('doctors')
+                ->onDelete('restrict');
+            $table->string('report_file_url')->nullable();
             $table->timestamps();
         });
     }

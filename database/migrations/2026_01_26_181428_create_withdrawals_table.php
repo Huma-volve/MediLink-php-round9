@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('withdrawals', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('doctor_id')
+                ->constrained('doctors')
+                ->onDelete('cascade');
+            $table->decimal('amount', 12, 2);
+            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->text('admin_notes')->nullable();
+            $table->timestamp('processed_at')->nullable();
             $table->timestamps();
         });
     }
