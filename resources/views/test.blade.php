@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <h1>Test Page مرحبا بالجميع</h1>
+    <h1>Test Page مرحبا </h1>
 </body>
 
 </html>
