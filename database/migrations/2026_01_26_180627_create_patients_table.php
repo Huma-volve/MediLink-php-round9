@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('emergency_contact_name')->nullable();
             $table->string('emergency_contact_phone')->nullable();
             $table->string('emergency_contact_relationship')->nullable();
-            $table->foreignId('insurance_id')->nullable()->constrained('insurance')->onDelete('cascade');
+            $table->foreignId('insurance_id')->nullable()->constrained('insurances')->onDelete('cascade');
             $table->date('date_of_birth')->nullable();
             $table->enum('blood_group', ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])->nullable();
             $table->timestamps();
