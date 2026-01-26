@@ -22,7 +22,6 @@ return new class extends Migration
             $table->decimal('latitude', 10, 8)->nullable();
             $table->foreignId('doctor_id')->constrained('doctors')->onDelete('cascade');
             $table->timestamps();
-            $table->timestamps();
         });
     }
 

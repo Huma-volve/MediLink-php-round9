@@ -20,7 +20,7 @@ return new class extends Migration
             $table->enum('role', ['admin', 'doctor', 'patient'])->default('patient');
             $table->string('profile_picture')->nullable();
             $table->enum('gender', ['male', 'female'])->nullable();
-            $table->boolean('is_active')->default('true');
+            $table->boolean('is_active')->default(true);
             $table->string('phone')->nullable();
             $table->rememberToken();
             $table->timestamps();
