@@ -13,6 +13,18 @@ return new class extends Migration
     {
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('doctor_id')
+                ->constrained('doctors')
+                ->onDelete('cascade');
+            $table->foreignId('patient_id')
+                ->constrained('patients')
+                ->onDelete('cascade');
+            $table->foreignId('appointment_id')
+                ->nullable()
+                ->constrained('appointments')
+                ->onDelete('cascade');
+            $table->integer('rating'); // 1-5 stars
+            $table->text('review')->nullable();
             $table->timestamps();
         });
     }

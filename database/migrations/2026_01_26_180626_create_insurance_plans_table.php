@@ -13,6 +13,15 @@ return new class extends Migration
     {
         Schema::create('insurance_plans', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('insurance_id')
+                ->constrained('insurances')
+                ->onDelete('cascade');
+            $table->string('name');
+            $table->decimal('primary_care', 10, 2)->default(0);
+            $table->decimal('specialist', 10, 2)->default(0);
+            $table->decimal('emergency', 10, 2)->default(0);
+            $table->decimal('annual_deductible', 10, 2)->nullable();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

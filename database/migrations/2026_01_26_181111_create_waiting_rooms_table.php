@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('waiting_rooms', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('appointment_id')
+                ->constrained('appointments')
+                ->onDelete('cascade');
+            $table->integer('position_in_queue')->default(0);
+            $table->integer('estimated_wait_time')->nullable(); // in minutes
+            $table->enum('status', ['waiting', 'join_now'])->default('waiting');
+            $table->timestamp('joined_at')->nullable();
+            $table->timestamp('left_at')->nullable();
             $table->timestamps();
         });
     }
