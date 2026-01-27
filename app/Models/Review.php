@@ -18,4 +18,14 @@ class Review extends Model
     {
         return $this->belongsTo(Doctor::class);
     }
+
+    public function patient()
+    {
+        return $this->belongsTo(Patient::class);
+    }
+
+    public function appointment()
+    {
+        return $this->belongsTo(Appointment::class);
+    }
 }
