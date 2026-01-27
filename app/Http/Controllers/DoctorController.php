@@ -70,12 +70,12 @@ class DoctorController extends Controller
     {
         $patientId = $request->patient_id;
         if (!$patientId) {
-            return response()->json(['message' => 'Patient ID مطلوب'], 400);
+            return response()->json(['message' => 'Patient ID required'], 400);
         }
 
         $patient = Patient::find($patientId);
         if (!$patient) {
-            return response()->json(['message' => 'Patient غير موجود'], 404);
+            return response()->json(['message' => 'Patient not found'], 404);
         }
 
         $favorite = $patient->favorites()->where('doctor_id', $doctor->id)->first();
@@ -84,10 +84,10 @@ class DoctorController extends Controller
             $patient->favorites()->updateExistingPivot($doctor->id, [
                 'is_favorite' => !$favorite->pivot->is_favorite
             ]);
-            $status = $favorite->pivot->is_favorite ? 'تم الحذف من المفضلة' : 'تم الإضافة للمفضلة';
+            $status = $favorite->pivot->is_favorite ? 'deleted from favorites' : 'added to favorites';
         } else {
             $patient->favorites()->attach($doctor->id, ['is_favorite' => true]);
-            $status = 'تم الإضافة للمفضلة';
+            $status = 'added to favorites';
         }
 
         return response()->json(['message' => $status]);

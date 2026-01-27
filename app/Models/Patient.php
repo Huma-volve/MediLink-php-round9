@@ -16,7 +16,6 @@ class Patient extends Model
         'blood_group',
     ];
 
-    // علاقة المريض بالدكاترة المفضلة (pivot table: favorites)
     public function favorites()
     {
         return $this->belongsToMany(Doctor::class, 'favorites')
@@ -24,7 +23,7 @@ class Patient extends Model
             ->withTimestamps();
     }
 
-    // دكاترة مفضلة فقط
+
     public function favoriteDoctors()
     {
         return $this->favorites()->wherePivot('is_favorite', true);

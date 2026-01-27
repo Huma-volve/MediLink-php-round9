@@ -20,7 +20,6 @@ class Doctor extends Model
         'is_verified'
     ];
 
-    // المرضى اللي ضافوا الدكتور للمفضلة
     public function favoritedBy()
     {
         return $this->belongsToMany(Patient::class, 'favorites')
