@@ -23,5 +23,21 @@ class Doctor extends Model
     public function reviews()
     {
         return $this->hasMany(Review::class);
+      
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function spelization()
+    {
+        return $this->belongsTo(Spelization::class, 'speciality_id');
+    }
+
+    public function clinics()
+    {
+        return $this->hasMany(Clinic::class);
     }
 }
