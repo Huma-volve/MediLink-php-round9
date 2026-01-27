@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+
 class Doctor extends Model
 {
     protected $fillable = [
@@ -20,10 +21,8 @@ class Doctor extends Model
         'is_verified'
     ];
 
-    public function favoritedBy()
+    public function favorites()
     {
-        return $this->belongsToMany(Patient::class, 'favorites')
-            ->withPivot('is_favorite')
-            ->withTimestamps();
+        return $this->hasMany(favorite::class);
     }
 }

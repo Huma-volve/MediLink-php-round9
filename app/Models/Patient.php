@@ -16,16 +16,15 @@ class Patient extends Model
         'blood_group',
     ];
 
+    // علاقة مباشرة مع جدول Favorite
     public function favorites()
     {
-        return $this->belongsToMany(Doctor::class, 'favorites')
-            ->withPivot('is_favorite')
-            ->withTimestamps();
+        return $this->hasMany(favorite::class);
     }
 
-
+    // دكاترة المفضلة فقط
     public function favoriteDoctors()
     {
-        return $this->favorites()->wherePivot('is_favorite', true);
+        return $this->hasMany(favorite::class)->where('is_favorite', true);
     }
 }
