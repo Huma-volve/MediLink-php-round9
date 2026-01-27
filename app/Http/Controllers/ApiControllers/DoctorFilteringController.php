@@ -4,16 +4,15 @@ namespace App\Http\Controllers\ApiControllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Doctor;
-use App\Models\DoctorWorking;
-use App\Models\Review;
 use Illuminate\Http\Request;
 
-class DoctorController extends Controller
+class DoctorFilteringController extends Controller
 {
     public function index(Request $request)
     {
         $doctors = Doctor::with(['user' , 'spelization' , 'clinic' , 'doctor_workings'])
 
+        ->where('is_verified', true)
         ->when($request->search, function ($query) use ($request) {
 
             $query->where(function ($q) use ($request) {

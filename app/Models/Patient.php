@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Patient extends Model
 {
+<<<<<<< HEAD
     protected $fillable = [
         'user_id',
         'emergency_contact_name',
@@ -26,4 +28,7 @@ class Patient extends Model
     {
         return $this->belongsTo(Insurance::class);
     }
+=======
+    use HasFactory;
+>>>>>>> 6c3f0275a6361a8b234c4b98936287fe9e00b92a
 }
