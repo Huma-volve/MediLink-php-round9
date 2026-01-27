@@ -18,7 +18,7 @@ class Doctor extends Model
         'consultation_fee_inperson',
         'spelization_id',
         'location',
-        'is_verified'
+        'is_verified',
     ];
 
     public function favorites()
