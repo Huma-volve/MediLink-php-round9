@@ -44,6 +44,8 @@ Route::group(['prefix' => 'v1'], function () {
 });
 
 
+Route::get('/doctors', [DoctorController::class, 'index']);
+Route::post('/doctors/{doctor}/favorite', [DoctorController::class, 'toggleFavorite']);
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
@@ -52,3 +54,5 @@ Route::get('/user', function (Request $request) {
 
 
 Route::get('/top-rated-doctors', [DoctorController::class, 'topRatedDoctors']);
+Route::get('/doctors/search', [DoctorController::class, 'search']);
+

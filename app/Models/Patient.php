@@ -28,6 +28,16 @@ class Patient extends Model
         'blood_group',
     ];
 
+    // علاقة مباشرة مع جدول Favorite
+    public function favorites()
+    {
+        return $this->hasMany(favorite::class);
+    }
+
+    // دكاترة المفضلة فقط
+    public function favoriteDoctors()
+    {
+        return $this->hasMany(favorite::class)->where('is_favorite', true);
     protected $casts = [
         'date_of_birth' => 'date',
     ];
