@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\StatisticsController;
 
 
 // Authentication Routes
@@ -19,3 +20,9 @@ Route::middleware('auth:sanctum')->group(function () {
         ]);
     });
 });
+
+// Statistics Routes
+Route::middleware('auth:sanctum')->get(
+    '/statistics/totals',
+    [StatisticsController::class, 'totals']
+);
