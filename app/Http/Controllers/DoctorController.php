@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Doctor;
 use App\Models\Patient;
+use App\Models\favorite;
 
 class DoctorController extends Controller
 {
@@ -69,27 +70,36 @@ class DoctorController extends Controller
     public function toggleFavorite(Request $request, Doctor $doctor)
     {
         $patientId = $request->patient_id;
+
         if (!$patientId) {
             return response()->json(['message' => 'Patient ID required'], 400);
         }
 
-        $patient = Patient::find($patientId);
-        if (!$patient) {
-            return response()->json(['message' => 'Patient not found'], 404);
-        }
-
-        $favorite = $patient->favorites()->where('doctor_id', $doctor->id)->first();
+        $favorite = favorite::where('patient_id', $patientId)
+            ->where('doctor_id', $doctor->id)
+            ->first();
 
         if ($favorite) {
-            $patient->favorites()->updateExistingPivot($doctor->id, [
-                'is_favorite' => !$favorite->pivot->is_favorite
+            $favorite->update([
+                'is_favorite' => !$favorite->is_favorite
             ]);
-            $status = $favorite->pivot->is_favorite ? 'deleted from favorites' : 'added to favorites';
+
+            $status = $favorite->is_favorite
+                ? 'added to favorites'
+                : 'deleted from favorites';
         } else {
-            $patient->favorites()->attach($doctor->id, ['is_favorite' => true]);
+            favorite::create([
+                'patient_id' => $patientId,
+                'doctor_id'  => $doctor->id,
+                'is_favorite' => true
+            ]);
+
             $status = 'added to favorites';
         }
 
-        return response()->json(['message' => $status]);
+        return response()->json([
+            'message' => $status,
+            'is_favorite' => $status === 'added to favorites'
+        ]);
     }
 }
