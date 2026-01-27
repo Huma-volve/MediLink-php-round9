@@ -38,6 +38,8 @@ class Patient extends Model
     public function favoriteDoctors()
     {
         return $this->hasMany(favorite::class)->where('is_favorite', true);
+    }
+
     protected $casts = [
         'date_of_birth' => 'date',
     ];
@@ -53,10 +55,6 @@ class Patient extends Model
         return $this->hasMany(Appointment::class);
     }
 
-    public function favorites()
-    {
-        return $this->hasMany(Favorite::class);
-    }
 
     public function prescriptions()
     {

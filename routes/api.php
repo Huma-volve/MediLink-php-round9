@@ -1,15 +1,14 @@
 <?php
 
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\StatisticsController;
 use App\Http\Controllers\Api\DoctorController;
 use App\Http\Controllers\api\v1\GeneralController;
-use App\Http\Controllers\api\v1\PatientController;
 
-
+Route::get('/doctors', [DoctorController::class, 'index']);
+Route::post('/doctors/{doctor}/favorite', [DoctorController::class, 'toggleFavorite']);
 // Authentication Routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -46,6 +45,7 @@ Route::group(['prefix' => 'v1'], function () {
 
 Route::get('/doctors', [DoctorController::class, 'index']);
 Route::post('/doctors/{doctor}/favorite', [DoctorController::class, 'toggleFavorite']);
+
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
@@ -55,4 +55,3 @@ Route::get('/user', function (Request $request) {
 
 Route::get('/top-rated-doctors', [DoctorController::class, 'topRatedDoctors']);
 Route::get('/doctors/search', [DoctorController::class, 'search']);
-
