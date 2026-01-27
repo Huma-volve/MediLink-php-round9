@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\StatisticsController;
 use App\Http\Controllers\Api\DoctorController;
 use App\Http\Controllers\api\v1\GeneralController;
+use App\Http\Controllers\api\v1\PatientController;
 
 Route::get('/doctors', [DoctorController::class, 'index']);
 Route::post('/doctors/{doctor}/favorite', [DoctorController::class, 'toggleFavorite']);
@@ -32,9 +33,8 @@ Route::middleware('auth:sanctum')->get(
 );
 
 
-use App\Http\Controllers\Api\DoctorController;
-use App\Http\Controllers\api\v1\GeneralController;
-use App\Http\Controllers\api\v1\PatientController;
+
+
 
 Route::group(['prefix' => 'v1'], function () {
     Route::get('spelizations', [GeneralController::class, 'spelizations']);
