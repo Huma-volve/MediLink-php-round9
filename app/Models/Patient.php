@@ -5,7 +5,63 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+use App\Models\User;
+use App\Models\Appointment;
+use App\Models\Favorite;
+use App\Models\Prescription;
+use App\Models\Insurance;
+
+
+
 class Patient extends Model
 {
     use HasFactory;
+
+
+    protected $fillable = [
+        'user_id',
+        'emergency_contact_name',
+        'emergency_contact_phone',
+        'emergency_contact_relationship',
+        'insurance_id',
+        'date_of_birth',
+        'blood_group',
+    ];
+
+    protected $casts = [
+        'date_of_birth' => 'date',
+    ];
+
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
+    }
+
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
+    }
+
+    public function prescriptions()
+    {
+        return $this->hasManyThrough(
+            Prescription::class,
+            Appointment::class,
+            'patient_id',
+            'appointment_id',
+            'id',
+            'id'
+        );
+    }
+
+    public function insurance()
+    {
+        return $this->belongsTo(Insurance::class);
+    }
 }
