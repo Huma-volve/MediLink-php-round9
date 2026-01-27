@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('profile_picture')->nullable();
             $table->enum('gender', ['male', 'female'])->nullable();
             $table->boolean('is_active')->default(true);
-            $table->string('phone')->nullable();
+            $table->string('phone')->nullable()->unique();
             $table->rememberToken();
             $table->timestamps();
         });
