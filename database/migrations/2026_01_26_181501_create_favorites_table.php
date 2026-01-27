@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('favorites', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('patient_id')
+                ->constrained('patients')
+                ->onDelete('cascade');
+            $table->foreignId('doctor_id')
+                ->constrained('doctors')
+                ->onDelete('cascade');
+            $table->boolean('is_favorite')->default(true);
+            $table->unique(['patient_id', 'doctor_id']); // Ensure a patient can favorite a doctor only once
             $table->timestamps();
         });
     }

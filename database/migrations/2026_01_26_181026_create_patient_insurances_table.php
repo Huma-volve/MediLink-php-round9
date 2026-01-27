@@ -13,6 +13,20 @@ return new class extends Migration
     {
         Schema::create('patient_insurances', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('patient_id')
+                ->constrained('patients')
+                ->onDelete('cascade');
+            $table->foreignId('insurance_plan_id')
+                ->constrained('insurance_plans')
+                ->onDelete('cascade');
+            $table->string('id_number')->unique();
+            $table->string('group_number');
+            $table->date('effective_date');
+            $table->date('expiry_date');
+            $table->string('front_image');
+            $table->string('back_image');
+            $table->string('member_name');
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }
