@@ -9,12 +9,12 @@ use App\Http\Controllers\Api\DoctorController;
 use App\Http\Controllers\api\v1\GeneralController;
 use App\Http\Controllers\api\v1\PatientController;
 
-Route::get('/doctors' , [DoctorFilteringController::class , 'index']);
 
+// search routes
+Route::get('/doctors' , [DoctorFilteringController::class , 'index']);
 Route::get('/doctors/{id}' , [DoctorFilteringController::class, 'show']);
 Route::get('/doctors/{id}/reviews' , [DoctorFilteringController::class, 'reviews']);
 Route::get('/doctors/{id}/doctor-working-hours' , [DoctorFilteringController::class, 'workingHours']);
-
 
 
 // Authentication Routes
