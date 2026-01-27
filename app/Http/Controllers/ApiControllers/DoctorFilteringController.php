@@ -4,6 +4,8 @@ namespace App\Http\Controllers\ApiControllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Doctor;
+use App\Models\DoctorWorking;
+use App\Models\Review;
 use Illuminate\Http\Request;
 
 class DoctorFilteringController extends Controller
@@ -46,5 +48,47 @@ class DoctorFilteringController extends Controller
                 'data' => []
             ]);
         }
+    }
+
+
+    public function show($id)
+    {
+        $doctor = Doctor::with([
+
+            'user:id,full_name,email,phone',
+            'spelization:id,name'])
+
+            ->findOrFail($id);
+
+        return response()->json([
+            'status' => true,
+            'data' => $doctor,
+        ]);
+    }
+
+
+    public function reviews($id)
+    {
+        $reviews = Review::with('patient:id , user_id' , 'patient.user:id , full_name')
+        ->where('doctor_id' , $id)
+        ->paginate();
+
+        return response()->json([
+            'status' => true,
+            'data' => $reviews,
+        ]);
+    }
+
+
+    public function workingHours($id)
+    {
+        $hours = DoctorWorking::where('doctor_id', $id)
+            ->orderBy('day_of_week')
+            ->get();
+
+        return response()->json([
+            'status' => true,
+            'data' => $hours
+        ]);
     }
 }

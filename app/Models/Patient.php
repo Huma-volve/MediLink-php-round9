@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Patient extends Model
 {
-<<<<<<< HEAD
+    use HasFactory;
+
     protected $fillable = [
         'user_id',
         'emergency_contact_name',
@@ -28,7 +29,38 @@ class Patient extends Model
     {
         return $this->belongsTo(Insurance::class);
     }
-=======
-    use HasFactory;
->>>>>>> 6c3f0275a6361a8b234c4b98936287fe9e00b92a
+
+     // علاقة مباشرة مع جدول Favorite
+    public function favorites()
+    {
+        return $this->hasMany(favorite::class);
+    }
+
+    // دكاترة المفضلة فقط
+    public function favoriteDoctors()
+    {
+        return $this->hasMany(favorite::class)->where('is_favorite', true);
+    }
+
+    protected $casts = [
+        'date_of_birth' => 'date',
+    ];
+
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
+    }
+
+
+    public function prescriptions()
+    {
+        return $this->hasManyThrough(
+            Prescription::class,
+            Appointment::class,
+            'patient_id',
+            'appointment_id',
+            'id',
+            'id'
+        );
+    }
 }
