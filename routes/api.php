@@ -19,3 +19,10 @@ Route::middleware('auth:sanctum')->group(function () {
         ]);
     });
 });
+use App\Http\Controllers\Api\DoctorController;
+
+Route::get('/user', function (Request $request) {
+    return $request->user();
+})->middleware('auth:sanctum');
+
+Route::get('/doctors/search', [DoctorController::class, 'search']);
