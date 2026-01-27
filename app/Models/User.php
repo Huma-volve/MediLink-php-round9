@@ -49,20 +49,36 @@ class User extends Authenticatable
         ];
     }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 6c3f0275a6361a8b234c4b98936287fe9e00b92a
-    public function doctor()
-    {
-        return $this->hasOne(Doctor::class);
-    }
-<<<<<<< HEAD
 
     public function patient()
     {
         return $this->hasOne(Patient::class);
     }
-=======
->>>>>>> 6c3f0275a6361a8b234c4b98936287fe9e00b92a
+
+    public function doctor()
+    {
+        return $this->hasOne(Doctor::class);
+    }
+
+
+    public function patient()
+    {
+        return $this->hasOne(Patient::class);
+    }
+
+
+    public function isPatient(): bool
+    {
+        return $this->role === 'patient';
+    }
+
+    public function isDoctor(): bool
+    {
+        return $this->role === 'doctor';
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
 }
