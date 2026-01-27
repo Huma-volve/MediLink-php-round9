@@ -1,11 +1,27 @@
 <?php
 
+
+use App\Http\Controllers\ApiControllers\DoctorFilteringController;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\DoctorController;
+use App\Http\Controllers\api\v1\GeneralController;
+use App\Http\Controllers\api\v1\PatientController;
+
+
+// search routes
+Route::get('/doctors' , [DoctorFilteringController::class , 'index']);
+Route::get('/doctors/{id}' , [DoctorFilteringController::class, 'show']);
+Route::get('/doctors/{id}/reviews' , [DoctorFilteringController::class, 'reviews']);
+Route::get('/doctors/{id}/doctor-working-hours' , [DoctorFilteringController::class, 'workingHours']);
+
 use App\Http\Controllers\Api\StatisticsController;
 use App\Http\Controllers\Api\DoctorController;
 use App\Http\Controllers\api\v1\GeneralController;
+
 
 Route::get('/doctors', [DoctorController::class, 'index']);
 Route::post('/doctors/{doctor}/favorite', [DoctorController::class, 'toggleFavorite']);
