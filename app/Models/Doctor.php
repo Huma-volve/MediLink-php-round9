@@ -22,6 +22,11 @@ class Doctor extends Model
         'is_verified',
     ];
 
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
     public function favorites()
     {
         return $this->hasMany(favorite::class);
