@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\api\v1;
+namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Models\Spelization;
 use Illuminate\Http\Request;
 
-class GeneralController extends Controller
+class SpelizationController extends Controller
 {
-      public function spelizations()
+      public function show()
     {
         $spelizations = Spelization::all();
         return response()->json($spelizations);
