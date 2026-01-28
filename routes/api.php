@@ -5,18 +5,15 @@ use App\Http\Controllers\ApiControllers\DoctorFilteringController;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Api\AuthController;
-
 use App\Http\Controllers\api\v1\GeneralController;
 use App\Http\Controllers\api\v1\PatientController;
-
 // Abdulgaffr controllers
 use App\Http\Controllers\Api\DoctorController;
 use App\Http\Controllers\Api\PrescriptionController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\SettingController;
-
+use App\Http\Controllers\Api\StatisticsController;
 
 // search routes
 Route::get('/doctors', [DoctorFilteringController::class, 'index']);
@@ -24,10 +21,10 @@ Route::get('/doctors/{id}', [DoctorFilteringController::class, 'show']);
 Route::get('/doctors/{id}/reviews', [DoctorFilteringController::class, 'reviews']);
 Route::get('/doctors/{id}/doctor-working-hours', [DoctorFilteringController::class, 'workingHours']);
 
-use App\Http\Controllers\Api\StatisticsController;
-use App\Http\Controllers\Api\DoctorController;
-use App\Http\Controllers\api\v1\GeneralController;
-use App\Http\Controllers\api\v1\PatientController;
+
+
+
+
 
 
 Route::get('/doctors', [DoctorController::class, 'index']);
