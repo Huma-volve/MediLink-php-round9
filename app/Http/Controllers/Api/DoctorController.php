@@ -41,10 +41,25 @@ class DoctorController extends Controller
     {
         $doctors = Doctor::with('reviews')->get();
 
+        if ($doctors->isEmpty()) {
+            return ApiResponse::sendResponse(200, 'No doctors found', null);
+        }
+
         $topDoctors = $doctors->sortByDesc(function ($doctor) {
             return $doctor->reviews->avg('rating');
-        })->take(5)->values();
+        })
+            ->filter(fn($doctor) => $doctor->reviews->count() > 0)  // ignore doctors with no reviews
+            ->take(5) // take top 5 doctors
+            ->values(); // reset keys
 
-        return ApiResponse::sendResponse(200, 'Top rated doctors fetched successfully', DoctorResource::collection($topDoctors));
+        if ($topDoctors->isEmpty()) {
+            return ApiResponse::sendResponse(200, 'No top-rated doctors found', null);
+        }
+
+        return ApiResponse::sendResponse(
+            200,
+            'Top rated doctors fetched successfully',
+            DoctorResource::collection($topDoctors)
+        );
     }
 }
