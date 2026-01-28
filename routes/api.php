@@ -3,19 +3,19 @@
 use App\Http\Controllers\Api\AppointmentController;
 use App\Http\Controllers\ApiControllers\DoctorFilteringController;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 
+use Illuminate\Http\Request;
+use App\Http\Controllers\Api\RecentActivitiesController;
 use App\Http\Controllers\api\v1\GeneralController;
 use App\Http\Controllers\api\v1\PatientController;
-
 // Abdulgaffr controllers
 use App\Http\Controllers\Api\DoctorController;
 use App\Http\Controllers\Api\PrescriptionController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\SettingController;
-
+use App\Http\Controllers\Api\StatisticsController;
 
 // search routes
 Route::get('/doctors', [DoctorFilteringController::class, 'index']);
@@ -49,10 +49,11 @@ Route::middleware('auth:sanctum')->get(
     '/statistics/totals',
     [StatisticsController::class, 'totals']
 );
-
-
-
-
+// Recent Activities Routes
+Route::middleware('auth:sanctum')->get(
+    '/recent-activities/latest',
+    [RecentActivitiesController::class, 'latest']
+);
 
 Route::group(['prefix' => 'v1'], function () {
     Route::get('spelizations', [GeneralController::class, 'spelizations']);

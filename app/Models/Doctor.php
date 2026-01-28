@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Doctor extends Model
 {
+
     protected $fillable = [
         'user_id',
         'license_number',
@@ -61,10 +62,9 @@ class Doctor extends Model
         return $this->hasMany(Payment::class);
     }
 
-    public function reviews()
-    {
-        return $this->hasMany(Review::class);
-    }
+
+
+
 
     public function workingHours()
     {

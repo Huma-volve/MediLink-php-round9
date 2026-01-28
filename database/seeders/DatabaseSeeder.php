@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
             SpelizationSeeder::class,
             InsuranceSeeder::class,
             PatientSeeder::class,
+            DoctorsAndPatientsSeeder::class,
+
         ]);
 
         User::factory()->count(5)->create();
