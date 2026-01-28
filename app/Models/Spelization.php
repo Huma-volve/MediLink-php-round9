@@ -8,9 +8,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Spelization extends Model
 {
     use HasFactory;
+
     public function doctors()
     {
-        return $this->hasMany(Doctor::class, 'speciality_id');
+
+        return $this->hasMany(Doctor::class, 'spelization_id');
     }
 }
-    
