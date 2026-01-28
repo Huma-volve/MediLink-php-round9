@@ -8,6 +8,9 @@ use App\Models\Patient;
 use App\Models\Doctor;
 use App\Models\Prescription;
 
+<<<<<<< HEAD
+class Appointment extends Model {}
+=======
 class Appointment extends Model
 {
     use HasFactory;
@@ -38,3 +41,4 @@ class Appointment extends Model
         return $this->hasOne(Prescription::class);
     }
 }
+>>>>>>> 9c7c528910350a30de398b85d53eca0958053603
