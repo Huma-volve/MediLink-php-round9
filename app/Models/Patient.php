@@ -17,7 +17,6 @@ class Patient extends Model
 {
     use HasFactory;
 
-
     protected $fillable = [
         'user_id',
         'emergency_contact_name',
@@ -28,7 +27,19 @@ class Patient extends Model
         'blood_group',
     ];
 
-    // علاقة مباشرة مع جدول Favorite
+
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+
+    public function insurance()
+    {
+        return $this->belongsTo(Insurance::class);
+    }
+
     public function favorites()
     {
         return $this->hasMany(favorite::class);
@@ -45,10 +56,7 @@ class Patient extends Model
     ];
 
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+
 
     public function appointments()
     {
@@ -66,10 +74,5 @@ class Patient extends Model
             'id',
             'id'
         );
-    }
-
-    public function insurance()
-    {
-        return $this->belongsTo(Insurance::class);
     }
 }
