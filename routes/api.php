@@ -7,16 +7,22 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\DoctorController;
+
 use App\Http\Controllers\api\v1\GeneralController;
 use App\Http\Controllers\api\v1\PatientController;
 
+// Abdulgaffr controllers
+use App\Http\Controllers\Api\DoctorController;
+use App\Http\Controllers\Api\PrescriptionController;
+use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\SettingController;
+
 
 // search routes
-Route::get('/doctors' , [DoctorFilteringController::class , 'index']);
-Route::get('/doctors/{id}' , [DoctorFilteringController::class, 'show']);
-Route::get('/doctors/{id}/reviews' , [DoctorFilteringController::class, 'reviews']);
-Route::get('/doctors/{id}/doctor-working-hours' , [DoctorFilteringController::class, 'workingHours']);
+Route::get('/doctors', [DoctorFilteringController::class, 'index']);
+Route::get('/doctors/{id}', [DoctorFilteringController::class, 'show']);
+Route::get('/doctors/{id}/reviews', [DoctorFilteringController::class, 'reviews']);
+Route::get('/doctors/{id}/doctor-working-hours', [DoctorFilteringController::class, 'workingHours']);
 
 use App\Http\Controllers\Api\StatisticsController;
 use App\Http\Controllers\Api\DoctorController;
@@ -71,3 +77,16 @@ Route::get('/user', function (Request $request) {
 
 Route::get('/top-rated-doctors', [DoctorController::class, 'topRatedDoctors']);
 Route::get('/doctors/search', [DoctorController::class, 'search']);
+
+//AbdulGaffar APIs
+// doctors searching
+Route::get('/doctors/search', [DoctorController::class, 'search']);
+
+// doctor diagnosis summary creation
+Route::post('/doctor/prescriptions', [PrescriptionController::class, 'store']);
+
+// payments  peoccessing
+Route::post('/payments/checkout', [PaymentController::class, 'store']);
+
+// profile settings
+Route::put('/user/profile-settings', [SettingController::class, 'updateProfile']);
