@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
@@ -13,6 +14,7 @@ use App\Http\Controllers\Api\PrescriptionController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\Api\StatisticsController;
+use App\Http\Controllers\Api\DoctormanagmentController;
 
 // search routes
 Route::get('/doctors', [DoctorFilteringController::class, 'index']);
@@ -20,16 +22,14 @@ Route::get('/doctors/{id}', [DoctorFilteringController::class, 'show']);
 Route::get('/doctors/{id}/reviews', [DoctorFilteringController::class, 'reviews']);
 Route::get('/doctors/{id}/doctor-working-hours', [DoctorFilteringController::class, 'workingHours']);
 
-Route::get('/doctors', [DoctorController::class, 'index']);
-Route::post('/doctors/{doctor}/favorite', [DoctorController::class, 'toggleFavorite']);
 // Authentication Routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
-        // show patient info
+    // show patient info
     Route::get('patient/profile', [PatientController::class, 'profile']);
-        // delete patient account
+    // delete patient account
     Route::delete('proflie/delete', [SettingController::class, 'deleteAccount']);
 
 
@@ -55,16 +55,16 @@ Route::middleware('auth:sanctum')->get(
 );
 
 
-Route::get('/doctors', [DoctorController::class, 'index']);
-Route::post('/doctors/{doctor}/favorite', [DoctorController::class, 'toggleFavorite']);
+Route::get('/doctors', [DoctormanagmentController::class, 'index']);
+Route::post('/doctors/{doctor}/favorite', [DoctormanagmentController::class, 'toggleFavorite']);
 
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-        // show spelizations 
+// show spelizations
 Route::get('spelizations', [SpelizationController::class, 'show']);
-        // show languages 
+// show languages
 Route::get('languages', [SettingController::class, 'languages']);
 
 
