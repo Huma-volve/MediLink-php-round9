@@ -19,7 +19,7 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'full_name',
+        'name',
         'email',
         'phone',
         'password',
@@ -49,19 +49,15 @@ class User extends Authenticatable
         ];
     }
 
+       public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
 
     public function doctor()
     {
         return $this->hasOne(Doctor::class);
     }
-
-
-    public function patient()
-    {
-        return $this->hasOne(Patient::class);
-    }
-
-
     public function isPatient(): bool
     {
         return $this->role === 'patient';

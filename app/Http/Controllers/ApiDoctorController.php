@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Doctor;
 use App\Models\Patient;
-use App\Models\favorite;
+use App\Models\Favorite;
 
-class DoctorController extends Controller
+class ApiDoctorController extends Controller
 {
 
     public function index(Request $request)
@@ -75,7 +75,7 @@ class DoctorController extends Controller
             return response()->json(['message' => 'Patient ID required'], 400);
         }
 
-        $favorite = favorite::where('patient_id', $patientId)
+        $favorite = Favorite::where('patient_id', $patientId)
             ->where('doctor_id', $doctor->id)
             ->first();
 

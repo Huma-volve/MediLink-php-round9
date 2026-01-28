@@ -15,8 +15,13 @@ use App\Models\Insurance;
 
 class Patient extends Model
 {
+<<<<<<< HEAD
     use HasFactory;
 
+=======
+
+    use HasFactory;
+>>>>>>> 620136d37187ae1b06387174217497df0dca6d12
     protected $fillable = [
         'user_id',
         'emergency_contact_name',
@@ -45,7 +50,6 @@ class Patient extends Model
         return $this->hasMany(favorite::class);
     }
 
-    // دكاترة المفضلة فقط
     public function favoriteDoctors()
     {
         return $this->hasMany(favorite::class)->where('is_favorite', true);
