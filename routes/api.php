@@ -1,6 +1,6 @@
 <?php
 
-
+use App\Http\Controllers\Api\AppointmentController;
 use App\Http\Controllers\ApiControllers\DoctorFilteringController;
 
 
@@ -101,6 +101,16 @@ Route::middleware('auth:sanctum')->group(function () {
     // payments  peoccessing
     Route::post('/payments/checkout', [PaymentController::class, 'store']);
 
+// profile settings
+Route::put('/user/profile-settings', [SettingController::class, 'updateProfile']);
+
+
+
+
+// appointment APIs
+Route::get('/appointments', [AppointmentController::class, 'index'])->middleware('auth:sanctum');
+Route::patch('/appointments/{appointment}/confirm', [AppointmentController::class, 'confirmAppointment'])->middleware('auth:sanctum');
+Route::patch('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancelAppointment'])->middleware('auth:sanctum');
     // profile settings
     Route::put('/user/profile-settings', [SettingController::class, 'updateProfile']);
 });
