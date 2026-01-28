@@ -5,11 +5,9 @@ use App\Http\Controllers\ApiControllers\DoctorFilteringController;
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
-<<<<<<< HEAD
-=======
-use App\Http\Controllers\Api\StatisticsController;
+
+use Illuminate\Http\Request;
 use App\Http\Controllers\Api\RecentActivitiesController;
->>>>>>> 58ac349ae53998a7788c68106f05f06f14264766
 use App\Http\Controllers\api\v1\GeneralController;
 use App\Http\Controllers\api\v1\PatientController;
 // Abdulgaffr controllers
@@ -24,16 +22,7 @@ Route::get('/doctors', [DoctorFilteringController::class, 'index']);
 Route::get('/doctors/{id}', [DoctorFilteringController::class, 'show']);
 Route::get('/doctors/{id}/reviews', [DoctorFilteringController::class, 'reviews']);
 Route::get('/doctors/{id}/doctor-working-hours', [DoctorFilteringController::class, 'workingHours']);
-<<<<<<< HEAD
 
-
-
-
-
-
-
-=======
->>>>>>> 58ac349ae53998a7788c68106f05f06f14264766
 Route::get('/doctors', [DoctorController::class, 'index']);
 Route::post('/doctors/{doctor}/favorite', [DoctorController::class, 'toggleFavorite']);
 // Authentication Routes

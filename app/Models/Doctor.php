@@ -7,12 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Doctor extends Model
 {
-<<<<<<< HEAD
 
-
-
-=======
->>>>>>> 58ac349ae53998a7788c68106f05f06f14264766
     protected $fillable = [
         'user_id',
         'license_number',
@@ -71,11 +66,10 @@ class Doctor extends Model
         return $this->hasMany(Payment::class);
     }
 
-<<<<<<< HEAD
 
 
-=======
->>>>>>> 58ac349ae53998a7788c68106f05f06f14264766
+
+
     public function workingHours()
     {
         return $this->hasMany(DoctorWorking::class);
