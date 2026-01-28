@@ -3,14 +3,18 @@
 namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Models\Spelization;
-use Illuminate\Http\Request;
+use App\Helper\ApiResponse;
 
 class SpelizationController extends Controller
 {
       public function show()
     {
         $spelizations = Spelization::all();
-        return response()->json($spelizations);
+           return ApiResponse::sendResponse(
+                200,
+                'null',
+                $spelizations
+            );
     }
 
 }

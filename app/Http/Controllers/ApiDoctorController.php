@@ -7,7 +7,7 @@ use App\Models\Doctor;
 use App\Models\Patient;
 use App\Models\Favorite;
 
-class DoctorController extends Controller
+class ApiDoctorController extends Controller
 {
 
     public function index(Request $request)
