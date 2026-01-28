@@ -3,9 +3,13 @@
 
 use App\Http\Controllers\ApiControllers\DoctorFilteringController;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+<<<<<<< HEAD
+=======
+use App\Http\Controllers\Api\StatisticsController;
+use App\Http\Controllers\Api\RecentActivitiesController;
+>>>>>>> 58ac349ae53998a7788c68106f05f06f14264766
 use App\Http\Controllers\api\v1\GeneralController;
 use App\Http\Controllers\api\v1\PatientController;
 // Abdulgaffr controllers
@@ -20,6 +24,7 @@ Route::get('/doctors', [DoctorFilteringController::class, 'index']);
 Route::get('/doctors/{id}', [DoctorFilteringController::class, 'show']);
 Route::get('/doctors/{id}/reviews', [DoctorFilteringController::class, 'reviews']);
 Route::get('/doctors/{id}/doctor-working-hours', [DoctorFilteringController::class, 'workingHours']);
+<<<<<<< HEAD
 
 
 
@@ -27,6 +32,8 @@ Route::get('/doctors/{id}/doctor-working-hours', [DoctorFilteringController::cla
 
 
 
+=======
+>>>>>>> 58ac349ae53998a7788c68106f05f06f14264766
 Route::get('/doctors', [DoctorController::class, 'index']);
 Route::post('/doctors/{doctor}/favorite', [DoctorController::class, 'toggleFavorite']);
 // Authentication Routes
@@ -50,10 +57,11 @@ Route::middleware('auth:sanctum')->get(
     '/statistics/totals',
     [StatisticsController::class, 'totals']
 );
-
-
-
-
+// Recent Activities Routes
+Route::middleware('auth:sanctum')->get(
+    '/recent-activities/latest',
+    [RecentActivitiesController::class, 'latest']
+);
 
 Route::group(['prefix' => 'v1'], function () {
     Route::get('spelizations', [GeneralController::class, 'spelizations']);
