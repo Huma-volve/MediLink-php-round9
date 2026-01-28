@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 
 class DoctorController extends Controller
 {
+
     public function search(Request $request)
     {
 
