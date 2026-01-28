@@ -28,6 +28,7 @@ use App\Http\Controllers\Api\StatisticsController;
 use App\Http\Controllers\Api\DoctorController;
 use App\Http\Controllers\api\v1\GeneralController;
 use App\Http\Controllers\api\v1\PatientController;
+use App\Http\Controllers\Api\RecentActivitiesController;
 
 
 Route::get('/doctors', [DoctorController::class, 'index']);
@@ -52,6 +53,11 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware('auth:sanctum')->get(
     '/statistics/totals',
     [StatisticsController::class, 'totals']
+);
+// Recent Activities Routes
+Route::middleware('auth:sanctum')->get(
+    '/recent-activities/latest',
+    [RecentActivitiesController::class, 'latest']
 );
 
 
