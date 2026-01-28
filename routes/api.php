@@ -1,13 +1,27 @@
 <?php
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\DoctorController;
 use App\Http\Controllers\api\SpelizationController;
 use App\Http\Controllers\api\PatientController;
-use App\Http\Controllers\api\SettingController;
+use App\Http\Controllers\ApiControllers\DoctorFilteringController;
+use App\Http\Controllers\Api\RecentActivitiesController;
 
+// Abdulgaffr controllers
+use App\Http\Controllers\Api\DoctorController;
+use App\Http\Controllers\Api\PrescriptionController;
+use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\SettingController;
+use App\Http\Controllers\Api\StatisticsController;
+
+// search routes
+Route::get('/doctors', [DoctorFilteringController::class, 'index']);
+Route::get('/doctors/{id}', [DoctorFilteringController::class, 'show']);
+Route::get('/doctors/{id}/reviews', [DoctorFilteringController::class, 'reviews']);
+Route::get('/doctors/{id}/doctor-working-hours', [DoctorFilteringController::class, 'workingHours']);
+
+Route::get('/doctors', [DoctorController::class, 'index']);
+Route::post('/doctors/{doctor}/favorite', [DoctorController::class, 'toggleFavorite']);
 // Authentication Routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -29,6 +43,20 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 });
 
+// Statistics Routes
+Route::middleware('auth:sanctum')->get(
+    '/statistics/totals',
+    [StatisticsController::class, 'totals']
+);
+// Recent Activities Routes
+Route::middleware('auth:sanctum')->get(
+    '/recent-activities/latest',
+    [RecentActivitiesController::class, 'latest']
+);
+
+
+Route::get('/doctors', [DoctorController::class, 'index']);
+Route::post('/doctors/{doctor}/favorite', [DoctorController::class, 'toggleFavorite']);
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -36,6 +64,22 @@ Route::get('/user', function (Request $request) {
 
         // show spelizations 
 Route::get('spelizations', [SpelizationController::class, 'show']);
-Route::get('/doctors/search', [DoctorController::class, 'search']);
         // show languages 
 Route::get('languages', [SettingController::class, 'languages']);
+
+
+Route::get('/top-rated-doctors', [DoctorController::class, 'topRatedDoctors']);
+
+
+//AbdulGaffar APIs
+// doctors searching
+Route::get('/doctors/search', [DoctorController::class, 'search']);
+
+// doctor diagnosis summary creation
+Route::post('/doctor/prescriptions', [PrescriptionController::class, 'store']);
+
+// payments  peoccessing
+Route::post('/payments/checkout', [PaymentController::class, 'store']);
+
+// profile settings
+Route::put('/user/profile-settings', [SettingController::class, 'updateProfile']);
