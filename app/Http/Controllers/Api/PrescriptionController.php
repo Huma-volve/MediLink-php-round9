@@ -13,10 +13,12 @@ class PrescriptionController extends Controller
     {
         $request->validate([
             'appointment_id' => 'required|exists:appointments,id',
-            'medications' => 'required|array',
-            'diagnosis' => 'required|string|min:10',
+            // 'medications' => 'required|array',
+            'medications' => 'required|string',
+            // 'diagnosis' => 'required|string|min:10',
+            'diagnosis' => 'required|string',
             'frequency' => 'required|string',
-            'duration_days' => 'required|integer',
+            'duration_days' => 'required',
             'prescription_date' => 'required|date',
         ]);
 

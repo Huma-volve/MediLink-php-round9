@@ -1,9 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Language;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use App\Helper\ApiResponse;
 
 class SettingController extends Controller
 {
@@ -24,5 +27,43 @@ class SettingController extends Controller
         ]);
 
         return response()->json(['message' => 'Settings updated successfully']);
+    }
+
+    public function deleteAccount(Request $request)
+    {
+        $request->validate([
+            'password' => ['required'],
+        ]);
+
+        $user = $request->user();
+
+        if (! Hash::check($request->password, $user->password)) {
+            
+            return ApiResponse::sendResponse(
+                422,
+                'Password is incorrect',
+                null
+            );
+        }
+
+        $user->tokens()->delete();
+        $user->delete();
+
+                return ApiResponse::sendResponse(
+                200,
+                'Deleted Successfully',
+                null
+            );
+     
+    }
+
+    public function languages()
+    {
+        $languages = Language::all();
+        return ApiResponse::sendResponse(
+            200,
+            'null',
+            $languages
+        );
     }
 }
