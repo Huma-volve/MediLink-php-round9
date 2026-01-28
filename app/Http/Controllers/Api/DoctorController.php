@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helper\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\DoctorResource;
 use App\Models\Doctor;
 use Illuminate\Http\Request;
 
@@ -33,5 +35,16 @@ class DoctorController extends Controller
             'success' => true,
             'data' => $doctors
         ], 200);
+    }
+
+    public function topRatedDoctors()
+    {
+        $doctors = Doctor::with('reviews')->get();
+
+        $topDoctors = $doctors->sortByDesc(function ($doctor) {
+            return $doctor->reviews->avg('rating');
+        })->take(5)->values();
+
+        return ApiResponse::sendResponse(200, 'Top rated doctors fetched successfully', DoctorResource::collection($topDoctors));
     }
 }
