@@ -10,15 +10,15 @@ use Illuminate\Http\Request;
 
 class DoctorController extends Controller
 {
+
     public function search(Request $request)
     {
 
         $doctors = Doctor::with(['user:id,name', 'specialization:id,name'])
             ->where('is_verified', true)
             ->when($request->name, function ($query) use ($request) {
-
                 $query->whereHas('user', function ($q) use ($request) {
-                    $q->where('name', 'like', '%' . $request->name . '%');
+                    $q->where('users.name', 'like', '%' . $request->name . '%');
                 });
             })
             ->when($request->speciality_id, function ($query) use ($request) {

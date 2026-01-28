@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('languages', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique(); // en, ar, fr, etc.
+            $table->string('code')->unique(); 
             $table->string('name');
-            $table->string('native_name')->nullable(); // اللغة العربية
+            $table->string('native_name')->nullable(); 
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
