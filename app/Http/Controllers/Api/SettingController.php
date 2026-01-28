@@ -1,10 +1,14 @@
 <?php
+
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Language;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+
+
+
 
 class SettingController extends Controller
 {
@@ -25,9 +29,8 @@ class SettingController extends Controller
         ]);
 
         return response()->json(['message' => 'Settings updated successfully']);
-
     }
-    
+
     public function deleteAccount(Request $request)
     {
         $request->validate([
@@ -49,10 +52,10 @@ class SettingController extends Controller
             'message' => 'Deleted Successfully'
         ], 200);
     }
-  
-     public function languages()
+
+    public function languages()
     {
         $languages = Language::all();
         return response()->json($languages);
     }
-
+}
