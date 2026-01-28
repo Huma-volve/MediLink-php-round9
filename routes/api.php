@@ -1,15 +1,12 @@
 <?php
-
-
-use App\Http\Controllers\ApiControllers\DoctorFilteringController;
-
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
-
-use Illuminate\Http\Request;
+use App\Http\Controllers\api\SpelizationController;
+use App\Http\Controllers\api\PatientController;
+use App\Http\Controllers\ApiControllers\DoctorFilteringController;
 use App\Http\Controllers\Api\RecentActivitiesController;
-use App\Http\Controllers\api\v1\GeneralController;
-use App\Http\Controllers\api\v1\PatientController;
+
 // Abdulgaffr controllers
 use App\Http\Controllers\Api\DoctorController;
 use App\Http\Controllers\Api\PrescriptionController;
@@ -30,6 +27,12 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
+        // show patient info
+    Route::get('patient/profile', [PatientController::class, 'profile']);
+        // delete patient account
+    Route::delete('proflie/delete', [SettingController::class, 'deleteAccount']);
+
+
 
     Route::post('/logout', [AuthController::class, 'logout']);
     // current user info
@@ -39,7 +42,6 @@ Route::middleware('auth:sanctum')->group(function () {
         ]);
     });
 });
-
 
 // Statistics Routes
 Route::middleware('auth:sanctum')->get(
@@ -52,12 +54,6 @@ Route::middleware('auth:sanctum')->get(
     [RecentActivitiesController::class, 'latest']
 );
 
-Route::group(['prefix' => 'v1'], function () {
-    Route::get('spelizations', [GeneralController::class, 'spelizations']);
-    Route::get('/doctors/search', [DoctorController::class, 'search']);
-    Route::get('/doctors/search', [DoctorController::class, 'search']);
-});
-
 
 Route::get('/doctors', [DoctorController::class, 'index']);
 Route::post('/doctors/{doctor}/favorite', [DoctorController::class, 'toggleFavorite']);
@@ -66,11 +62,14 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-
+        // show spelizations 
+Route::get('spelizations', [SpelizationController::class, 'show']);
+        // show languages 
+Route::get('languages', [SettingController::class, 'languages']);
 
 
 Route::get('/top-rated-doctors', [DoctorController::class, 'topRatedDoctors']);
-Route::get('/doctors/search', [DoctorController::class, 'search']);
+
 
 //AbdulGaffar APIs
 // doctors searching
