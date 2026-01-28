@@ -8,11 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Doctor extends Model
 {
     protected $fillable = [
-        'experience_years' , 'bio' , 'education' , 'consultation_fee_online' , 'consultation_fee_inperson'
-    ];
-
-
-    protected $fillable = [
         'user_id',
         'license_number',
         'experience_years',
@@ -39,7 +34,7 @@ class Doctor extends Model
     {
         return $this->belongsTo(User::class);
     }
-    
+
     public function clinic()
     {
         return $this->hasMany(Clinic::class);
@@ -68,11 +63,6 @@ class Doctor extends Model
     public function payments()
     {
         return $this->hasMany(Payment::class);
-    }
-
-    public function reviews()
-    {
-        return $this->hasMany(Review::class);
     }
 
     public function workingHours()
