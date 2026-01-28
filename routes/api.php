@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
@@ -6,9 +7,11 @@ use App\Http\Controllers\api\SpelizationController;
 use App\Http\Controllers\api\PatientController;
 use App\Http\Controllers\ApiControllers\DoctorFilteringController;
 use App\Http\Controllers\Api\RecentActivitiesController;
+use App\Http\Controllers\ApiDoctorController;
 
 // Abdulgaffr controllers
 use App\Http\Controllers\Api\DoctorController;
+use App\Http\Controllers\api\NotificationController;
 use App\Http\Controllers\Api\PrescriptionController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\SettingController;
@@ -20,17 +23,22 @@ Route::get('/doctors/{id}', [DoctorFilteringController::class, 'show']);
 Route::get('/doctors/{id}/reviews', [DoctorFilteringController::class, 'reviews']);
 Route::get('/doctors/{id}/doctor-working-hours', [DoctorFilteringController::class, 'workingHours']);
 
-Route::get('/doctors', [DoctorController::class, 'index']);
-Route::post('/doctors/{doctor}/favorite', [DoctorController::class, 'toggleFavorite']);
+
+Route::get('/doctors', [ApiDoctorController::class, 'index']);
+Route::post('/doctors/{doctor}/favorite', [ApiDoctorController::class, 'toggleFavorite']);
+
+
 // Authentication Routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
-        // show patient info
+    // show patient info
     Route::get('patient/profile', [PatientController::class, 'profile']);
-        // delete patient account
+    // delete patient account
     Route::delete('proflie/delete', [SettingController::class, 'deleteAccount']);
+    Route::get('user/notifications', [NotificationController::class, 'index']);
+    Route::post('notification/read/{id}', [NotificationController::class, 'isRead']);
 
 
 
@@ -55,16 +63,13 @@ Route::middleware('auth:sanctum')->get(
 );
 
 
-Route::get('/doctors', [DoctorController::class, 'index']);
-Route::post('/doctors/{doctor}/favorite', [DoctorController::class, 'toggleFavorite']);
-
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-        // show spelizations 
+// show spelizations 
 Route::get('spelizations', [SpelizationController::class, 'show']);
-        // show languages 
+// show languages 
 Route::get('languages', [SettingController::class, 'languages']);
 
 
