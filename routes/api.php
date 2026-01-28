@@ -27,6 +27,7 @@ Route::get('/doctors/{id}/doctor-working-hours', [DoctorFilteringController::cla
 use App\Http\Controllers\Api\StatisticsController;
 use App\Http\Controllers\Api\DoctorController;
 use App\Http\Controllers\api\v1\GeneralController;
+use App\Http\Controllers\api\v1\PatientController;
 
 
 Route::get('/doctors', [DoctorController::class, 'index']);
@@ -54,9 +55,8 @@ Route::middleware('auth:sanctum')->get(
 );
 
 
-use App\Http\Controllers\Api\DoctorController;
-use App\Http\Controllers\api\v1\GeneralController;
-use App\Http\Controllers\api\v1\PatientController;
+
+
 
 Route::group(['prefix' => 'v1'], function () {
     Route::get('spelizations', [GeneralController::class, 'spelizations']);
