@@ -1,30 +1,29 @@
 <?php
-
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\PatientResource;
-use App\Models\Patient;
+use App\Http\Resources\DoctorProfileResource;
 use Illuminate\Http\Request;
 use App\Helper\ApiResponse;
+use App\Models\Doctor;
 
-class PatientController extends Controller
+class DoctorProfileController extends Controller
 {
     public function profile(Request $request)
     {
         $user_id = $request->user()->id;
         
-        $patient = Patient::where('user_id', $user_id)->first();
+        $doctor = Doctor::where('user_id', $user_id)->first();
 
-        if (!$patient) {
+        if (!$doctor) {
             return ApiResponse::sendResponse(
                 404,
-                'Patient not found',
-                $patient
+                'doctor not found',
+                $doctor
             );
         }
         $data = [
-            'patient' => new PatientResource($patient)
+            'doctor' => new DoctorProfileResource($doctor)
         ];
         return ApiResponse::sendResponse(
             200,

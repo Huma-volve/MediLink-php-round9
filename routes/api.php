@@ -8,6 +8,7 @@ use App\Http\Controllers\api\PatientController;
 use App\Http\Controllers\ApiControllers\DoctorFilteringController;
 use App\Http\Controllers\Api\RecentActivitiesController;
 use App\Http\Controllers\ApiDoctorController;
+use App\Http\Controllers\api\DoctorProfileController;
 
 // Abdulgaffr controllers
 use App\Http\Controllers\Api\DoctorController;
@@ -37,8 +38,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('patient/profile', [PatientController::class, 'profile']);
     // delete patient account
     Route::delete('proflie/delete', [SettingController::class, 'deleteAccount']);
+    // show all user notification
     Route::get('user/notifications', [NotificationController::class, 'index']);
+    // mark notification as read
     Route::post('notification/read/{id}', [NotificationController::class, 'isRead']);
+    // show doctor profile
+    Route::get('doctor/profile', [DoctorProfileController::class, 'profile']);
 
 
 
