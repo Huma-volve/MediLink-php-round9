@@ -88,8 +88,6 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 
-
-
 Route::get('/top-rated-doctors', [DoctorSearchController::class, 'topRatedDoctors']);
 
 
@@ -102,7 +100,19 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/doctor/prescriptions', [PrescriptionController::class, 'store']);
 
     // payments  peoccessing
-    Route::post('/payments/checkout', [PaymentController::class, 'store']);
+    Route::prefix('payments')->group(function () {
+        Route::get('/', [PaymentController::class, 'index']);
+        Route::post('/store', [PaymentController::class, 'store']);
+        Route::get('/show/{id}', [PaymentController::class, 'show']);
+        Route::put('/update/{id}', [PaymentController::class, 'update']);
+        Route::delete('/delete/{id}', [PaymentController::class, 'destroy']);
+
+        //- pending ->completed  تحويل الحالة إلى مكتمل بعد الدفع
+        Route::post('/{id}/process', [PaymentController::class, 'processPayment']);
+
+        //  ترجيع المبلغ- فى حالة الالغاء او الاسترجاع- لو كان مكتمل
+        Route::post('/{id}/refund', [PaymentController::class, 'refund']);
+    });
 
     // profile settings
     Route::put('/user/profile-settings', [SettingController::class, 'updateProfile']);
