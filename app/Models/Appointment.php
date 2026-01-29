@@ -10,6 +10,7 @@ use App\Models\Prescription;
 
 class Appointment extends Model
 {
+
     use HasFactory;
 
     const STATUS_UPCOMING = 'upcoming';

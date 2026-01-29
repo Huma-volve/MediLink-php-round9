@@ -6,6 +6,11 @@ use App\Http\Controllers\ApiControllers\DoctorFilteringController;
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\api\v1\GeneralController;
+use App\Http\Controllers\api\v1\PatientController;
+use App\Http\Controllers\Api\StatisticsController;
+
+
 use App\Http\Controllers\api\SpelizationController;
 use App\Http\Controllers\api\PatientController;
 
@@ -28,6 +33,14 @@ Route::get('/doctors/{id}', [DoctorFilteringController::class, 'show']);
 Route::get('/doctors/{id}/reviews', [DoctorFilteringController::class, 'reviews']);
 Route::get('/doctors/{id}/doctor-working-hours', [DoctorFilteringController::class, 'workingHours']);
 
+
+// search routes
+Route::get('/doctors_search', [DoctorFilteringController::class, 'search']);
+Route::get('/doctor/{id}', [DoctorFilteringController::class, 'doctorsInformation']);
+Route::get('/doctor/{id}/reviews', [DoctorFilteringController::class, 'patientReviews']);
+Route::get('/doctor/{id}/doctor-working-hours', [DoctorFilteringController::class, 'workingHours']);
+Route::get('/doctor/{id}/doctor-working-hours_online', [DoctorFilteringController::class, 'workingHoursOnline'])
+  
 use App\Http\Controllers\Api\StatisticsController;
 use App\Http\Controllers\Api\DoctorController;
 use App\Http\Controllers\api\v1\GeneralController;
@@ -64,9 +77,6 @@ Route::middleware('auth:sanctum')->get(
     '/statistics/totals',
     [StatisticsController::class, 'totals']
 );
-
-
-
 
 
 Route::group(['prefix' => 'v1'], function () {
