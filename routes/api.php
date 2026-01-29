@@ -15,7 +15,7 @@ use App\Http\Controllers\Api\RecentActivitiesController;
 use App\Http\Controllers\ApiDoctorController;
 
 // Abdulgaffr controllers
-use App\Http\Controllers\Api\DoctorController;
+use App\Http\Controllers\Api\DoctorSearchController;
 use App\Http\Controllers\api\NotificationController;
 use App\Http\Controllers\Api\PrescriptionController;
 use App\Http\Controllers\Api\PaymentController;
@@ -34,7 +34,6 @@ use App\Http\Controllers\api\v1\GeneralController;
 use App\Http\Controllers\api\v1\PatientController;
 
 
-Route::get('/doctors', [DoctorController::class, 'index']);
 Route::post('/doctors/{doctor}/favorite', [DoctorController::class, 'toggleFavorite']);
 // Authentication Routes
 Route::post('/register', [AuthController::class, 'register']);
@@ -66,9 +65,6 @@ Route::middleware('auth:sanctum')->get(
 );
 
 
-
-
-
 Route::group(['prefix' => 'v1'], function () {
     Route::get('spelizations', [GeneralController::class, 'spelizations']);
     Route::get('/doctors/search', [DoctorController::class, 'search']);
@@ -86,13 +82,12 @@ Route::get('/user', function (Request $request) {
 
 
 
-Route::get('/top-rated-doctors', [DoctorController::class, 'topRatedDoctors']);
-Route::get('/doctors/search', [DoctorController::class, 'search']);
+Route::get('/top-rated-doctors', [DoctorSearchController::class, 'topRatedDoctors']);
 
 
 //AbdulGaffar APIs
 // doctors searching
-Route::get('/doctors/search', [DoctorController::class, 'search']);
+Route::get('/doctors/search', [DoctorSearchController::class, 'search']);
 
 Route::middleware('auth:sanctum')->group(function () {
     // doctor diagnosis summary creation
@@ -102,5 +97,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/payments/checkout', [PaymentController::class, 'store']);
 
     // profile settings
-    Route::put('/user/profile-settings', [SettingController::class, 'updateProfile']);
+    Route::put('/user/profile_settings', [SettingController::class, 'updateProfile']);
 });
