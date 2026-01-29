@@ -10,7 +10,8 @@ class DoctorResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user_id' => $this->user_id,
+            //'user_id' => $this->user_id,
+            'user' => new UserResource($this->user),
             'license_number' => $this->license_number,
             'experience_years' => $this->experience_years,
             'certification' => $this->certification,

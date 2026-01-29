@@ -49,16 +49,16 @@ class User extends Authenticatable
         ];
     }
 
-
-    public function patient()
+       public function notifications()
     {
-        return $this->hasOne(Patient::class);
+        return $this->hasMany(Notification::class);
     }
 
     public function doctor()
     {
         return $this->hasOne(Doctor::class);
     }
+
     public function isPatient(): bool
     {
         return $this->role === 'patient';

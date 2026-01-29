@@ -11,7 +11,11 @@ class Spelization extends Model
 
     public function doctors()
     {
+<<<<<<< HEAD
+        return $this->hasMany(Doctor::class, 'speciality_id');
+=======
 
         return $this->hasMany(Doctor::class, 'spelization_id');
+>>>>>>> 620136d37187ae1b06387174217497df0dca6d12
     }
 }

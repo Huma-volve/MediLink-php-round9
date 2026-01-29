@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\PatientResource;
 use App\Models\Patient;
 use Illuminate\Http\Request;
+use App\Helper\ApiResponse;
 
 class PatientController extends Controller
 {
@@ -15,13 +16,19 @@ class PatientController extends Controller
         $patient = Patient::where('user_id', $user_id)->first();
 
         if (!$patient) {
-            return response()->json([
-                'message' => 'Patient not found'
-            ], 404);
+            return ApiResponse::sendResponse(
+                404,
+                'Patient not found',
+                $patient
+            );
         }
         $data = [
             'patient' => new PatientResource($patient)
         ];
-        return response()->json($data);
+        return ApiResponse::sendResponse(
+            200,
+            null,
+            $data
+        );
     }
 }
