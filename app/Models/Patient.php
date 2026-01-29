@@ -15,13 +15,9 @@ use App\Models\Insurance;
 
 class Patient extends Model
 {
-<<<<<<< HEAD
-    use HasFactory;
-
-=======
 
     use HasFactory;
->>>>>>> 620136d37187ae1b06387174217497df0dca6d12
+
     protected $fillable = [
         'user_id',
         'emergency_contact_name',
@@ -33,18 +29,17 @@ class Patient extends Model
     ];
 
 
-
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-
 
     public function insurance()
     {
         return $this->belongsTo(Insurance::class);
     }
 
+    // علاقة مباشرة مع جدول Favorite
     public function favorites()
     {
         return $this->hasMany(favorite::class);
@@ -59,8 +54,10 @@ class Patient extends Model
         'date_of_birth' => 'date',
     ];
 
-
-
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function appointments()
     {
