@@ -1,19 +1,22 @@
 <?php
 
-use App\Http\Controllers\Api\AppointmentController;
-use App\Http\Controllers\ApiControllers\DoctorFilteringController;
-
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\api\v1\GeneralController;
+use App\Http\Controllers\api\v1\PatientController;
+use App\Http\Controllers\Api\StatisticsController;
+use App\Http\Controllers\Api\DoctorController;
+use App\Http\Controllers\api\v1\PatientController;
+
 use App\Http\Controllers\api\SpelizationController;
 use App\Http\Controllers\api\PatientController;
 
+use App\Http\Controllers\ApiControllers\DoctorFilteringController;
 use App\Http\Controllers\Api\RecentActivitiesController;
 use App\Http\Controllers\ApiDoctorController;
 
 // Abdulgaffr controllers
-use App\Http\Controllers\Api\DoctorController;
 use App\Http\Controllers\api\NotificationController;
 use App\Http\Controllers\Api\PrescriptionController;
 use App\Http\Controllers\Api\PaymentController;
@@ -25,6 +28,17 @@ Route::get('/doctors', [DoctorFilteringController::class, 'index']);
 Route::get('/doctors/{id}', [DoctorFilteringController::class, 'show']);
 Route::get('/doctors/{id}/reviews', [DoctorFilteringController::class, 'reviews']);
 Route::get('/doctors/{id}/doctor-working-hours', [DoctorFilteringController::class, 'workingHours']);
+
+
+// search routes
+Route::get('/doctors_search', [DoctorFilteringController::class, 'search']);
+Route::get('/doctor/{id}', [DoctorFilteringController::class, 'doctorsInformation']);
+Route::get('/doctor/{id}/reviews', [DoctorFilteringController::class, 'patientReviews']);
+Route::get('/doctor/{id}/doctor-working-hours', [DoctorFilteringController::class, 'workingHours']);
+Route::get('/doctor/{id}/doctor-working-hours_online', [DoctorFilteringController::class, 'workingHoursOnline'])
+  
+
+
 
 use App\Http\Controllers\Api\StatisticsController;
 use App\Http\Controllers\api\v1\GeneralController;
@@ -62,9 +76,6 @@ Route::middleware('auth:sanctum')->get(
 );
 
 
-
-
-
 Route::group(['prefix' => 'v1'], function () {
     Route::get('spelizations', [GeneralController::class, 'spelizations']);
     Route::get('/doctors/search', [DoctorController::class, 'search']);
@@ -72,8 +83,8 @@ Route::group(['prefix' => 'v1'], function () {
 });
 
 
-Route::get('/doctors', [DoctorController::class, 'index']);
-Route::post('/doctors/{doctor}/favorite', [DoctorController::class, 'toggleFavorite']);
+Route::get('/doctors', [DoctormanagmentController::class, 'index']);
+Route::post('/doctors/{doctor}/favorite', [DoctormanagmentController::class, 'toggleFavorite']);
 
 Route::get('/user', function (Request $request) {
     return $request->user();

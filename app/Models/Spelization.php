@@ -13,9 +13,15 @@ class Spelization extends Model
         'name',
         'description',
     ];
+    // public function doctors()
+    // {
+    //     return $this->hasMany(Doctor::class);
+    // }
+
 
     public function doctors()
     {
+        return $this->hasMany(Doctor::class, 'speciality_id');
         return $this->hasMany(Doctor::class, 'spelization_id');
     }
 }
