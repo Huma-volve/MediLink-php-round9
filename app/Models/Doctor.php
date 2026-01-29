@@ -3,6 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\User;
+use App\Models\Review;
+use App\Models\Clinic;
+use App\Models\Spelization;
+use App\Models\Appointment;
+use App\Models\MedicalHistory;
+use App\Models\Prescription;
+use App\Models\Payment;
 
 
 class Doctor extends Model
@@ -47,9 +56,9 @@ class Doctor extends Model
         return $this->hasMany(Appointment::class);
     }
 
-    public function medicalHistory()
+    public function medicalHistories()
     {
-        return $this->hasMany(MedicalHistroy::class);
+        return $this->hasMany(MedicalHistory::class);
     }
 
     public function prescriptions()

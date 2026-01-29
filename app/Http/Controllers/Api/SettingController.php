@@ -7,15 +7,15 @@ use App\Models\Language;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Helper\ApiResponse;
-
-
+use Illuminate\Support\Facades\Auth;
 
 
 class SettingController extends Controller
 {
     public function updateProfile(Request $request)
     {
-        $user = auth()->user();
+        $user = $request->user();
+
 
         $request->validate([
             'name' => 'string|max:255',
@@ -41,7 +41,7 @@ class SettingController extends Controller
         $user = $request->user();
 
         if (! Hash::check($request->password, $user->password)) {
-            
+
             return ApiResponse::sendResponse(
                 422,
                 'Password is incorrect',
@@ -52,12 +52,11 @@ class SettingController extends Controller
         $user->tokens()->delete();
         $user->delete();
 
-                return ApiResponse::sendResponse(
-                200,
-                'Deleted Successfully',
-                null
-            );
-     
+        return ApiResponse::sendResponse(
+            200,
+            'Deleted Successfully',
+            null
+        );
     }
 
     public function languages()

@@ -16,7 +16,7 @@ class DoctorsAndPatientsSeeder extends Seeder
         $patientUser1 = User::firstOrCreate(
             ['email' => 'patient1@example.com'],
             [
-                'name' => 'Patient One', // تم تعديل full_name -> name
+                'name' => 'Patient One',
                 'password' => bcrypt('password'),
                 'role' => 'patient'
             ]
@@ -31,7 +31,6 @@ class DoctorsAndPatientsSeeder extends Seeder
             ]
         );
 
-        // إنشاء مرضى
         $patient1 = Patient::firstOrCreate(
             ['user_id' => $patientUser1->id],
             [
@@ -48,7 +47,6 @@ class DoctorsAndPatientsSeeder extends Seeder
             ]
         );
 
-        // إنشاء مستخدمين دكاترة
         $doctorUser1 = User::firstOrCreate(
             ['email' => 'doctor1@example.com'],
             [
@@ -76,7 +74,6 @@ class DoctorsAndPatientsSeeder extends Seeder
             ]
         );
 
-        // إنشاء دكاترة
         $doctor1 = Doctor::firstOrCreate(
             ['user_id' => $doctorUser1->id],
             [
@@ -110,7 +107,6 @@ class DoctorsAndPatientsSeeder extends Seeder
             ]
         );
 
-        // إنشاء المفضلات
         Favorite::updateOrCreate(
             ['patient_id' => $patient1->id, 'doctor_id' => $doctor1->id],
             ['is_favorite' => true]
