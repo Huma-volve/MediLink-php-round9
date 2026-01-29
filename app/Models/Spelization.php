@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Spelization extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'description',
+    ];
     // public function doctors()
     // {
     //     return $this->hasMany(Doctor::class);
@@ -16,6 +21,6 @@ class Spelization extends Model
 
     public function doctors()
     {
-        return $this->hasMany(Doctor::class, 'speciality_id');
+        return $this->hasMany(Doctor::class, 'spelization_id');
     }
 }

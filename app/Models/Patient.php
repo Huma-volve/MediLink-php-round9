@@ -18,6 +18,8 @@ class Patient extends Model
 
     use HasFactory;
 
+
+    use HasFactory;
     protected $fillable = [
         'user_id',
         'emergency_contact_name',
@@ -27,12 +29,6 @@ class Patient extends Model
         'date_of_birth',
         'blood_group',
     ];
-
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
 
     public function insurance()
     {

@@ -1,14 +1,13 @@
 <?php
 
-
+use App\Http\Controllers\Api\AppointmentController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\api\v1\GeneralController;
-use App\Http\Controllers\api\v1\PatientController;
+//use App\Http\Controllers\api\v1\PatientController;
 use App\Http\Controllers\Api\StatisticsController;
 use App\Http\Controllers\Api\DoctorController;
-use App\Http\Controllers\api\v1\PatientController;
-
+use App\Http\Controllers\Api\DoctormanagmentController;
 use App\Http\Controllers\api\SpelizationController;
 use App\Http\Controllers\api\PatientController;
 
@@ -35,11 +34,15 @@ Route::get('/doctors_search', [DoctorFilteringController::class, 'search']);
 Route::get('/doctor/{id}', [DoctorFilteringController::class, 'doctorsInformation']);
 Route::get('/doctor/{id}/reviews', [DoctorFilteringController::class, 'patientReviews']);
 Route::get('/doctor/{id}/doctor-working-hours', [DoctorFilteringController::class, 'workingHours']);
-Route::get('/doctor/{id}/doctor-working-hours_online', [DoctorFilteringController::class, 'workingHoursOnline'])
-  
+Route::get('/doctor/{id}/doctor-working-hours_online', [DoctorFilteringController::class, 'workingHoursOnline']);
 
 
 
+
+use Illuminate\Support\Facades\Request;
+
+Route::get('/doctors', [DoctorController::class, 'index']);
+Route::post('/doctors/{doctor}/favorite', [DoctorController::class, 'toggleFavorite']);
 // Authentication Routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -71,7 +74,7 @@ Route::middleware('auth:sanctum')->get(
 
 
 Route::group(['prefix' => 'v1'], function () {
-    Route::get('spelizations', [GeneralController::class, 'spelizations']);
+    //Route::get('spelizations', [GeneralController::class, 'spelizations']);
     Route::get('/doctors/search', [DoctorController::class, 'search']);
     Route::get('/doctors/search', [DoctorController::class, 'search']);
 });
@@ -102,16 +105,16 @@ Route::middleware('auth:sanctum')->group(function () {
     // payments  peoccessing
     Route::post('/payments/checkout', [PaymentController::class, 'store']);
 
-// profile settings
-Route::put('/user/profile-settings', [SettingController::class, 'updateProfile']);
+    // profile settings
+    Route::put('/user/profile-settings', [SettingController::class, 'updateProfile']);
 
 
 
 
-// appointment APIs
-Route::get('/appointments', [AppointmentController::class, 'index'])->middleware('auth:sanctum');
-Route::patch('/appointments/{appointment}/confirm', [AppointmentController::class, 'confirmAppointment'])->middleware('auth:sanctum');
-Route::patch('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancelAppointment'])->middleware('auth:sanctum');
+    // appointment APIs
+    Route::get('/appointments', [AppointmentController::class, 'index']);
+    Route::patch('/appointments/{appointment}/confirm', [AppointmentController::class, 'confirmAppointment']);
+    Route::patch('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancelAppointment']);
     // profile settings
     Route::put('/user/profile-settings', [SettingController::class, 'updateProfile']);
 });
