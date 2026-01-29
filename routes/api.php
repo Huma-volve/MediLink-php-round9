@@ -2,26 +2,28 @@
 
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Request;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\api\v1\GeneralController;
-use App\Http\Controllers\api\v1\PatientController;
-use App\Http\Controllers\Api\StatisticsController;
+use App\Http\Controllers\ApiDoctorController;
 use App\Http\Controllers\Api\DoctorController;
-use App\Http\Controllers\api\v1\PatientController;
-
-use App\Http\Controllers\api\SpelizationController;
 use App\Http\Controllers\api\PatientController;
 
-use App\Http\Controllers\ApiControllers\DoctorFilteringController;
-use App\Http\Controllers\Api\RecentActivitiesController;
-use App\Http\Controllers\ApiDoctorController;
+use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\SettingController;
+
+use App\Http\Controllers\Api\StatisticsController;
+use App\Http\Controllers\api\v1\GeneralController;
+// use App\Http\Controllers\api\v1\PatientController;
 
 // Abdulgaffr controllers
+use App\Http\Controllers\Api\AppointmentController;
+use App\Http\Controllers\api\SpelizationController;
 use App\Http\Controllers\Api\DoctorSearchController;
 use App\Http\Controllers\api\NotificationController;
 use App\Http\Controllers\Api\PrescriptionController;
-use App\Http\Controllers\Api\PaymentController;
-use App\Http\Controllers\Api\SettingController;
+use App\Http\Controllers\Api\DoctormanagmentController;
+use App\Http\Controllers\Api\RecentActivitiesController;
+use App\Http\Controllers\ApiControllers\DoctorFilteringController;
 
 
 // search routes
@@ -36,7 +38,7 @@ Route::get('/doctors_search', [DoctorFilteringController::class, 'search']);
 Route::get('/doctor/{id}', [DoctorFilteringController::class, 'doctorsInformation']);
 Route::get('/doctor/{id}/reviews', [DoctorFilteringController::class, 'patientReviews']);
 Route::get('/doctor/{id}/doctor-working-hours', [DoctorFilteringController::class, 'workingHours']);
-Route::get('/doctor/{id}/doctor-working-hours_online', [DoctorFilteringController::class, 'workingHoursOnline'])
+Route::get('/doctor/{id}/doctor-working-hours_online', [DoctorFilteringController::class, 'workingHoursOnline']);
 
 
 
@@ -112,6 +114,4 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/appointments', [AppointmentController::class, 'index'])->middleware('auth:sanctum');
     Route::patch('/appointments/{appointment}/confirm', [AppointmentController::class, 'confirmAppointment'])->middleware('auth:sanctum');
     Route::patch('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancelAppointment'])->middleware('auth:sanctum');
-    // profile settings
-    Route::put('/user/profile_settings', [SettingController::class, 'updateProfile']);
 });
