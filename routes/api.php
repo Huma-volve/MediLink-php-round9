@@ -9,8 +9,6 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\api\SpelizationController;
 use App\Http\Controllers\api\PatientController;
 
-use App\Http\Controllers\Api\StatisticsController;
-use App\Http\Controllers\ApiControllers\DoctorFilteringController;
 use App\Http\Controllers\Api\RecentActivitiesController;
 use App\Http\Controllers\ApiDoctorController;
 
@@ -29,10 +27,8 @@ Route::get('/doctors/{id}/reviews', [DoctorFilteringController::class, 'reviews'
 Route::get('/doctors/{id}/doctor-working-hours', [DoctorFilteringController::class, 'workingHours']);
 
 use App\Http\Controllers\Api\StatisticsController;
-use App\Http\Controllers\Api\DoctorController;
 use App\Http\Controllers\api\v1\GeneralController;
-use App\Http\Controllers\api\v1\PatientController;
-
+use Illuminate\Support\Facades\Request;
 
 Route::get('/doctors', [DoctorController::class, 'index']);
 Route::post('/doctors/{doctor}/favorite', [DoctorController::class, 'toggleFavorite']);
@@ -101,16 +97,16 @@ Route::middleware('auth:sanctum')->group(function () {
     // payments  peoccessing
     Route::post('/payments/checkout', [PaymentController::class, 'store']);
 
-// profile settings
-Route::put('/user/profile-settings', [SettingController::class, 'updateProfile']);
+    // profile settings
+    Route::put('/user/profile-settings', [SettingController::class, 'updateProfile']);
 
 
 
 
-// appointment APIs
-Route::get('/appointments', [AppointmentController::class, 'index'])->middleware('auth:sanctum');
-Route::patch('/appointments/{appointment}/confirm', [AppointmentController::class, 'confirmAppointment'])->middleware('auth:sanctum');
-Route::patch('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancelAppointment'])->middleware('auth:sanctum');
+    // appointment APIs
+    Route::get('/appointments', [AppointmentController::class, 'index']);
+    Route::patch('/appointments/{appointment}/confirm', [AppointmentController::class, 'confirmAppointment']);
+    Route::patch('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancelAppointment']);
     // profile settings
     Route::put('/user/profile-settings', [SettingController::class, 'updateProfile']);
 });

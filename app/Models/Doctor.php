@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 
 class Doctor extends Model
 {
+    use HasFactory;
 
     protected $fillable = [
         'user_id',
@@ -62,8 +64,10 @@ class Doctor extends Model
         return $this->hasMany(Payment::class);
     }
 
-
-
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
 
 
     public function workingHours()
