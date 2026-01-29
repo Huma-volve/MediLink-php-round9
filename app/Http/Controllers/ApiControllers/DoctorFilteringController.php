@@ -5,14 +5,15 @@ namespace App\Http\Controllers\ApiControllers;
 use App\Http\Controllers\Controller;
 use App\Models\Doctor;
 use App\Models\DoctorWorking;
+use App\Models\DoctorWorkingHoursOnline;
 use App\Models\Review;
 use Illuminate\Http\Request;
 
 class DoctorFilteringController extends Controller
 {
-    public function index(Request $request)
+    public function search(Request $request)
     {
-        $doctors = Doctor::with(['user' , 'spelization' , 'clinic' , 'doctor_workings'])
+        $doctors = Doctor::with(['user' , 'spelization' , 'clinic' , 'workingHours'])
 
         ->where('is_verified', true)
         ->when($request->search, function ($query) use ($request) {
@@ -20,7 +21,7 @@ class DoctorFilteringController extends Controller
             $query->where(function ($q) use ($request) {
 
                 $q->whereHas('user', function ($srch) use ($request) {
-                    $srch->where('full_name', 'like', "%{$request->search}%");
+                    $srch->where('name', 'like', "%{$request->search}%");
                 })
 
                 ->orWhereHas('spelization', function ($filter) use ($request) {
@@ -32,63 +33,83 @@ class DoctorFilteringController extends Controller
                         ->orWhere('address', 'like', "%{$request->search}%");
                 })
 
-                ->orWhereHas('doctor_workings', function ($work) use ($request) {
+                ->orWhereHas('workingHours', function ($work) use ($request) {
                     $work->where('is_closed', $request->search == 'closed' ? true : false);
                 });
             });
         })
         ->get();
 
-        // return response()->json($doctors);
-
-        if ($doctors->isEmpty()) {
-            return response()->json([
-                'status' => true,
-                'message' => 'No doctors found',
-                'data' => []
-            ]);
-        }
-    }
-
-
-    public function show($id)
-    {
-        $doctor = Doctor::with([
-
-            'user:id,full_name,email,phone',
-            'spelization:id,name'])
-
-            ->findOrFail($id);
-
         return response()->json([
             'status' => true,
-            'data' => $doctor,
+            'message' => 'No doctors found',
+            'data' => $doctors,
         ]);
     }
 
-
-    public function reviews($id)
+    public function doctorsInformation($id)
     {
-        $reviews = Review::with('patient:id , user_id' , 'patient.user:id , full_name')
+        $doctor = Doctor::with([
+            'user:id,name,email,phone',
+            'clinic:id,name,address',
+            'spelization:id,name'
+        ])->findOrFail($id);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Doctors Informations',
+            'data' => $doctor
+        ]);
+
+    }
+
+    public function patientReviews($id)
+    {
+        $reviews = Review::with(
+            'patient.user:id,name',
+        )
         ->where('doctor_id' , $id)
         ->paginate();
 
         return response()->json([
             'status' => true,
+            'message' => 'Patients Reviews',
             'data' => $reviews,
+        ] , 200);
+    }
+
+    public function workingHours($id)
+    {
+        $hours = DoctorWorking::with('doctor.user:id,name')
+
+        ->where('doctor_id', $id)
+        ->orderByRaw("FIELD(day_of_week,
+            'Monday','Tuesday','Wednesday',
+            'Thursday','Friday','Saturday','Sunday')")
+        ->get();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Doctors Working Hours',
+            'data' => $hours
         ]);
     }
 
 
-    public function workingHours($id)
+    public function workingHoursOnline($id)
     {
-        $hours = DoctorWorking::where('doctor_id', $id)
-            ->orderBy('day_of_week')
-            ->get();
+        $onlineHours = DoctorWorkingHoursOnline::with('doctor.user:id,name')
+
+        ->where('doctor_id', $id)
+        ->orderByRaw("FIELD(day_of_week,
+            'Monday','Tuesday','Wednesday',
+            'Thursday','Friday','Saturday','Sunday')")
+        ->get();
 
         return response()->json([
             'status' => true,
-            'data' => $hours
+            'message' => 'Doctors Working Hours Online',
+            'data' => $onlineHours,
         ]);
     }
 }

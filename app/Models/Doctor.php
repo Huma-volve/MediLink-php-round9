@@ -7,11 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Doctor extends Model
 {
-    protected $fillable = [
-        'experience_years' , 'bio' , 'education' , 'consultation_fee_online' , 'consultation_fee_inperson'
-    ];
-
-
+    
     protected $fillable = [
         'user_id',
         'license_number',
@@ -26,10 +22,6 @@ class Doctor extends Model
         'is_verified',
     ];
 
-    public function reviews()
-    {
-        return $this->hasMany(Review::class);
-    }
 
     public function favorites()
     {
