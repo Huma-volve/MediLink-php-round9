@@ -27,9 +27,9 @@ class DatabaseSeeder extends Seeder
             // AppointmentSeeder::class,
 
 
-            SpelizationSeeder::class,
-            PatientSeeder::class,
-            DoctorsAndPatientsSeeder::class,
+            // SpelizationSeeder::class,
+            // PatientSeeder::class,
+            // DoctorsAndPatientsSeeder::class,
         ]);
 
         // User::factory()->count(5)->create();
