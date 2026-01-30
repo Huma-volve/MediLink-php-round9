@@ -10,7 +10,12 @@ use App\Models\Prescription;
 
 class Appointment extends Model
 {
+
     use HasFactory;
+
+    const STATUS_UPCOMING = 'upcoming';
+    const STATUS_COMPLETED = 'completed';
+    const STATUS_CANCELLED = 'cancelled';
 
     protected $fillable = [
         'patient_id',
@@ -36,5 +41,11 @@ class Appointment extends Model
     public function prescription()
     {
         return $this->hasOne(Prescription::class);
+    }
+
+
+    public function prescriptions()
+    {
+        return $this->hasMany(Prescription::class);
     }
 }

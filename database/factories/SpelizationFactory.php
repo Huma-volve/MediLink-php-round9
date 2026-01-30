@@ -15,12 +15,13 @@ class SpelizationFactory extends Factory
      *
      * @return array<string, mixed>
      */
-   
-     protected $model = Spelization::class;
+
+    protected $model = Spelization::class;
 
     public function definition()
     {
         return [
+
             'name' => $this->faker->unique()->word(),
             'description' => $this->faker->sentence(),
         ];

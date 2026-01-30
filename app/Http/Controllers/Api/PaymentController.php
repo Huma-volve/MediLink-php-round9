@@ -7,9 +7,10 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class PaymentController extends Controller {
+class PaymentController extends Controller
+{
 
-  public function index(Request $request)
+    public function index(Request $request)
     {
 
         $query = Payment::with(['appointment', 'patient', 'patientInsurance']);
@@ -146,7 +147,7 @@ class PaymentController extends Controller {
     }
 
     /**
-     * Process payment ( completed)
+     *  - pending ->completed  تحويل الحالة إلى مكتمل بعد الدفع
      */
     public function processPayment($id)
     {
@@ -179,7 +180,7 @@ class PaymentController extends Controller {
     }
 
     /**
-     * Refund payment
+     *   ترجيع المبلغ- فى حالة الالغاء او الاسترجاع- لو كان مكتمل
      */
     public function refund($id)
     {
@@ -210,4 +211,3 @@ class PaymentController extends Controller {
         ], 200);
     }
 }
-

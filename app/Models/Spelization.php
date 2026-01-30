@@ -11,7 +11,6 @@ class Spelization extends Model
 
     public function doctors()
     {
-
         return $this->hasMany(Doctor::class, 'spelization_id');
     }
 }
