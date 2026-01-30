@@ -13,36 +13,42 @@ class DoctorFilteringController extends Controller
 {
     public function search(Request $request)
     {
-        $doctors = Doctor::with(['user' , 'spelization' , 'clinic' , 'workingHours'])
+        $doctors = Doctor::with([
+            'user:id,name,email',
+            'spelization:id,name',
+            'clinic:id,name,address,doctor_id',
+            'workingHours:id,doctor_id,day_of_week,opening_time,closing_time,is_closed'
+        ])
 
+        ->select('id','user_id','spelization_id','location','is_verified')
         ->where('is_verified', true)
+        
         ->when($request->search, function ($query) use ($request) {
-
             $query->where(function ($q) use ($request) {
 
                 $q->whereHas('user', function ($srch) use ($request) {
                     $srch->where('name', 'like', "%{$request->search}%");
                 })
 
-                ->orWhereHas('spelization', function ($filter) use ($request) {
-                    $filter->where('name', 'like', "%{$request->search}%");
+                // OR البحث باسم التخصص
+                ->orWhereHas('spelization', function ($sp) use ($request) {
+                    $sp->where('name', 'like', "%{$request->search}%");
                 })
 
-                ->orWhereHas('clinic', function ($cli) use ($request) {
-                    $cli->where('name', 'like', "%{$request->search}%")
-                        ->orWhere('address', 'like', "%{$request->search}%");
-                })
+                ->orWhere('location' ,  'like' , "%{$request->search}%")
 
-                ->orWhereHas('workingHours', function ($work) use ($request) {
-                    $work->where('is_closed', $request->search == 'closed' ? true : false);
+                ->orWhereHas('workingHours', function ($hour) use ($request) {
+                    $hour->where('day_of_week', $request->search)
+                    ->where('is_closed', false);
                 });
             });
         })
+
         ->get();
 
         return response()->json([
             'status' => true,
-            'message' => 'No doctors found',
+            'message' => 'Doctor Is Found',
             'data' => $doctors,
         ]);
     }
@@ -65,9 +71,11 @@ class DoctorFilteringController extends Controller
 
     public function patientReviews($id)
     {
-        $reviews = Review::with(
-            'patient.user:id,name',
-        )
+        $reviews = Review::with(['patient.user' => function($query)
+        {
+            $query->select('id' , 'name');
+        }])
+        
         ->where('doctor_id' , $id)
         ->paginate();
 
@@ -78,9 +86,32 @@ class DoctorFilteringController extends Controller
         ] , 200);
     }
 
-    public function workingHours($id)
+    // public function createWorkingDays(Request $request)
+    // {
+    //     $days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+
+    //     foreach ($days as $day) {
+    //         DoctorWorking::create([
+    //             'doctor_id' => 1,
+    //             'day_of_week' => $day,
+    //             'opening_time' => '05:00:00',
+    //             'closing_time' => '10:00:00',
+    //             'is_closed' => 0,
+    //         ]);
+    //     }
+
+    //     return response()->json([
+    //         'status' => true,
+    //         'message' => 'Working days created successfully'
+    //     ]);
+    // }
+
+    public function workingHours(Request $request , $id)
     {
-        $hours = DoctorWorking::with('doctor.user:id,name')
+        $hours = DoctorWorking::with(['doctor.user' => function($query)
+        {
+            $query->select('id' , 'name');
+        }])
 
         ->where('doctor_id', $id)
         ->orderByRaw("FIELD(day_of_week,
@@ -98,7 +129,10 @@ class DoctorFilteringController extends Controller
 
     public function workingHoursOnline($id)
     {
-        $onlineHours = DoctorWorkingHoursOnline::with('doctor.user:id,name')
+        $onlineHours = DoctorWorking::with(['doctor.user' => function($query)
+        {
+            $query->select('id' , 'name');
+        }])
 
         ->where('doctor_id', $id)
         ->orderByRaw("FIELD(day_of_week,
