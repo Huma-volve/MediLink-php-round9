@@ -4,11 +4,9 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Request;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\ApiDoctorController;
 use App\Http\Controllers\api\DoctorProfileController;
 
 // Abdulgaffr controllers
-use App\Http\Controllers\Api\DoctorController;
 use App\Http\Controllers\api\PatientController;
 
 use App\Http\Controllers\Api\PaymentController;
@@ -16,8 +14,6 @@ use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\Api\DoctorSearchController;
 
 use App\Http\Controllers\Api\StatisticsController;
-use App\Http\Controllers\api\v1\GeneralController;
-// use App\Http\Controllers\api\v1\PatientController;
 
 
 use App\Http\Controllers\Api\AppointmentController;
@@ -26,7 +22,7 @@ use App\Http\Controllers\api\NotificationController;
 use App\Http\Controllers\Api\PrescriptionController;
 use App\Http\Controllers\Api\DoctormanagmentController;
 use App\Http\Controllers\Api\RecentActivitiesController;
-use App\Http\Controllers\ApiControllers\DoctorFilteringController;
+use App\Http\Controllers\Api\DoctorFilteringController;
 
 // doctors searching
 Route::get('/doctors/search', [DoctorSearchController::class, 'search']);
@@ -46,8 +42,11 @@ Route::get('/doctor/{id}/reviews', [DoctorFilteringController::class, 'patientRe
 Route::get('/doctor/{id}/doctor-working-hours', [DoctorFilteringController::class, 'workingHours']);
 Route::get('/doctor/{id}/doctor-working-hours_online', [DoctorFilteringController::class, 'workingHoursOnline']);
 
+// show spelizations 
+Route::get('spelizations', [SpelizationController::class, 'show']);
 
-
+// show languages 
+Route::get('languages', [SettingController::class, 'languages']);
 
 // Authentication Routes
 Route::post('/register', [AuthController::class, 'register']);
@@ -83,10 +82,6 @@ Route::middleware('auth:sanctum')->get(
 );
 
 
-Route::group(['prefix' => 'v1'], function () {
-    // Route::get('spelizations', [GeneralController::class, 'spelizations']);
-    // Route::get('/doctors/search', [DoctorController::class, 'search']);
-});
 
 
 Route::get('/doctors', [DoctormanagmentController::class, 'index']);
@@ -118,7 +113,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // profile settings
     Route::put('/user/profile-settings', [SettingController::class, 'updateProfile']);
-    Route::delete('/user/profile-delete', [SettingController::class, 'deleteAccount']);
 });
 
 // appointment APIs
