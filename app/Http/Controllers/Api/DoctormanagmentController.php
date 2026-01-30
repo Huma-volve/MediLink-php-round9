@@ -17,8 +17,8 @@ class DoctormanagmentController extends Controller
         $query = Doctor::query();
 
 
-        if ($request->has('specialization') && $request->specialization != '') {
-            $query->where('spelization_id', $request->specialization);
+        if ($request->has('spelization_id') && $request->spelization_id != '') {
+            $query->where('spelization_id', $request->spelization_id);
         }
 
 
@@ -27,14 +27,19 @@ class DoctormanagmentController extends Controller
         }
 
 
-        if ($request->has('min_experience') && $request->min_experience != '') {
-            $query->where('experience_years', '>=', $request->min_experience);
+        if ($request->has('experience_years') && $request->experience_years != '') {
+            $query->where('experience_years',  $request->experience_years);
         }
 
 
         if ($request->has('is_verified') && $request->is_verified != '') {
             $query->where('is_verified', $request->is_verified);
         }
+
+        if ($request->has('user_id') && $request->user_id != '') {
+            $query->where('user_id', $request->user_id);
+        }
+
 
         $doctors = $query->get();
 
