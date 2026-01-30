@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Doctor;
-use App\Models\Patient;
 use App\Models\Favorite;
 
 class DoctormanagmentController extends Controller
@@ -14,103 +13,46 @@ class DoctormanagmentController extends Controller
 
     public function index(Request $request)
     {
-        $query = Doctor::query();
+        $patient = Auth::user()?->patient;
 
-
-        if ($request->has('spelization_id') && $request->spelization_id != '') {
-            $query->where('spelization_id', $request->spelization_id);
-        }
-
-
-        if ($request->has('location') && $request->location != '') {
-            $query->where('location', $request->location);
-        }
-
-
-        if ($request->has('experience_years') && $request->experience_years != '') {
-            $query->where('experience_years',  $request->experience_years);
-        }
-
-
-        if ($request->has('is_verified') && $request->is_verified != '') {
-            $query->where('is_verified', $request->is_verified);
-        }
-
-        if ($request->has('user_id') && $request->user_id != '') {
-            $query->where('user_id', $request->user_id);
-        }
-
-
-        $doctors = $query->get();
-
-
-        $patientId = $request->patient_id ?? null;
-
-        if ($patientId) {
-            $patient = Patient::find($patientId);
-            if ($patient) {
-                $patientFavorites = $patient->favorites()->pluck('doctor_id')->toArray();
-
-                $doctors->transform(function ($doctor) use ($patientFavorites) {
-                    $doctor->is_favorite = in_array($doctor->id, $patientFavorites);
-                    return $doctor;
-                });
-            } else {
-
-                $doctors->transform(function ($doctor) {
-                    $doctor->is_favorite = false;
-                    return $doctor;
-                });
-            }
-        } else {
-
-            $doctors->transform(function ($doctor) {
-                $doctor->is_favorite = false;
-                return $doctor;
-            });
-        }
+        $doctors = Doctor::filter($request)
+            ->with([
+                'favorites' => fn($q) => $patient
+                    ? $q->where('patient_id', $patient->id)->where('is_favorite', true)
+                    : $q->whereRaw('0=1')
+            ])
+            ->paginate(10);
 
         return response()->json($doctors);
     }
 
-
-    public function toggleFavorite(Request $request, $doctorId)
+    public function toggleFavorite($doctorId)
     {
-        $doctor = Doctor::find($doctorId);
-        if (!$doctor) {
-            return response()->json(['message' => 'Doctor not found'], 404);
-        }
-        $patientId = $request->patient_id;
+        $doctor = Doctor::findOrFail($doctorId);
+        $patient = Auth::user()?->patient;
 
-        if (!$patientId) {
-            return response()->json(['message' => 'Patient ID required'], 400);
+        if (!$patient) {
+            return response()->json([
+                'message' => 'Guests cannot mark favorite'
+            ], 401);
         }
 
-        $favorite = Favorite::where('patient_id', $patientId)
-            ->where('doctor_id', $doctor->id)
-            ->first();
+        $favorite = $doctor->favorites()->where('patient_id', $patient->id)->first();
 
         if ($favorite) {
-            $favorite->update([
-                'is_favorite' => !$favorite->is_favorite
-            ]);
-
-            $status = $favorite->is_favorite
-                ? 'added to favorites'
-                : 'deleted from favorites';
+            $favorite->update(['is_favorite' => !$favorite->is_favorite]);
+            $isFavorite = $favorite->is_favorite;
         } else {
-            Favorite::create([
-                'patient_id' => $patientId,
-                'doctor_id'  => $doctor->id,
+            $doctor->favorites()->create([
+                'patient_id'  => $patient->id,
                 'is_favorite' => true
             ]);
-
-            $status = 'added to favorites';
+            $isFavorite = true;
         }
 
         return response()->json([
-            'message' => $status,
-            'is_favorite' => $status === 'added to favorites'
+            'doctor_id'   => $doctor->id,
+            'is_favorite' => $isFavorite
         ]);
     }
 }

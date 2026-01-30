@@ -2,16 +2,18 @@
 
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\api\v1\GeneralController;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\PatientController;
+use App\Http\Controllers\api\v1\GeneralController;
+
 
 
 
 use App\Http\Controllers\Api\DoctorController;
 use App\Http\Controllers\Api\AppointmentController;
 use App\Http\Controllers\api\SpelizationController;
-use App\Http\Controllers\api\PatientController;
+
 
 
 use App\Http\Controllers\ApiControllers\DoctorFilteringController;
@@ -85,11 +87,7 @@ Route::middleware('auth:sanctum')->get(
 );
 
 
-Route::group(['prefix' => 'v1'], function () {
 
-    Route::get('/doctors/search', [DoctorController::class, 'search']);
-    Route::get('/doctors/search', [DoctorController::class, 'search']);
-});
 
 
 Route::get('/doctors', [DoctormanagmentController::class, 'index']);
@@ -113,7 +111,7 @@ Route::get('/doctors/search', [DoctorController::class, 'search']);
 
 //AbdulGaffar APIs
 // doctors searching
-Route::get('/doctors/search', [DoctorController::class, 'search']);
+
 
 Route::middleware('auth:sanctum')->group(function () {
     // doctor diagnosis summary creation
