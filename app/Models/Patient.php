@@ -11,11 +11,8 @@ use App\Models\Favorite;
 use App\Models\Prescription;
 use App\Models\Insurance;
 
-
-
 class Patient extends Model
 {
-
     use HasFactory;
 
     protected $fillable = [
@@ -29,10 +26,7 @@ class Patient extends Model
     ];
 
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+
 
     public function insurance()
     {

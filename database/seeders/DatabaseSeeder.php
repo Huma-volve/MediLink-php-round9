@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-<<<<<<< HEAD
+
             // DoctorsAndPatientsSeeder::class
 
             // SpelizationSeeder::class,
@@ -26,12 +26,10 @@ class DatabaseSeeder extends Seeder
             // PrescriptionSeeder::class,
             // AppointmentSeeder::class,
 
-=======
+
             SpelizationSeeder::class,
-            InsuranceSeeder::class,
             PatientSeeder::class,
-           DoctorsAndPatientsSeeder::class,
->>>>>>> 620136d37187ae1b06387174217497df0dca6d12
+            DoctorsAndPatientsSeeder::class,
         ]);
 
         // User::factory()->count(5)->create();
