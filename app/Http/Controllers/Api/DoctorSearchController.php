@@ -9,7 +9,7 @@ use App\Models\Doctor;
 use App\Services\DoctorService;
 use Illuminate\Http\Request;
 
-class DoctorController extends Controller
+class DoctorSearchController extends Controller
 {
 
     protected DoctorService $doctorService;

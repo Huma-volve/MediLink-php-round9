@@ -4,13 +4,12 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class DoctorResource extends JsonResource
+class DoctorProfileResource extends JsonResource
 {
     public function toArray($request)
     {
         return [
             'id' => $this->id,
-            'user' => new UserResource($this->user),
             'license_number' => $this->license_number,
             'experience_years' => $this->experience_years,
             'certification' => $this->certification,
@@ -18,11 +17,11 @@ class DoctorResource extends JsonResource
             'education' => $this->education,
             'consultation_fee_online' => $this->consultation_fee_online,
             'consultation_fee_inperson' => $this->consultation_fee_inperson,
-            'spelization_id' => $this->spelization_id,
+            'spelization_name' => $this->spelization->name,
+            'spelization_description' => $this->spelization->description,
             'location' => $this->location,
-            'is_verified' => $this->is_verified,
-            'average_rating' => round($this->reviews->avg('rating'), 2),
-            'review_count' => $this->reviews->count(),
+            'user' => new UserResource($this->user),
+
         ];
     }
 }

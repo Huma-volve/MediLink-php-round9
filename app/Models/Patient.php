@@ -11,15 +11,10 @@ use App\Models\Favorite;
 use App\Models\Prescription;
 use App\Models\Insurance;
 
-
-
 class Patient extends Model
 {
-
     use HasFactory;
 
-
-    use HasFactory;
     protected $fillable = [
         'user_id',
         'emergency_contact_name',
@@ -29,6 +24,9 @@ class Patient extends Model
         'date_of_birth',
         'blood_group',
     ];
+
+
+
 
     public function insurance()
     {

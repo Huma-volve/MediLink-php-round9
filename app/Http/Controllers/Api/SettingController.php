@@ -7,9 +7,8 @@ use App\Models\Language;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Helper\ApiResponse;
-
-
-
+use App\Http\Resources\LanguageResource;
+use App\Models\Setting;
 
 class SettingController extends Controller
 {
@@ -41,7 +40,7 @@ class SettingController extends Controller
         $user = $request->user();
 
         if (! Hash::check($request->password, $user->password)) {
-            
+
             return ApiResponse::sendResponse(
                 422,
                 'Password is incorrect',
@@ -52,21 +51,57 @@ class SettingController extends Controller
         $user->tokens()->delete();
         $user->delete();
 
-                return ApiResponse::sendResponse(
-                200,
-                'Deleted Successfully',
-                null
-            );
-     
+        return ApiResponse::sendResponse(
+            200,
+            'Deleted Successfully',
+            null
+        );
     }
 
     public function languages()
     {
+
         $languages = Language::all();
+        $data = [
+            'languages' => LanguageResource::collection($languages)
+        ];
         return ApiResponse::sendResponse(
             200,
             'null',
-            $languages
+            $data
+        );
+    }
+
+    public function help()
+    {
+        $setting = Setting::find(1);
+        $help = $setting->help;
+        return ApiResponse::sendResponse(
+            200,
+            'null',
+            $help
+        );
+    }
+
+    public function privacy()
+    {
+        $setting = Setting::find(1);
+        $privacy = $setting->privacy;
+        return ApiResponse::sendResponse(
+            200,
+            'null',
+            $privacy
+        );
+    }
+    
+    public function about()
+    {
+        $setting = Setting::find(1);
+        $about = $setting->about;
+        return ApiResponse::sendResponse(
+            200,
+            'null',
+            $about
         );
     }
 }

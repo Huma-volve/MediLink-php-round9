@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Spelization extends Model
@@ -13,11 +14,7 @@ class Spelization extends Model
         'name',
         'description',
     ];
-    // public function doctors()
-    // {
-    //     return $this->hasMany(Doctor::class);
-    // }
-
+    use RefreshDatabase;
 
     public function doctors()
     {

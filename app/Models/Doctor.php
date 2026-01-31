@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use \Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Doctor extends Model
 {
     use HasFactory;
-
     protected $fillable = [
         'user_id',
         'license_number',
@@ -41,7 +41,12 @@ class Doctor extends Model
 
     public function spelization()
     {
-        return $this->belongsTo(Spelization::class);   // specialization
+        return $this->belongsTo(Spelization::class);
+    }
+
+    public function specialization()
+    {
+        return $this->belongsTo(Spelization::class, 'spelization_id');
     }
 
     public function appointments()
@@ -73,5 +78,10 @@ class Doctor extends Model
     public function workingHours()
     {
         return $this->hasMany(DoctorWorking::class);
+    }
+
+    public function withdrawals()
+    {
+        return $this->hasMany(Withdrawal::class);
     }
 }

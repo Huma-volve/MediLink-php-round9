@@ -10,6 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
+    use HasApiTokens, Notifiable;
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
@@ -49,7 +50,7 @@ class User extends Authenticatable
         ];
     }
 
-       public function notifications()
+    public function notifications()
     {
         return $this->hasMany(Notification::class);
     }
