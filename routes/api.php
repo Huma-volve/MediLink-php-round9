@@ -4,20 +4,17 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Request;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\api\DoctorProfileController;
+use App\Http\Controllers\api\WithdrawalController;
+use App\Http\Controllers\Api\SettingController;
+use App\Http\Controllers\api\SpelizationController;
+use App\Http\Controllers\api\NotificationController;
 
 // Abdulgaffr controllers
 use App\Http\Controllers\api\PatientController;
-
 use App\Http\Controllers\Api\PaymentController;
-use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\Api\DoctorSearchController;
-
 use App\Http\Controllers\Api\StatisticsController;
-
-
 use App\Http\Controllers\Api\AppointmentController;
-use App\Http\Controllers\api\SpelizationController;
-use App\Http\Controllers\api\NotificationController;
 use App\Http\Controllers\Api\PrescriptionController;
 use App\Http\Controllers\Api\DoctormanagmentController;
 use App\Http\Controllers\Api\RecentActivitiesController;
@@ -46,6 +43,17 @@ Route::get('spelizations', [SpelizationController::class, 'show']);
 // show languages 
 Route::get('languages', [SettingController::class, 'languages']);
 
+// settings help 
+Route::get('settings/help', [SettingController::class, 'help']);
+
+// settings privacy 
+Route::get('settings/privacy', [SettingController::class, 'privacy']);
+
+// settings about app 
+Route::get('settings/about', [SettingController::class, 'about']);
+
+
+
 // Authentication Routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -53,14 +61,21 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     // show patient info
     Route::get('patient/profile', [PatientController::class, 'profile']);
+
     // delete patient account
     Route::delete('proflie/delete', [SettingController::class, 'deleteAccount']);
+
     // show all user notification
     Route::get('user/notifications', [NotificationController::class, 'index']);
+
     // mark notification as read
     Route::post('notification/read/{id}', [NotificationController::class, 'isRead']);
+
     // show doctor profile
     Route::get('doctor/profile', [DoctorProfileController::class, 'profile']);
+
+    // show doctor withdrawals
+    Route::get('doctor/{doctor}/withdrawals', [WithdrawalController::class, 'show']);
 
     //AbdulGaffar APIs
     // doctor diagnosis summary creation
