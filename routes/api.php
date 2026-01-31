@@ -76,7 +76,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // show doctor withdrawals
     Route::get('doctor/{doctor}/withdrawals', [WithdrawalController::class, 'show']);
 
-    //AbdulGaffar APIs
+    // APIs
     // doctor diagnosis summary creation
     Route::post('/doctor/prescriptions', [PrescriptionController::class, 'store']);
 
