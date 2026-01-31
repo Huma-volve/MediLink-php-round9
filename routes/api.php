@@ -1,6 +1,5 @@
 <?php
 
-
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Request;
 use App\Http\Controllers\Api\AuthController;
@@ -27,13 +26,12 @@ use App\Http\Controllers\Api\DoctorFilteringController;
 // doctors searching
 Route::get('/doctors/search', [DoctorSearchController::class, 'search']);
 
+// top rated doctors 
+Route::get('/top-rated-doctors', [DoctorSearchController::class, 'topRatedDoctors']);
 
-// search routes
-Route::get('/doctors', [DoctorFilteringController::class, 'index']);
-Route::get('/doctors/{id}', [DoctorFilteringController::class, 'show']);
-Route::get('/doctors/{id}/reviews', [DoctorFilteringController::class, 'reviews']);
-Route::get('/doctors/{id}/doctor-working-hours', [DoctorFilteringController::class, 'workingHours']);
 
+Route::get('/doctors', [DoctormanagmentController::class, 'index']);
+Route::post('/doctors/{doctor}/favorite', [DoctormanagmentController::class, 'toggleFavorite']);
 
 // search routes
 Route::get('/doctors_search', [DoctorFilteringController::class, 'search']);
@@ -64,39 +62,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // show doctor profile
     Route::get('doctor/profile', [DoctorProfileController::class, 'profile']);
 
-
-
-    Route::post('/logout', [AuthController::class, 'logout']);
-    // current user info
-    Route::get('/me', function (Request $request) {
-        return response()->json([
-            'user' => $request->user()
-        ]);
-    });
-});
-
-// Statistics Routes
-Route::middleware('auth:sanctum')->get(
-    '/statistics/totals',
-    [StatisticsController::class, 'totals']
-);
-
-
-
-
-Route::get('/doctors', [DoctormanagmentController::class, 'index']);
-Route::post('/doctors/{doctor}/favorite', [DoctormanagmentController::class, 'toggleFavorite']);
-
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
-
-
-Route::get('/top-rated-doctors', [DoctorSearchController::class, 'topRatedDoctors']);
-
-
-//AbdulGaffar APIs
-Route::middleware('auth:sanctum')->group(function () {
+    //AbdulGaffar APIs
     // doctor diagnosis summary creation
     Route::post('/doctor/prescriptions', [PrescriptionController::class, 'store']);
 
@@ -113,9 +79,29 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // profile settings
     Route::put('/user/profile-settings', [SettingController::class, 'updateProfile']);
+    //AbdulGaffar APIs
+
+
+    // current user info
+    Route::get('/me', function (Request $request) {
+        return response()->json([
+            'user' => $request->user()
+        ]);
+    });
+
+    // Statistics Routes
+    Route::get('/statistics/totals', [StatisticsController::class, 'totals']);
+
+    // appointment APIs
+    Route::get('/appointments', [AppointmentController::class, 'index']);
+    Route::patch('/appointments/{appointment}/confirm', [AppointmentController::class, 'confirmAppointment']);
+    Route::patch('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancelAppointment']);
+
+    Route::post('/logout', [AuthController::class, 'logout']);
 });
 
-// appointment APIs
-Route::get('/appointments', [AppointmentController::class, 'index'])->middleware('auth:sanctum');
-Route::patch('/appointments/{appointment}/confirm', [AppointmentController::class, 'confirmAppointment'])->middleware('auth:sanctum');
-Route::patch('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancelAppointment'])->middleware('auth:sanctum');
+
+
+Route::get('/user', function (Request $request) {
+    return $request->user();
+})->middleware('auth:sanctum');
