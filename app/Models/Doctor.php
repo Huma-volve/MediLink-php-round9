@@ -72,4 +72,9 @@ class Doctor extends Model
     {
         return $this->hasMany(DoctorWorking::class);
     }
+    
+      public function withdrawals()
+    {
+        return $this->hasMany(Withdrawal::class);
+    }
 }
