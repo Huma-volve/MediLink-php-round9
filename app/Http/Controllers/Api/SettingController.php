@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Helper\ApiResponse;
 use App\Http\Resources\LanguageResource;
+use App\Models\Setting;
 
 class SettingController extends Controller
 {
@@ -68,6 +69,39 @@ class SettingController extends Controller
             200,
             'null',
             $data
+        );
+    }
+
+    public function help()
+    {
+        $setting = Setting::find(1);
+        $help = $setting->help;
+        return ApiResponse::sendResponse(
+            200,
+            'null',
+            $help
+        );
+    }
+
+    public function privacy()
+    {
+        $setting = Setting::find(1);
+        $privacy = $setting->privacy;
+        return ApiResponse::sendResponse(
+            200,
+            'null',
+            $privacy
+        );
+    }
+    
+    public function about()
+    {
+        $setting = Setting::find(1);
+        $about = $setting->about;
+        return ApiResponse::sendResponse(
+            200,
+            'null',
+            $about
         );
     }
 }
