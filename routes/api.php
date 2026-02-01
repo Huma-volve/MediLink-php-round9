@@ -37,6 +37,21 @@ Route::get('/doctor/{id}/reviews', [DoctorFilteringController::class, 'patientRe
 Route::get('/doctor/{id}/doctor-working-hours', [DoctorFilteringController::class, 'workingHours']);
 Route::get('/doctor/{id}/doctor-working-hours_online', [DoctorFilteringController::class, 'workingHoursOnline']);
 
+// show spelizations
+Route::get('spelizations', [SpelizationController::class, 'show']);
+
+
+Route::prefix('settings')->group(function () {
+    // show languages 
+    Route::get('languages', [SettingController::class, 'languages']);
+    // help & support
+    Route::get('help-item', [SettingController::class, 'helpItem']);
+    // about app 
+    Route::get('app-settings', [SettingController::class, 'appSetting']);
+});
+
+
+
 
 
 
@@ -48,6 +63,10 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
+
+    // settings privacy & security
+    Route::get('settings/privacy-settings', [SettingController::class, 'privacySetting']);
+
     // show patient info
     Route::get('patient/profile', [PatientController::class, 'profile']);
 
