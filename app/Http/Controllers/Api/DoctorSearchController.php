@@ -12,13 +12,6 @@ use Illuminate\Http\Request;
 class DoctorSearchController extends Controller
 {
 
-    protected DoctorService $doctorService;
-
-    public function __construct(DoctorService $doctorService)
-    {
-        $this->doctorService = $doctorService;
-    }
-
     public function search(Request $request)
     {
 
@@ -43,20 +36,5 @@ class DoctorSearchController extends Controller
             'success' => true,
             'data' => $doctors
         ], 200);
-    }
-
-    public function topRatedDoctors()
-    {
-        $topDoctors = $this->doctorService->getTopRatedDoctors();
-
-        if ($topDoctors->isEmpty()) {
-            return ApiResponse::sendResponse(200, 'No top-rated doctors found', null);
-        }
-
-        return ApiResponse::sendResponse(
-            200,
-            'Top rated doctors fetched successfully',
-            DoctorResource::collection($topDoctors)
-        );
     }
 }
