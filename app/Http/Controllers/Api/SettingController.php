@@ -8,7 +8,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Helper\ApiResponse;
 use App\Http\Resources\LanguageResource;
-use App\Models\Setting;
+use App\Http\Resources\HelpItemResource;
+use App\Http\Resources\PrivacyResource;
+use App\Http\Resources\AboutAppResource;
+use App\Models\AppSetting;
+use App\Models\HelpItem;
+use App\Models\PrivacySetting;
 
 class SettingController extends Controller
 {
@@ -72,36 +77,49 @@ class SettingController extends Controller
         );
     }
 
-    public function help()
+    public function helpItem()
     {
-        $setting = Setting::find(1);
-        $help = $setting->help;
+        $help_item = HelpItem::find(1);
+
+        $data = [
+            'help_item' => new HelpItemResource($help_item)
+        ];
+
         return ApiResponse::sendResponse(
             200,
             'null',
-            $help
+            $data
         );
     }
 
-    public function privacy()
+    public function privacySetting(Request $request)
     {
-        $setting = Setting::find(1);
-        $privacy = $setting->privacy;
+        $user_id = $request->user()->id;
+
+        $privacy_setting = PrivacySetting::where('user_id', $user_id)->first();
+
+        $data = [
+            'privacy_setting' => new PrivacyResource($privacy_setting)
+        ];
+
         return ApiResponse::sendResponse(
             200,
             'null',
-            $privacy
+            $data
         );
     }
-    
-    public function about()
+
+    public function appSetting()
     {
-        $setting = Setting::find(1);
-        $about = $setting->about;
+        $about_app = AppSetting::find(1);
+
+        $data = [
+            'about_app' => new AboutAppResource($about_app)
+        ];
         return ApiResponse::sendResponse(
             200,
             'null',
-            $about
+            $data
         );
     }
 }

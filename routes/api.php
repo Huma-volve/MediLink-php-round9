@@ -40,17 +40,15 @@ Route::get('/doctor/{id}/doctor-working-hours_online', [DoctorFilteringControlle
 // show spelizations 
 Route::get('spelizations', [SpelizationController::class, 'show']);
 
-// show languages 
-Route::get('languages', [SettingController::class, 'languages']);
 
-// settings help 
-Route::get('settings/help', [SettingController::class, 'help']);
-
-// settings privacy 
-Route::get('settings/privacy', [SettingController::class, 'privacy']);
-
-// settings about app 
-Route::get('settings/about', [SettingController::class, 'about']);
+Route::prefix('settings')->group(function () {
+    // show languages 
+    Route::get('languages', [SettingController::class, 'languages']);
+    // help & support
+    Route::get('help-item', [SettingController::class, 'helpItem']);
+    // about app 
+    Route::get('app-settings', [SettingController::class, 'appSetting']);
+});
 
 
 
@@ -59,6 +57,10 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
+
+    // settings privacy & security
+    Route::get('settings/privacy-settings', [SettingController::class, 'privacySetting']);
+
     // show patient info
     Route::get('patient/profile', [PatientController::class, 'profile']);
 

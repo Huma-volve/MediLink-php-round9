@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('settings', function (Blueprint $table) {
+        Schema::create('help_items', function (Blueprint $table) {
             $table->id();
-            $table->string('help');
-            $table->string('about');
-            $table->string('privacy');
+            $table->string('faq_url');
+            $table->string('contact_support_url');
+            $table->string('documentation_url');
+            $table->string('video_tutorials_url');
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('settings');
+        Schema::dropIfExists('help_items');
     }
 };
