@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Spelization extends Model
 {
     use HasFactory;
+    use RefreshDatabase;
 
     public function doctors()
     {

@@ -9,7 +9,6 @@ use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\api\SpelizationController;
 use App\Http\Controllers\api\NotificationController;
 
-// Abdulgaffr controllers
 use App\Http\Controllers\api\PatientController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\DoctorSearchController;
@@ -23,7 +22,7 @@ use App\Http\Controllers\Api\DoctorFilteringController;
 // doctors searching
 Route::get('/doctors/search', [DoctorSearchController::class, 'search']);
 
-// top rated doctors 
+// top rated doctors
 Route::get('/top-rated-doctors', [DoctorSearchController::class, 'topRatedDoctors']);
 
 
@@ -37,7 +36,7 @@ Route::get('/doctor/{id}/reviews', [DoctorFilteringController::class, 'patientRe
 Route::get('/doctor/{id}/doctor-working-hours', [DoctorFilteringController::class, 'workingHours']);
 Route::get('/doctor/{id}/doctor-working-hours_online', [DoctorFilteringController::class, 'workingHoursOnline']);
 
-// show spelizations 
+// show spelizations
 Route::get('spelizations', [SpelizationController::class, 'show']);
 
 
@@ -79,7 +78,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // show doctor withdrawals
     Route::get('doctor/{doctor}/withdrawals', [WithdrawalController::class, 'show']);
 
-    //AbdulGaffar APIs
+    // APIs
     // doctor diagnosis summary creation
     Route::post('/doctor/prescriptions', [PrescriptionController::class, 'store']);
 
@@ -96,7 +95,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // profile settings
     Route::put('/user/profile-settings', [SettingController::class, 'updateProfile']);
-    //AbdulGaffar APIs
 
 
     // current user info
