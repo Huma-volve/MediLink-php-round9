@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\api\DoctorProfileController;
 use App\Http\Controllers\api\WithdrawalController;
 use App\Http\Controllers\Api\SettingController;
-use App\Http\Controllers\api\SpelizationController;
+use App\Http\Controllers\api\SpecializationController;
 use App\Http\Controllers\api\NotificationController;
 
 // Abdulgaffr controllers
@@ -38,7 +38,7 @@ Route::get('/doctor/{id}/doctor-working-hours', [DoctorFilteringController::clas
 Route::get('/doctor/{id}/doctor-working-hours_online', [DoctorFilteringController::class, 'workingHoursOnline']);
 
 // show spelizations 
-Route::get('spelizations', [SpelizationController::class, 'show']);
+Route::get('specializations', [SpecializationController::class, 'show']);
 
 
 Route::prefix('settings')->group(function () {
