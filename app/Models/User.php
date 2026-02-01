@@ -25,6 +25,7 @@ class User extends Authenticatable
         'phone',
         'password',
         'role',
+        'language_id'
     ];
 
     /**
@@ -48,6 +49,16 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function privacySetting()
+    {
+        return $this->hasOne(PrivacySetting::class);
+    }
+
+    public function language()
+    {
+        return $this->belongsTo(Language::class);
     }
 
     public function notifications()
