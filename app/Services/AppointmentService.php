@@ -10,7 +10,7 @@ class AppointmentService
 {
     public function getDoctorAppointments(Doctor $doctor): Collection
     {
-        return Appointment::where('doctor_id', $doctor->id)
+        return Appointment::forDoctor($doctor->id)
             ->with(['patient.user'])
             ->orderBy('appointment_date')
             ->get();
@@ -19,19 +19,18 @@ class AppointmentService
 
     public function confirmAppointment(Appointment $appointment, Doctor $doctor): ?Appointment
     {
-        if ($appointment->doctor_id !== $doctor->id) {
-            return null;
-        }
+        $appointment = Appointment::query()
+            ->whereKey($appointment->id)
+            ->forDoctor($doctor->id)
+            ->whereNotIn('status', [
+                Appointment::STATUS_COMPLETED,
+                Appointment::STATUS_CANCELLED,
+                Appointment::STATUS_UPCOMING,
+            ])
+            ->whereDate('appointment_date', '>=',  now()->toISOString())
+            ->first();
 
-        if (in_array($appointment->status, [
-            Appointment::STATUS_COMPLETED,
-            Appointment::STATUS_CANCELLED,
-            Appointment::STATUS_UPCOMING,
-        ])) {
-            return null;
-        }
-
-        if ($appointment->appointment_date < now()->toDateString()) {
+        if (! $appointment) {
             return null;
         }
 
@@ -42,16 +41,19 @@ class AppointmentService
         return $appointment->fresh();
     }
 
+
     public function cancelAppointment(Appointment $appointment, Doctor $doctor): ?Appointment
     {
-        if ($appointment->doctor_id !== $doctor->id) {
-            return null;
-        }
+        $appointment = Appointment::query()
+            ->whereKey($appointment->id)
+            ->forDoctor($doctor->id)
+            ->whereNotIn('status', [
+                Appointment::STATUS_COMPLETED,
+                Appointment::STATUS_CANCELLED,
+            ])
+            ->first();
 
-        if (in_array($appointment->status, [
-            Appointment::STATUS_COMPLETED,
-            Appointment::STATUS_CANCELLED,
-        ])) {
+        if (! $appointment) {
             return null;
         }
 
