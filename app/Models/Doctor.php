@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 use \Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -68,12 +69,18 @@ class Doctor extends Model
         return $this->hasMany(Payment::class);
     }
 
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+
     public function workingHours()
     {
         return $this->hasMany(DoctorWorking::class);
     }
-    
-      public function withdrawals()
+
+    public function withdrawals()
     {
         return $this->hasMany(Withdrawal::class);
     }

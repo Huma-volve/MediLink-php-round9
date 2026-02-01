@@ -1,11 +1,12 @@
 <?php
 
+use App\Http\Controllers\Api\AppointmentController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Request;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\api\DoctorProfileController;
-use App\Http\Controllers\api\WithdrawalController;
-use App\Http\Controllers\Api\SettingController;
+use App\Http\Controllers\api\v1\GeneralController;
+use App\Http\Controllers\Api\DoctorController;
+
 use App\Http\Controllers\api\SpelizationController;
 use App\Http\Controllers\api\NotificationController;
 
@@ -51,6 +52,12 @@ Route::prefix('settings')->group(function () {
 
 
 
+
+
+
+
+Route::get('/doctors', [DoctorController::class, 'index']);
+Route::post('/doctors/{doctor}/favorite', [DoctorController::class, 'toggleFavorite']);
 // Authentication Routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -112,7 +119,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/appointments/{appointment}/confirm', [AppointmentController::class, 'confirmAppointment']);
     Route::patch('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancelAppointment']);
 
-    Route::post('/logout', [AuthController::class, 'logout']);
+    //Route::post('/logout', [AuthController::class, 'logout']);
 });
 
 
@@ -120,3 +127,35 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
+
+
+
+
+Route::get('/top-rated-doctors', [DoctorController::class, 'topRatedDoctors']);
+Route::get('/doctors/search', [DoctorController::class, 'search']);
+
+
+//AbdulGaffar APIs
+// doctors searching
+Route::get('/doctors/search', [DoctorController::class, 'search']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    // doctor diagnosis summary creation
+    Route::post('/doctor/prescriptions', [PrescriptionController::class, 'store']);
+
+    // payments  peoccessing
+    Route::post('/payments/checkout', [PaymentController::class, 'store']);
+
+    // profile settings
+    Route::put('/user/profile-settings', [SettingController::class, 'updateProfile']);
+
+
+
+
+    // appointment APIs
+    Route::get('/appointments', [AppointmentController::class, 'index']);
+    Route::patch('/appointments/{appointment}/confirm', [AppointmentController::class, 'confirmAppointment']);
+    Route::patch('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancelAppointment']);
+    // profile settings
+    Route::put('/user/profile-settings', [SettingController::class, 'updateProfile']);
+});
