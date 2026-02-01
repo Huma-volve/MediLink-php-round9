@@ -14,11 +14,14 @@ use App\Http\Controllers\api\PatientController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\DoctorSearchController;
 use App\Http\Controllers\Api\StatisticsController;
-use App\Http\Controllers\Api\AppointmentController;
 use App\Http\Controllers\Api\PrescriptionController;
 use App\Http\Controllers\Api\DoctormanagmentController;
 use App\Http\Controllers\Api\RecentActivitiesController;
 use App\Http\Controllers\Api\DoctorFilteringController;
+use App\Http\Controllers\api\DoctorProfileController;
+use App\Http\Controllers\api\SettingController;
+use App\Http\Controllers\Api\TopRatedDoctorsController;
+use App\Http\Controllers\api\WithdrawalController;
 
 // doctors searching
 Route::get('/doctors/search', [DoctorSearchController::class, 'search']);
@@ -131,7 +134,7 @@ Route::get('/user', function (Request $request) {
 
 
 
-Route::get('/top-rated-doctors', [DoctorController::class, 'topRatedDoctors']);
+Route::get('/top-rated-doctors', TopRatedDoctorsController::class);
 Route::get('/doctors/search', [DoctorController::class, 'search']);
 
 
