@@ -2,25 +2,26 @@
 
 namespace Database\Factories;
 
-use App\Models\Spelization;
+use App\Models\Specialization;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Spelization>
  */
-class SpelizationFactory extends Factory
+class SpecializationFactory extends Factory
 {
     /**
      * Define the model's default state.
      *
      * @return array<string, mixed>
      */
-   
-     protected $model = Spelization::class;
+
+    protected $model = Specialization::class;
 
     public function definition()
     {
         return [
+
             'name' => $this->faker->unique()->word(),
             'description' => $this->faker->sentence(),
         ];

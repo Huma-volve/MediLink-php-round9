@@ -22,6 +22,7 @@ return new class extends Migration
             $table->enum('gender', ['male', 'female'])->nullable();
             $table->boolean('is_active')->default(true);
             $table->string('phone')->nullable()->unique();
+            $table->foreignId('language_id')->nullable()->constrained('languages')->onDelete('set null');
             $table->rememberToken();
             $table->timestamps();
         });

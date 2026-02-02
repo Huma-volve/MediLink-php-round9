@@ -22,7 +22,7 @@ return new class extends Migration
             //$table->dateTime('appointment_date_time');
             $table->date('appointment_date');
             $table->time('appointment_time');
-            $table->enum('status', ['upcoming', 'completed', 'cancelled'])->default('upcoming');
+            $table->enum('status', ['pending', 'upcoming', 'completed', 'cancelled'])->default('pending');
             $table->text('reason_for_visit')->nullable();
             $table->enum('consultation_type', ['in_person', 'online'])->default('in_person');
             $table->timestamps();
