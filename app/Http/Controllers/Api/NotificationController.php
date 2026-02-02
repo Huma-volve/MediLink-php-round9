@@ -14,7 +14,7 @@ class NotificationController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $notifications = $user->notifications()->paginate(10);
+        $notifications = $user->notifications()->orderBy('created_at', 'desc')->paginate(10);
         $notifications_count = $user->notifications()->count();
 
         $data = [
