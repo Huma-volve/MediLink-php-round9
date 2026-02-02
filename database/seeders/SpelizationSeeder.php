@@ -2,17 +2,17 @@
 
 namespace Database\Seeders;
 
-use App\Models\Spelization;
+use App\Models\Specialization;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class SpelizationSeeder extends Seeder
+class SpecializationSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {    
-        Spelization::factory()->count(10)->create();
+        Specialization::factory()->count(10)->create();
     }
 }
