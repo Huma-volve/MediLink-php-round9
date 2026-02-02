@@ -26,7 +26,7 @@ return new class extends Migration
                 ->on('patient_insurances')
                 ->onDelete('cascade');
             $table->decimal('amount', 12, 2);
-            $table->enum('payment_method', ['credit_card', 'debit_card', 'bank_transfer', 'cash', 'insurance', 'wallet'])->nullable();
+            $table->enum('payment_method', ['credit_card', 'debit_card', 'bank_transfer', 'cash', 'insurance', 'wallet', 'stripe'])->nullable();
             $table->enum('payment_status', ['pending', 'completed', 'failed', 'refunded', 'cancelled', 'partial'])->default('pending');
             $table->string('transaction_id')->nullable()->unique();
             $table->string('currency')->default('EGP');

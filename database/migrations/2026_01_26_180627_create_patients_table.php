@@ -20,6 +20,12 @@ return new class extends Migration
             $table->foreignId('insurance_id')->nullable()->constrained('insurances')->onDelete('cascade');
             $table->date('date_of_birth')->nullable();
             $table->enum('blood_group', ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])->nullable();
+
+            $table->float('weight')->nullable();
+            $table->float('height')->nullable();
+            $table->boolean('email_notifications')->default(true);
+            $table->boolean('push_notifications')->default(true);
+
             $table->timestamps();
         });
     }
