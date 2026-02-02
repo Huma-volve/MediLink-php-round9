@@ -2,14 +2,22 @@
 
 namespace App\Http\Controllers\Api;
 
+
+use Exception;
+use Stripe\Charge;
+use Stripe\Stripe;
 use App\Models\Payment;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Stripe\Exception\ApiErrorException;
 
-class PaymentController extends Controller {
+use App\Models\Appointment;
 
-  public function index(Request $request)
+class PaymentController extends Controller
+{
+
+    public function index(Request $request)
     {
 
         $query = Payment::with(['appointment', 'patient', 'patientInsurance']);
@@ -97,56 +105,54 @@ class PaymentController extends Controller {
         ], 201);
     }
 
-    /* Update payment */
-    public function update(Request $request, $id)
+
+    // Stripe::setApiKey(config('services.stripe.secret') ?? env('STRIPE_SECRET'));
+
+    // stripe integration
+    public function processStripePayment(Request $request)
     {
-        $payment = Payment::find($id);
-
-        if (!$payment) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Payment not found'
-            ], 404);
-        }
-
-        $validated = $request->validate([
-            'amount' => 'nullable|numeric|min:0',
-            'payment_method' => 'nullable|in:credit_card,debit_card,bank_transfer,cash,insurance,wallet',
-            'payment_status' => 'nullable|in:pending,completed,failed,refunded,cancelled,partial',
-            'currency' => 'nullable|string|max:3',
+        // التحقق من البيانات
+        $request->validate([
+            'appointment_id' => 'required|exists:appointments,id',
+            'amount' => 'required|numeric',
+            'stripeToken' => 'required',
         ]);
 
-        $payment->update($validated);
+        // إعداد المفتاح السري
+        Stripe::setApiKey(env('STRIPE_SECRET'));
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Payment updated successfully',
-            'data' => $payment->load(['appointment', 'patient', 'patientInsurance'])
-        ], 200);
-    }
+        try {
+            $charge = Charge::create([
+                "amount" => $request->amount * 100,
+                "currency" => "usd",
+                "source" => $request->stripeToken,
+                "description" => "Payment for MediLink Appointment #" . $request->appointment_id
+            ]);
 
-    /* Delete payment */
-    public function destroy($id)
-    {
-        $payment = Payment::find($id);
+            // إنشاء السجل في جدول المدفوعات
+            $payment = Payment::create([
+                'appointment_id' => $request->appointment_id,
+                'patient_id'     => Appointment::find($request->appointment_id)->patient_id, // جلب id المريض تلقائياً
+                'amount'         => $request->amount,
+                'payment_status' => 'completed',
+                'transaction_id' => $charge->id,
+                'payment_method' => 'stripe',
+                //  'payment_method' => 'credit_card',
+                'payment_date'   => now(),
+            ]);
 
-        if (!$payment) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Payment not found'
-            ], 404);
+            // تحديث حالة الموعد
+            Appointment::where('id', $request->appointment_id)->update(['status' => 'paid']);
+
+            return response()->json(['success' => true, 'data' => $payment]);
+        } catch (Exception $e) {
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
         }
-
-        $payment->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Payment deleted successfully'
-        ], 200);
     }
+
 
     /**
-     * Process payment ( completed)
+     *  - pending ->completed  تحويل الحالة إلى مكتمل بعد الدفع
      */
     public function processPayment($id)
     {
@@ -179,7 +185,7 @@ class PaymentController extends Controller {
     }
 
     /**
-     * Refund payment
+     *   ترجيع المبلغ- فى حالة الالغاء او الاسترجاع- لو كان مكتمل
      */
     public function refund($id)
     {
@@ -210,4 +216,3 @@ class PaymentController extends Controller {
         ], 200);
     }
 }
-

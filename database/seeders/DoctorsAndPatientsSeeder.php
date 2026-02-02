@@ -16,7 +16,7 @@ class DoctorsAndPatientsSeeder extends Seeder
         $patientUser1 = User::firstOrCreate(
             ['email' => 'patient1@example.com'],
             [
-                'name' => 'Patient One', // تم تعديل full_name -> name
+                'name' => 'Patient One',
                 'password' => bcrypt('password'),
                 'role' => 'patient'
             ]
@@ -31,7 +31,6 @@ class DoctorsAndPatientsSeeder extends Seeder
             ]
         );
 
-        // إنشاء مرضى
         $patient1 = Patient::firstOrCreate(
             ['user_id' => $patientUser1->id],
             [
@@ -48,7 +47,6 @@ class DoctorsAndPatientsSeeder extends Seeder
             ]
         );
 
-        // إنشاء مستخدمين دكاترة
         $doctorUser1 = User::firstOrCreate(
             ['email' => 'doctor1@example.com'],
             [
@@ -76,15 +74,15 @@ class DoctorsAndPatientsSeeder extends Seeder
             ]
         );
 
-        // إنشاء دكاترة
         $doctor1 = Doctor::firstOrCreate(
             ['user_id' => $doctorUser1->id],
             [
                 'license_number' => 'D001',
                 'experience_years' => 10,
-                'spelization_id' => 1,
+                'specialization_id' => 1,
                 'location' => 'Cairo',
-                'is_verified' => true
+                'is_verified' => true,
+                'current_balance' => 1000
             ]
         );
 
@@ -93,9 +91,11 @@ class DoctorsAndPatientsSeeder extends Seeder
             [
                 'license_number' => 'D002',
                 'experience_years' => 5,
-                'spelization_id' => 2,
+                'specialization_id' => 2,
                 'location' => 'Giza',
-                'is_verified' => true
+                'is_verified' => true,
+                'current_balance' => 2000
+
             ]
         );
 
@@ -104,13 +104,14 @@ class DoctorsAndPatientsSeeder extends Seeder
             [
                 'license_number' => 'D003',
                 'experience_years' => 8,
-                'spelization_id' => 1,
+                'specialization_id' => 1,
                 'location' => 'Cairo',
-                'is_verified' => false
+                'is_verified' => false,
+                'current_balance' => 3000
+
             ]
         );
 
-        // إنشاء المفضلات
         Favorite::updateOrCreate(
             ['patient_id' => $patient1->id, 'doctor_id' => $doctor1->id],
             ['is_favorite' => true]

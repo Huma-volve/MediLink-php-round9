@@ -21,9 +21,10 @@ return new class extends Migration
             $table->text('education')->nullable();
             $table->decimal('consultation_fee_online', 8, 2)->nullable();
             $table->decimal('consultation_fee_inperson', 8, 2)->nullable();
-            $table->foreignId('spelization_id')->constrained('spelizations')->onDelete('cascade');
+            $table->foreignId('specialization_id')->constrained('specializations')->onDelete('cascade');
             $table->string('location')->nullable();
             $table->boolean('is_verified')->default(false);
+            $table->decimal('current_balance', 10, 2)->default(0);
             $table->timestamps();
         });
     }

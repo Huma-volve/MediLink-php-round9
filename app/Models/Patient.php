@@ -4,18 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 use App\Models\User;
 use App\Models\Appointment;
 use App\Models\Favorite;
 use App\Models\Prescription;
 use App\Models\Insurance;
-
-
+use App\Models\MedicalHistory;
 
 class Patient extends Model
 {
-
     use HasFactory;
 
     protected $fillable = [
@@ -25,14 +24,12 @@ class Patient extends Model
         'emergency_contact_relationship',
         'insurance_id',
         'date_of_birth',
+        'gender',
         'blood_group',
     ];
 
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+
 
     public function insurance()
     {
@@ -42,7 +39,7 @@ class Patient extends Model
     // علاقة مباشرة مع جدول Favorite
     public function favorites()
     {
-        return $this->hasMany(favorite::class);
+        return $this->hasMany(Favorite::class);
     }
 
     public function favoriteDoctors()
@@ -54,7 +51,16 @@ class Patient extends Model
         'date_of_birth' => 'date',
     ];
 
+<<<<<<< HEAD
     public function appointments()
+=======
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function appointments(): HasMany
+>>>>>>> 1a0b25265edd72a2b03c8142f34ecf1c5a6e4a33
     {
         return $this->hasMany(Appointment::class);
     }
@@ -70,5 +76,9 @@ class Patient extends Model
             'id',
             'id'
         );
+    }
+    public function medicalHistories(): HasMany
+    {
+        return $this->hasMany(MedicalHistory::class);
     }
 }

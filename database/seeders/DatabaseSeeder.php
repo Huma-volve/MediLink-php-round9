@@ -16,22 +16,26 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-<<<<<<< HEAD
+
             // DoctorsAndPatientsSeeder::class
 
-            // SpelizationSeeder::class,
+            // SpecializationSeeder::class,
+
             // InsuranceSeeder::class,
             // PatientSeeder::class,
 
             // PrescriptionSeeder::class,
             // AppointmentSeeder::class,
 
-=======
-            SpelizationSeeder::class,
-            InsuranceSeeder::class,
-            PatientSeeder::class,
-           DoctorsAndPatientsSeeder::class,
->>>>>>> 620136d37187ae1b06387174217497df0dca6d12
+
+
+           
+           SpecializationSeeder::class,
+            DoctorsAndPatientsSeeder::class,
+            PrescriptionSeeder::class,
+            AppointmentSeeder::class,   // PatientSeeder::class,
+ PatientSeeder::class,
+
         ]);
 
         // User::factory()->count(5)->create();

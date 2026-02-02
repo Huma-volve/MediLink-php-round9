@@ -8,11 +8,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Helper\ApiResponse;
 
+
 class SettingController extends Controller
 {
     public function updateProfile(Request $request)
     {
-        $user = auth()->user();
+        $user = $request->user();
+
 
         $request->validate([
             'name' => 'string|max:255',
@@ -35,10 +37,10 @@ class SettingController extends Controller
             'password' => ['required'],
         ]);
 
-        $user = $request->user();
+        $user = auth()->user();
 
         if (! Hash::check($request->password, $user->password)) {
-            
+
             return ApiResponse::sendResponse(
                 422,
                 'Password is incorrect',
@@ -49,21 +51,70 @@ class SettingController extends Controller
         $user->tokens()->delete();
         $user->delete();
 
-                return ApiResponse::sendResponse(
-                200,
-                'Deleted Successfully',
-                null
-            );
-     
+        return ApiResponse::sendResponse(
+            200,
+            'Deleted Successfully',
+            null
+        );
     }
 
     public function languages()
     {
+
         $languages = Language::all();
+        $data = [
+            'languages' => LanguageResource::collection($languages)
+        ];
         return ApiResponse::sendResponse(
             200,
             'null',
-            $languages
+            $data
+        );
+    }
+
+    public function helpItem()
+    {
+        $help_item = HelpItem::find(1);
+
+        $data = [
+            'help_item' => new HelpItemResource($help_item)
+        ];
+
+        return ApiResponse::sendResponse(
+            200,
+            'null',
+            $data
+        );
+    }
+
+    public function privacySetting()
+    {
+        $user_id = auth()->id();
+
+        $privacy_setting = PrivacySetting::where('user_id', $user_id)->first();
+
+        $data = [
+            'privacy_setting' => new PrivacyResource($privacy_setting)
+        ];
+
+        return ApiResponse::sendResponse(
+            200,
+            'null',
+            $data
+        );
+    }
+
+    public function appSetting()
+    {
+        $about_app = AppSetting::find(1);
+
+        $data = [
+            'about_app' => new AboutAppResource($about_app)
+        ];
+        return ApiResponse::sendResponse(
+            200,
+            'null',
+            $data
         );
     }
 }

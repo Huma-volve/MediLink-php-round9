@@ -10,8 +10,14 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
+    use HasApiTokens, Notifiable;
     /** @use HasFactory<\Database\Factories\UserFactory> */
+<<<<<<< HEAD
     use HasFactory, Notifiable , HasApiTokens;
+=======
+    use HasFactory, Notifiable;
+     use HasApiTokens, Notifiable;
+>>>>>>> 1a0b25265edd72a2b03c8142f34ecf1c5a6e4a33
 
     /**
      * The attributes that are mass assignable.
@@ -24,6 +30,7 @@ class User extends Authenticatable
         'phone',
         'password',
         'role',
+        'language_id'
     ];
 
     /**
@@ -49,7 +56,17 @@ class User extends Authenticatable
         ];
     }
 
-       public function notifications()
+    public function privacySetting()
+    {
+        return $this->hasOne(PrivacySetting::class);
+    }
+
+    public function language()
+    {
+        return $this->belongsTo(Language::class);
+    }
+
+    public function notifications()
     {
         return $this->hasMany(Notification::class);
     }
@@ -63,6 +80,7 @@ class User extends Authenticatable
     {
         return $this->hasOne(Patient::class);
     }
+
 
     public function isPatient(): bool
     {
