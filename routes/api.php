@@ -5,7 +5,6 @@ use App\Http\Controllers\Api\DoctorFilteringController;
 use App\Http\Controllers\Api\StatisticsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\SpelizationController;
 use App\Http\Controllers\Api\PatientController;
 use App\Http\Controllers\Api\AuthController;
 
@@ -19,6 +18,8 @@ use App\Http\Controllers\Api\PaymentController;
 
 use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\Api\ChattingController;
+
+use App\Http\Controllers\Api\PrescriptionController;
 use App\Http\Controllers\Api\RecentActivitiesController;
 
 use App\Http\Controllers\Api\DoctorSearchController;
@@ -125,6 +126,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // doctor request withdrawal
     Route::post('doctor/{doctor}/request/withdrawal', [WithdrawalController::class, 'store']);
 
+
+});
+
     Route::post('/logout', [AuthController::class, 'logout']);
     // current user info
     Route::get('/me', function (Request $request) {
@@ -161,12 +165,9 @@ Route::middleware('auth:sanctum')->get(
 );
 
 
-Route::group(['prefix' => 'v1'], function () {
-    // Route::get('spelizations', [GeneralController::class, 'spelizations']);
-    Route::get('/doctors/search', [DoctorSearchController::class, 'search']);
+
 
     Route::get('/doctors/search', [DoctorSearchController::class, 'search']);
-});
 
 
 Route::get('/doctors', [DoctormanagmentController::class, 'index']);
@@ -180,6 +181,7 @@ Route::get('/user', function (Request $request) {
 Route::get('/top-rated-doctors', [DoctorSearchController::class, 'topRatedDoctors']);
 
 
+Route::middleware('auth:sanctum')->group(function () {
 
 
     Route::post('/logout', [AuthController::class, 'logout']);

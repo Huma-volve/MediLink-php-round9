@@ -25,6 +25,12 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->foreignId('language_id')->nullable()->constrained('languages')->onDelete('set null');
 
+
+
+          
+           
+
+
             $table->rememberToken();
             $table->timestamps();
         });
