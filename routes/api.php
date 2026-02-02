@@ -3,22 +3,48 @@
 use App\Http\Controllers\Api\AppointmentController;
 use Illuminate\Support\Facades\Route;
 
+
+use Illuminate\Http\Request;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\PatientController;
+
+
+
+
+
 use App\Http\Controllers\api\DoctorProfileController;
 use App\Http\Controllers\api\WithdrawalController;
 use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\api\SpelizationController;
 use App\Http\Controllers\api\NotificationController;
 
-use App\Http\Controllers\api\PatientController;
+
+
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\DoctorSearchController;
 use App\Http\Controllers\Api\StatisticsController;
-use App\Http\Controllers\Api\AppointmentController;
+
 use App\Http\Controllers\Api\PrescriptionController;
 use App\Http\Controllers\Api\DoctormanagmentController;
 use App\Http\Controllers\Api\RecentActivitiesController;
 use App\Http\Controllers\Api\DoctorFilteringController;
+
+
+
+use App\Http\Controllers\Api\TopRatedDoctorsController;
+
+
+
+
+
+
+// Abdulgaffr controllers
+
+
+
+
+
+
 
 // doctors searching
 Route::get('/doctors/search', [DoctorSearchController::class, 'search']);
@@ -156,6 +182,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //Route::post('/logout', [AuthController::class, 'logout']);
 });
+
 
 
 
