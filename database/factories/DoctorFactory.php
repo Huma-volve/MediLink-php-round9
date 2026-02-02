@@ -1,7 +1,7 @@
 <?php
 
 namespace Database\Factories;
-
+use App\Models\Specialization;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -18,9 +18,9 @@ class DoctorFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => \App\Models\User::factory(),
+            'user_id' => User::factory(),
 
-            'spelization_id' => \App\Models\Spelization::factory(),
+            'specialization_id' => Specialization::factory(),
 
             'license_number' => 'LIC-' . $this->faker->unique()->numberBetween(1000, 9999),
             'bio' => $this->faker->paragraph(),
