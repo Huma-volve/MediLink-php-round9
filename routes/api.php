@@ -33,8 +33,6 @@ Route::get('/doctor/{id}/reviews', [DoctorFilteringController::class, 'patientRe
 Route::get('/doctor/{id}/doctor-working-hours', [DoctorFilteringController::class, 'workingHours']);
 Route::get('/doctor/{id}/doctor-working-hours_online', [DoctorFilteringController::class, 'workingHoursOnline']);
 
-// Route::post('/doctor/{id}/create-working-hours', [DoctorFilteringController::class, 'createWorkingDays']);
-
 
 
 
