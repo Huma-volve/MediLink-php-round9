@@ -81,7 +81,8 @@ class DoctorsAndPatientsSeeder extends Seeder
                 'experience_years' => 10,
                 'specialization_id' => 1,
                 'location' => 'Cairo',
-                'is_verified' => true
+                'is_verified' => true,
+                'current_balance' => 1000
             ]
         );
 
@@ -92,7 +93,9 @@ class DoctorsAndPatientsSeeder extends Seeder
                 'experience_years' => 5,
                 'specialization_id' => 2,
                 'location' => 'Giza',
-                'is_verified' => true
+                'is_verified' => true,
+                'current_balance' => 2000
+
             ]
         );
 
@@ -103,7 +106,9 @@ class DoctorsAndPatientsSeeder extends Seeder
                 'experience_years' => 8,
                 'specialization_id' => 1,
                 'location' => 'Cairo',
-                'is_verified' => false
+                'is_verified' => false,
+                'current_balance' => 3000
+
             ]
         );
 
