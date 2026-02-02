@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\Review;
 use App\Models\Clinic;
+
 use App\Models\Specialization;
+
 use App\Models\Appointment;
 use App\Models\MedicalHistory;
 use App\Models\Prescription;
@@ -88,7 +90,9 @@ class Doctor extends Model
     {
         return $query
             ->when(
+
                 $request->specialization_id,
+
                 fn($q) =>
                 $q->where('specialization_id', $request->specialization_id)
             )
@@ -117,7 +121,7 @@ class Doctor extends Model
 
         return $this->favorites->contains(fn($fav) => $fav->is_favorite);
     }
-
+ 
     public function withdrawals()
     {
         return $this->hasMany(Withdrawal::class);

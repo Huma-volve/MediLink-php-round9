@@ -7,15 +7,20 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\SpelizationController;
 use App\Http\Controllers\Api\PatientController;
-use App\Http\Controllers\ApiDoctorController;
+
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DoctormanagmentController;
 use App\Http\Controllers\Api\DoctorProfileController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PaymentController;
+
+
+use App\Http\Controllers\Api\SettingController;
+
+
 use App\Http\Controllers\Api\PrescriptionController;
 use App\Http\Controllers\Api\RecentActivitiesController;
-use App\Http\Controllers\Api\SettingController;
+
 
 // Abdulgaffr controllers
 use App\Http\Controllers\Api\DoctorSearchController;
@@ -25,7 +30,6 @@ use App\Http\Controllers\Api\WithdrawalController;
 
 // Abdulgaffr controllers
 use App\Http\Controllers\SettingPatient;
-
 
 // doctors searching
 Route::get('/doctors/search', [DoctorSearchController::class, 'search']);
@@ -208,6 +212,7 @@ Route::get('/doctor/patient/{patient_id}', [PatientController::class, 'doctorVie
     Route::patch('/appointments/{appointment}/confirm', [AppointmentController::class, 'confirmAppointment']);
     Route::patch('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancelAppointment']);
 });
+
 
 
 
