@@ -13,7 +13,7 @@ class NotificationController extends Controller
 {
     public function index(Request $request)
     {
-        $user = $request->user();
+        $user = auth()->user();
         $notifications = $user->notifications()->paginate(10);
         $notifications_count = $user->notifications()->count();
 
@@ -32,7 +32,7 @@ class NotificationController extends Controller
     public function isRead(Request $request, string $id)
     {
 
-        $user = $request->user();
+        $user = auth()->user();
         $notification = Notification::find($id);
 
         if (!$notification) {
