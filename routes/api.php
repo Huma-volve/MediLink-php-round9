@@ -15,7 +15,7 @@ use App\Http\Controllers\Api\PatientController;
 use App\Http\Controllers\api\DoctorProfileController;
 use App\Http\Controllers\api\WithdrawalController;
 use App\Http\Controllers\Api\SettingController;
-use App\Http\Controllers\api\SpelizationController;
+use App\Http\Controllers\api\SpecializationController;
 use App\Http\Controllers\api\NotificationController;
 
 
@@ -149,7 +149,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // doctor request withdrawal
     Route::post('doctor/{doctor}/request/withdrawal', [WithdrawalController::class, 'store']);
 
-
+});
 
 
 

@@ -22,11 +22,10 @@ return new class extends Migration
             $table->string('password');
             $table->enum('role', ['admin', 'doctor', 'patient'])->default('patient');
             $table->boolean('is_active')->default(true);
-<<<<<<< HEAD:database/migrations/0001_01_01_000001_create_users_table.php
-            $table->string('phone')->nullable()->unique();
+      
             $table->foreignId('language_id')->nullable()->constrained('languages')->onDelete('set null');
-=======
->>>>>>> 9411dd6 (payment  update):database/migrations/0001_01_01_000000_create_users_table.php
+
+
             $table->rememberToken();
             $table->timestamps();
         });
