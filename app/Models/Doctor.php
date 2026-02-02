@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -7,13 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\Review;
 use App\Models\Clinic;
-use App\Models\specialization;
+
+use App\Models\Specialization;
+
 use App\Models\Appointment;
 use App\Models\MedicalHistory;
 use App\Models\Prescription;
 use App\Models\Payment;
 use App\Models\Favorite;
-use Illuminate\Support\Facades\Auth;
 use App\Models\DoctorWorking;
 
 class Doctor extends Model
@@ -31,6 +31,7 @@ class Doctor extends Model
         'specialization_id',
         'location',
         'is_verified',
+        'current_balance'
     ];
 
     protected $appends = ['is_favorite'];
@@ -89,7 +90,9 @@ class Doctor extends Model
     {
         return $query
             ->when(
-                $request-> specialization_id,
+
+                $request->specialization_id,
+
                 fn($q) =>
                 $q->where('specialization_id', $request->specialization_id)
             )
@@ -118,6 +121,7 @@ class Doctor extends Model
 
         return $this->favorites->contains(fn($fav) => $fav->is_favorite);
     }
+ 
     public function withdrawals()
     {
         return $this->hasMany(Withdrawal::class);

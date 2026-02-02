@@ -19,10 +19,9 @@ return new class extends Migration
             $table->foreignId('doctor_id')
                 ->constrained('doctors')
                 ->onDelete('cascade');
-            //$table->dateTime('appointment_date_time');
             $table->date('appointment_date');
             $table->time('appointment_time');
-            $table->enum('status', ['pending', 'upcoming', 'completed', 'cancelled'])->default('pending');
+            $table->enum('status', ['pending', 'completed', 'cancelled', 'paid'])->default('pending');
             $table->text('reason_for_visit')->nullable();
             $table->enum('consultation_type', ['in_person', 'online'])->default('in_person');
             $table->timestamps();
