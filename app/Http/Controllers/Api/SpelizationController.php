@@ -1,19 +1,18 @@
 <?php
-
 namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
-use App\Models\Spelization;
+use App\Models\Specialization;
 use App\Helper\ApiResponse;
 
-class SpelizationController extends Controller
+class SpecializationController extends Controller
 {
-      public function show()
+      public function index()
     {
-        $spelizations = Spelization::all();
+        $specializations = Specialization::all();
            return ApiResponse::sendResponse(
                 200,
                 'null',
-                $spelizations
+                $specializations
             );
     }
 
