@@ -159,27 +159,7 @@ Route::get('/user', function (Request $request) {
 Route::get('/top-rated-doctors', [DoctorSearchController::class, 'topRatedDoctors']);
 
 
-// doctors searching
-Route::get('/doctors/search', [DoctorSearchController::class, 'search']);
 
-Route::middleware('auth:sanctum')->group(function () {
-    // APIs
-    // doctor diagnosis summary creation
-    Route::post('/doctor/prescriptions', [PrescriptionController::class, 'store']);
-
-    // payments  peoccessing
-    Route::prefix('payments')->group(function () {
-        Route::get('/', [PaymentController::class, 'index']);
-        Route::post('/store', [PaymentController::class, 'store']);
-        Route::get('/show/{id}', [PaymentController::class, 'show']);
-        Route::put('/update/{id}', [PaymentController::class, 'update']);
-        Route::delete('/delete/{id}', [PaymentController::class, 'destroy']);
-        Route::post('/{id}/process', [PaymentController::class, 'processPayment']);
-        Route::post('/{id}/refund', [PaymentController::class, 'refund']);
-    });
-
-    // profile settings
-    Route::put('/user/profile-settings', [SettingController::class, 'updateProfile']);
 
     Route::post('/logout', [AuthController::class, 'logout']);
 
@@ -213,12 +193,6 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
-
-
-
-
-
-
 
 
 //Route::post('/logout', [AuthController::class, 'logout']);
