@@ -69,11 +69,6 @@ class Doctor extends Model
         return $this->hasMany(Clinic::class);
     }
 
-    public function spelization()
-    {
-        return $this->belongsTo(Spelization::class);   // specialization
-    }
-
     public function appointments()
     {
         return $this->hasMany(Appointment::class);
