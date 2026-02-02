@@ -28,8 +28,14 @@ class DatabaseSeeder extends Seeder
             // AppointmentSeeder::class,
 
 
-            // PatientSeeder::class,
-            // DoctorsAndPatientsSeeder::class,
+
+           
+           
+            DoctorsAndPatientsSeeder::class,
+            PrescriptionSeeder::class,
+            AppointmentSeeder::class,
+
+
         ]);
 
         // User::factory()->count(5)->create();

@@ -7,19 +7,14 @@ use App\Models\Language;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Helper\ApiResponse;
-use App\Http\Resources\LanguageResource;
-use App\Http\Resources\HelpItemResource;
-use App\Http\Resources\PrivacyResource;
-use App\Http\Resources\AboutAppResource;
-use App\Models\AppSetting;
-use App\Models\HelpItem;
-use App\Models\PrivacySetting;
+
 
 class SettingController extends Controller
 {
     public function updateProfile(Request $request)
     {
-        $user = auth()->user();
+        $user = $request->user();
+
 
         $request->validate([
             'name' => 'string|max:255',

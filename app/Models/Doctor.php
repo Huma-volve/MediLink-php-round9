@@ -4,7 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\User;
+use App\Models\Review;
+use App\Models\Clinic;
+use App\Models\Spelization;
+use App\Models\Appointment;
+use App\Models\MedicalHistory;
+use App\Models\Prescription;
+use App\Models\Payment;
+use App\Models\Favorite;
+use Illuminate\Support\Facades\Auth;
+use App\Models\DoctorWorking;
 
 class Doctor extends Model
 {
@@ -23,10 +34,10 @@ class Doctor extends Model
         'is_verified',
     ];
 
-
+    protected $appends = ['is_favorite'];
     public function favorites()
     {
-        return $this->hasMany(favorite::class);
+        return $this->hasMany(Favorite::class);
     }
     public function user()
     {
@@ -49,9 +60,9 @@ class Doctor extends Model
         return $this->hasMany(Appointment::class);
     }
 
-    public function medicalHistory()
+    public function medicalHistories()
     {
-        return $this->hasMany(MedicalHistroy::class);
+        return $this->hasMany(MedicalHistory::class);
     }
 
     public function prescriptions()
@@ -75,8 +86,42 @@ class Doctor extends Model
         return $this->hasMany(DoctorWorking::class);
     }
 
+    public function scopeFilter($query, $request)
+    {
+        return $query
+            ->when(
+                $request->spelization_id,
+                fn($q) =>
+                $q->where('spelization_id', $request->spelization_id)
+            )
+            ->when(
+                $request->location,
+                fn($q) =>
+                $q->where('location', $request->location)
+            )
+            ->when(
+                $request->experience_years,
+                fn($q) =>
+                $q->where('experience_years', $request->experience_years)
+            )
+            ->when(
+                $request->is_verified !== null,
+                fn($q) =>
+                $q->where('is_verified', $request->is_verified)
+            );
+    }
+
+    public function getIsFavoriteAttribute()
+    {
+        if (!isset($this->relations['favorites'])) {
+            return false;
+        }
+
+        return $this->favorites->contains(fn($fav) => $fav->is_favorite);
+
     public function withdrawals()
     {
         return $this->hasMany(Withdrawal::class);
+
     }
 }
