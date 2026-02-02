@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
@@ -34,6 +35,22 @@ class WithdrawalController extends Controller
             200,
             null,
             []
+        );
+    }
+
+
+    public function showBalance()
+    {
+        $user_id = auth()->id();
+
+        $doctor = Doctor::where('user_id', $user_id)->first();
+
+        $current_balance = $doctor->current_balance;
+
+        return ApiResponse::sendResponse(
+            200,
+            null,
+            $current_balance
         );
     }
 
@@ -78,4 +95,3 @@ class WithdrawalController extends Controller
         }
     }
 }
-
