@@ -17,8 +17,8 @@ class DoctorProfileResource extends JsonResource
             'education' => $this->education,
             'consultation_fee_online' => $this->consultation_fee_online,
             'consultation_fee_inperson' => $this->consultation_fee_inperson,
-            'spelization_name' => $this->spelization->name,
-            'spelization_description' => $this->spelization->description,
+            'specialization_name' => $this->specialization->name,
+            'specialization_description' => $this->specialization->description,
             'location' => $this->location,
             'user' => new UserResource($this->user),
 
