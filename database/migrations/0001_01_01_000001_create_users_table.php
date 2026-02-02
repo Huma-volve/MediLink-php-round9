@@ -22,8 +22,14 @@ return new class extends Migration
             $table->string('password');
             $table->enum('role', ['admin', 'doctor', 'patient'])->default('patient');
             $table->boolean('is_active')->default(true);
+
       
             $table->foreignId('language_id')->nullable()->constrained('languages')->onDelete('set null');
+
+
+
+          
+           
 
 
             $table->rememberToken();
