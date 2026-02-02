@@ -7,7 +7,7 @@ use App\Services\AppointmentService;
 use App\Models\Appointment;
 use App\Models\Doctor;
 use App\Models\Patient;
-use App\Models\Spelization;
+use App\Models\Specialization;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -80,7 +80,7 @@ class AppointmentServiceTest extends TestCase
     public function test_doctor_can_confirm_appointment()
     {
 
-        $spelization = Spelization::create([
+        $spelization = Specialization::create([
             'name' => 'Test Spelization',
         ]);
         // Create user
@@ -95,7 +95,7 @@ class AppointmentServiceTest extends TestCase
         $doctor = Doctor::create([
             'user_id' => $user->id,
             'license_number' => 'DOC12345',
-            'spelization_id' => $spelization->id,
+            'specialization_id' => $spelization->id,
         ]);
 
         // Create patient user
@@ -131,7 +131,7 @@ class AppointmentServiceTest extends TestCase
 
     public function test_doctor_can_cancel_appointment()
     {
-        $spelization = Spelization::create([
+        $spelization = Specialization::create([
             'name' => 'Test  cancel Spelization',
         ]);
         // Create user
@@ -146,7 +146,7 @@ class AppointmentServiceTest extends TestCase
         $doctor = Doctor::create([
             'user_id' => $user->id,
             'license_number' => 'DOC12d345',
-            'spelization_id' => $spelization->id,
+            'specialization_id' => $spelization->id,
         ]);
 
         // Create patient user
