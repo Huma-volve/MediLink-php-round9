@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\User;
@@ -28,7 +29,7 @@ class Doctor extends Model
         'education',
         'consultation_fee_online',
         'consultation_fee_inperson',
-        'spelization_id',
+        'specialization_id',
         'location',
         'is_verified',
     ];
@@ -48,9 +49,10 @@ class Doctor extends Model
         return $this->hasMany(Clinic::class);
     }
 
-    public function spelization()
+
+    public function specialization()
     {
-        return $this->belongsTo(Spelization::class);   // specialization
+        return $this->belongsTo(Specialization::class);
     }
 
     public function appointments()
@@ -72,6 +74,12 @@ class Doctor extends Model
     {
         return $this->hasMany(Payment::class);
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
 
     public function workingHours()
     {
@@ -110,5 +118,10 @@ class Doctor extends Model
         }
 
         return $this->favorites->contains(fn($fav) => $fav->is_favorite);
+
+    public function withdrawals()
+    {
+        return $this->hasMany(Withdrawal::class);
+
     }
 }

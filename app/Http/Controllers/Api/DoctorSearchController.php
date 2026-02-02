@@ -6,9 +6,10 @@ use App\Helper\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\DoctorResource;
 use App\Models\Doctor;
+use App\Services\DoctorService;
 use Illuminate\Http\Request;
 
-class DoctorController extends Controller
+class DoctorSearchController extends Controller
 {
 
     public function search(Request $request)
@@ -35,31 +36,5 @@ class DoctorController extends Controller
             'success' => true,
             'data' => $doctors
         ], 200);
-    }
-
-    public function topRatedDoctors()
-    {
-        $doctors = Doctor::with('reviews')->get();
-
-        if ($doctors->isEmpty()) {
-            return ApiResponse::sendResponse(200, 'No doctors found', null);
-        }
-
-        $topDoctors = $doctors->sortByDesc(function ($doctor) {
-            return $doctor->reviews->avg('rating');
-        })
-            ->filter(fn($doctor) => $doctor->reviews->count() > 0)  // ignore doctors with no reviews
-            ->take(5) // take top 5 doctors
-            ->values(); // reset keys
-
-        if ($topDoctors->isEmpty()) {
-            return ApiResponse::sendResponse(200, 'No top-rated doctors found', null);
-        }
-
-        return ApiResponse::sendResponse(
-            200,
-            'Top rated doctors fetched successfully',
-            DoctorResource::collection($topDoctors)
-        );
     }
 }

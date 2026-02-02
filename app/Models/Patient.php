@@ -13,11 +13,8 @@ use App\Models\Prescription;
 use App\Models\Insurance;
 use App\Models\MedicalHistory;
 
-
-
 class Patient extends Model
 {
-
     use HasFactory;
 
     protected $fillable = [

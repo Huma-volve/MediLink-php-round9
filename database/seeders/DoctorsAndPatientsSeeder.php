@@ -79,7 +79,7 @@ class DoctorsAndPatientsSeeder extends Seeder
             [
                 'license_number' => 'D001',
                 'experience_years' => 10,
-                'spelization_id' => 1,
+                'specialization_id' => 1,
                 'location' => 'Cairo',
                 'is_verified' => true
             ]
@@ -90,7 +90,7 @@ class DoctorsAndPatientsSeeder extends Seeder
             [
                 'license_number' => 'D002',
                 'experience_years' => 5,
-                'spelization_id' => 2,
+                'specialization_id' => 2,
                 'location' => 'Giza',
                 'is_verified' => true
             ]
@@ -101,7 +101,7 @@ class DoctorsAndPatientsSeeder extends Seeder
             [
                 'license_number' => 'D003',
                 'experience_years' => 8,
-                'spelization_id' => 1,
+                'specialization_id' => 1,
                 'location' => 'Cairo',
                 'is_verified' => false
             ]

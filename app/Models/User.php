@@ -10,6 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
+    use HasApiTokens, Notifiable;
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
      use HasApiTokens, Notifiable;
@@ -25,6 +26,7 @@ class User extends Authenticatable
         'phone',
         'password',
         'role',
+        'language_id'
     ];
 
     /**
@@ -50,7 +52,17 @@ class User extends Authenticatable
         ];
     }
 
-       public function notifications()
+    public function privacySetting()
+    {
+        return $this->hasOne(PrivacySetting::class);
+    }
+
+    public function language()
+    {
+        return $this->belongsTo(Language::class);
+    }
+
+    public function notifications()
     {
         return $this->hasMany(Notification::class);
     }

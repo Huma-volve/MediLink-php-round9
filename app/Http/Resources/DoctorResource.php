@@ -10,7 +10,6 @@ class DoctorResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            //'user_id' => $this->user_id,
             'user' => new UserResource($this->user),
             'license_number' => $this->license_number,
             'experience_years' => $this->experience_years,
@@ -19,7 +18,7 @@ class DoctorResource extends JsonResource
             'education' => $this->education,
             'consultation_fee_online' => $this->consultation_fee_online,
             'consultation_fee_inperson' => $this->consultation_fee_inperson,
-            'spelization_id' => $this->spelization_id,
+            'specialization_id' => $this->specialization_id,
             'location' => $this->location,
             'is_verified' => $this->is_verified,
             'average_rating' => round($this->reviews->avg('rating'), 2),

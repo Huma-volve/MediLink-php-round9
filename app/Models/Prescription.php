@@ -31,6 +31,7 @@ class Prescription extends Model
         'expiry_date' => 'date',
     ];
 
+
     public function appointment()
     {
         return $this->belongsTo(Appointment::class);
@@ -43,7 +44,14 @@ class Prescription extends Model
 
     public function doctor()
     {
-        return $this->appointment->doctor();
+        return $this->hasOneThrough(
+            Doctor::class,
+            Appointment::class,
+            'id',
+            'id',
+            'appointment_id',
+            'doctor_id'
+        );
     }
     public function items(): HasMany
     {

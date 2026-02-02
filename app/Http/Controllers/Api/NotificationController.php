@@ -11,47 +11,69 @@ use App\Helper\ApiResponse;
 
 class NotificationController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $user = $request->user();
-        $notifications = $user->notifications()->get();
+        $user = auth()->user();
+        $notifications = $user->notifications()->paginate(10);
+        $notifications_count = $user->notifications()->count();
+
         $data = [
+            'notifications_count' => $notifications_count,
             'notifications' => NotificationResource::collection($notifications)
         ];
-           return ApiResponse::sendResponse(
-                200,
-                'null',
-                $data
-            );
+        return ApiResponse::sendResponse(
+            200,
+            'null',
+            $data
+        );
     }
 
 
-    public function isRead(Request $request, string $id)
+    public function isRead(string $id)
     {
 
-        $user = $request->user();
+        $user = auth()->user();
         $notification = Notification::find($id);
 
         if (!$notification) {
-               return ApiResponse::sendResponse(
+            return ApiResponse::sendResponse(
                 404,
                 'Notification not found',
                 null
             );
         }
-        $notification = $user->notifications()->where('id', $notification->id)->first();
+        $user_notification = $user->notifications()->where('id', $notification->id)->first();
 
-        if ($notification) {
-            $notification->update(['is_read' => 1]);
-                 return ApiResponse::sendResponse(
-                200,
-                'Notification marked as read',
-                null
-            );
-        } else {
-                 return ApiResponse::sendResponse(
+
+        if (!$user_notification) {
+            return ApiResponse::sendResponse(
                 403,
                 'This notification does not belong to you',
+                null
+            );
+        }
+
+        $is_read = $user_notification->is_read;
+        if ($is_read == 0) {
+            $user_notification->update([
+                'is_read' => 1,
+                'read_at' => now(),
+            ]);
+
+            $data = [
+                'read_at' => now()
+            ];
+
+            return ApiResponse::sendResponse(
+                200,
+                'Notification marked as read',
+                $data
+            );
+        } else {
+
+            return ApiResponse::sendResponse(
+                200,
+                'Notification already marked as read',
                 null
             );
         }

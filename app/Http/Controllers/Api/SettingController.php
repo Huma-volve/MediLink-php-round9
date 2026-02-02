@@ -7,7 +7,6 @@ use App\Models\Language;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Helper\ApiResponse;
-use Illuminate\Support\Facades\Auth;
 
 
 class SettingController extends Controller
@@ -38,7 +37,7 @@ class SettingController extends Controller
             'password' => ['required'],
         ]);
 
-        $user = $request->user();
+        $user = auth()->user();
 
         if (! Hash::check($request->password, $user->password)) {
 
@@ -61,11 +60,61 @@ class SettingController extends Controller
 
     public function languages()
     {
+
         $languages = Language::all();
+        $data = [
+            'languages' => LanguageResource::collection($languages)
+        ];
         return ApiResponse::sendResponse(
             200,
             'null',
-            $languages
+            $data
+        );
+    }
+
+    public function helpItem()
+    {
+        $help_item = HelpItem::find(1);
+
+        $data = [
+            'help_item' => new HelpItemResource($help_item)
+        ];
+
+        return ApiResponse::sendResponse(
+            200,
+            'null',
+            $data
+        );
+    }
+
+    public function privacySetting()
+    {
+        $user_id = auth()->id();
+
+        $privacy_setting = PrivacySetting::where('user_id', $user_id)->first();
+
+        $data = [
+            'privacy_setting' => new PrivacyResource($privacy_setting)
+        ];
+
+        return ApiResponse::sendResponse(
+            200,
+            'null',
+            $data
+        );
+    }
+
+    public function appSetting()
+    {
+        $about_app = AppSetting::find(1);
+
+        $data = [
+            'about_app' => new AboutAppResource($about_app)
+        ];
+        return ApiResponse::sendResponse(
+            200,
+            'null',
+            $data
         );
     }
 }
