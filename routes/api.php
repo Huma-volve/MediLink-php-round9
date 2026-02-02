@@ -12,13 +12,6 @@ use App\Http\Controllers\Api\PatientController;
 
 
 
-
-
-
-
-
-use Illuminate\Support\Facades\Request;
-use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\api\DoctorProfileController;
 use App\Http\Controllers\api\WithdrawalController;
 use App\Http\Controllers\Api\SettingController;
@@ -26,9 +19,6 @@ use App\Http\Controllers\Api\SettingController;
 
 use App\Http\Controllers\api\SpecializationController;
 use App\Http\Controllers\api\NotificationController;
-
-
-use App\Http\Controllers\api\PatientController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\DoctorSearchController;
 use App\Http\Controllers\Api\StatisticsController;
@@ -36,21 +26,21 @@ use App\Http\Controllers\Api\PrescriptionController;
 use App\Http\Controllers\Api\DoctormanagmentController;
 use App\Http\Controllers\Api\RecentActivitiesController;
 use App\Http\Controllers\Api\DoctorFilteringController;
-use App\Http\Controllers\api\DoctorProfileController;
+
 
 use App\Http\Controllers\Api\TopRatedDoctorsController;
-use App\Http\Controllers\api\WithdrawalController;
-use App\Http\Controllers\Api\StatisticsController;
-use App\Http\Controllers\Api\DoctormanagmentController;
+
+
+
 
 
 
 // Abdulgaffr controllers
-use App\Http\Controllers\api\NotificationController;
-use App\Http\Controllers\Api\PrescriptionController;
-use App\Http\Controllers\Api\PaymentController;
 
-use App\Http\Controllers\Api\SettingController;
+
+
+
+
 
 // doctors searching
 Route::get('/doctors/search', [DoctorSearchController::class, 'search']);
@@ -177,11 +167,6 @@ Route::get('/doctor/patient/{patient_id}', [PatientController::class, 'doctorVie
     Route::patch('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancelAppointment']);
 
 
-
-
-    //Route::post('/logout', [AuthController::class, 'logout']);
-});
-ain
 
 
 

@@ -4,11 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\User;
 use App\Models\Review;
 use App\Models\Clinic;
-use App\Models\Spelization;
+use App\Models\specialization;
 use App\Models\Appointment;
 use App\Models\MedicalHistory;
 use App\Models\Prescription;
@@ -90,9 +89,9 @@ class Doctor extends Model
     {
         return $query
             ->when(
-                $request->spelization_id,
+                $request-> specialization_id,
                 fn($q) =>
-                $q->where('spelization_id', $request->spelization_id)
+                $q->where('specialization_id', $request->specialization_id)
             )
             ->when(
                 $request->location,
@@ -118,7 +117,7 @@ class Doctor extends Model
         }
 
         return $this->favorites->contains(fn($fav) => $fav->is_favorite);
-
+    }
     public function withdrawals()
     {
         return $this->hasMany(Withdrawal::class);

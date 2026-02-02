@@ -34,33 +34,32 @@ class DoctorManagmentRoutesTest extends TestCase
       
 public function test_user_can_toggle_doctor_favorite()
 {
-    // إنشاء doctor
+   
     $doctor = \App\Models\Doctor::factory()->create();
 
-    // إنشاء user
+ 
     $user = \App\Models\User::factory()->create();
 
-    // إنشاء patient مرتبط بالـ user
+    
     $patient = \App\Models\Patient::factory()->create([
         'user_id' => $user->id
     ]);
 
-    // مصادقة المستخدم عبر Sanctum
+  
     \Laravel\Sanctum\Sanctum::actingAs($user);
 
-    // إرسال طلب toggle favorite
     $response = $this->post('/api/doctors/' . $doctor->id . '/favorite');
 
-    // التأكد من الاستجابة
+  
     $response->assertStatus(200);
 
-    // التأكد من شكل JSON
+ 
     $response->assertJsonStructure([
         'doctor_id',
         'is_favorite'
     ]);
 
-    // التأكد من تسجيل favorite في قاعدة البيانات
+ 
     $this->assertDatabaseHas('favorites', [
         'doctor_id' => $doctor->id,
         'patient_id' => $patient->id,
