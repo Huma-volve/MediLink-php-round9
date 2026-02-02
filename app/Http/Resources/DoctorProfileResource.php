@@ -21,7 +21,6 @@ class DoctorProfileResource extends JsonResource
             'specialization_description' => $this->specialization->description,
             'location' => $this->location,
             'user' => new UserResource($this->user),
-
         ];
     }
 }

@@ -11,7 +11,7 @@ use App\Helper\ApiResponse;
 
 class NotificationController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
         $user = auth()->user();
         $notifications = $user->notifications()->paginate(10);
@@ -29,7 +29,7 @@ class NotificationController extends Controller
     }
 
 
-    public function isRead(Request $request, string $id)
+    public function isRead(string $id)
     {
 
         $user = auth()->user();

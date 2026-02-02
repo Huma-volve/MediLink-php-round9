@@ -10,7 +10,7 @@ use App\Helper\ApiResponse;
 
 class PatientController extends Controller
 {
-    public function profile(Request $request)
+    public function profile()
     {
         $user_id = auth()->id();
         

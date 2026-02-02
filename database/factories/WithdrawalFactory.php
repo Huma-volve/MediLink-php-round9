@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Doctor;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,7 @@ class WithdrawalFactory extends Factory
     public function definition(): array
     {
         return [
-            'doctor_id' => \App\Models\Doctor::factory(),
+            'doctor_id' => Doctor::factory(),
             'amount' => $this->faker->randomFloat(2, 50, 1000), 
             'status' => $this->faker->randomElement(['pending', 'approved', 'rejected']),
             'admin_notes' => $this->faker->sentence(), 

@@ -92,7 +92,7 @@ class SettingController extends Controller
         );
     }
 
-    public function privacySetting(Request $request)
+    public function privacySetting()
     {
         $user_id = auth()->id();
 

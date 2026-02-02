@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             // DoctorsAndPatientsSeeder::class
 
             // SpecializationSeeder::class,
+
             // InsuranceSeeder::class,
             // PatientSeeder::class,
 

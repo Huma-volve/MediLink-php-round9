@@ -4,6 +4,9 @@ use App\Http\Controllers\Api\AppointmentController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Request;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\api\DoctorProfileController;
+use App\Http\Controllers\api\WithdrawalController;
+use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\Api\DoctorController;
 
 use App\Http\Controllers\api\SpecializationController;
@@ -56,14 +59,9 @@ Route::prefix('settings')->group(function () {
 
 
 
-
-
-
-Route::get('/doctors', [DoctorController::class, 'index']);
-Route::post('/doctors/{doctor}/favorite', [DoctorController::class, 'toggleFavorite']);
 // Authentication Routes
 Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::middleware('auth:sanctum')->group(function () {
 
@@ -83,14 +81,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('notification/read/{id}', [NotificationController::class, 'isRead']);
 
     // show doctor profile
-    Route::get('doctor/profile', [DoctorProfileController::class, 'profile']);
+    Route::get('doctor/{id}/profile', [DoctorProfileController::class, 'profile']);
 
     // show doctor withdrawals
     Route::get('doctor/{doctor}/withdrawals', [WithdrawalController::class, 'index']);
     
     // doctor request withdrawal
     Route::post('doctor/{doctor}/request/withdrawal', [WithdrawalController::class, 'store']);
-
 
 
     // APIs
