@@ -94,7 +94,6 @@ class SettingController extends Controller
 
     public function privacySetting()
     {
-
         $user_id = auth()->id();
 
         $privacy_setting = PrivacySetting::where('user_id', $user_id)->first();

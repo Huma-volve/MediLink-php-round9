@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
 
             // DoctorsAndPatientsSeeder::class
 
+            // SpecializationSeeder::class,
+
             // InsuranceSeeder::class,
             // PatientSeeder::class,
 
@@ -26,7 +28,6 @@ class DatabaseSeeder extends Seeder
             // AppointmentSeeder::class,
 
 
-            // SpecializationSeeder::class,
             // PatientSeeder::class,
             // DoctorsAndPatientsSeeder::class,
         ]);
