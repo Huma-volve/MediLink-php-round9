@@ -140,12 +140,11 @@ Route::get('/user', function (Request $request) {
 
 
 Route::get('/top-rated-doctors', TopRatedDoctorsController::class);
-Route::get('/doctors/search', [DoctorController::class, 'search']);
 
 
 //AbdulGaffar APIs
 // doctors searching
-Route::get('/doctors/search', [DoctorController::class, 'search']);
+Route::get('/doctors/search', [DoctorSearchController::class, 'search']);
 
 Route::middleware('auth:sanctum')->group(function () {
     // doctor diagnosis summary creation
