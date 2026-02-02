@@ -27,11 +27,6 @@ Route::get('/doctors/search', [DoctorSearchController::class, 'search']);
 // top rated doctors
 Route::get('/top-rated-doctors', [DoctorSearchController::class, 'topRatedDoctors']);
 
-
-
-
-
-
 // search routes
 Route::get('/doctors', [DoctorFilteringController::class, 'index']);
 Route::get('/doctors/{id}', [DoctorFilteringController::class, 'show']);
@@ -66,7 +61,36 @@ Route::prefix('settings')->group(function () {
 });
 
 
+// APIs
+Route::middleware('auth:sanctum')->group(function () {
+    // payments  peoccessing
+    Route::prefix('payments')->group(function () {
+        Route::get('/', [PaymentController::class, 'index']);
+        Route::post('/store', [PaymentController::class, 'store']);
+        Route::get('/show/{id}', [PaymentController::class, 'show']);
+        Route::post('/{id}/process', [PaymentController::class, 'processPayment']);
+        Route::post('/{id}/refund', [PaymentController::class, 'refund']);
 
+        Route::post('/payments/stripe', [PaymentController::class, 'processStripePayment']);
+    });
+
+    // Patient settings
+    Route::prefix('patient')->group(function () {
+        Route::get('/profile', [SettingPatient::class, 'index']);
+        Route::post('/profile/update', [SettingPatient::class, 'updateSettings']);
+        Route::post('/change-password', [SettingPatient::class, 'changePassword']);
+        Route::get('/paymentHistory', [SettingPatient::class, 'paymentHistory']);
+        Route::delete('/delete-account', [SettingPatient::class, 'destroy']);
+    });
+
+    // doctor diagnosis summary creation
+    Route::post('/doctor/prescriptions', [PrescriptionController::class, 'store']);
+    Route::get('/prescriptions/{id}/download', [PrescriptionController::class, 'download']);
+
+    // profile settings
+    Route::put('/user/profile-settings', [SettingController::class, 'updateProfile']);
+
+});
 
 
 // Authentication Routes
@@ -115,21 +139,22 @@ Route::middleware('auth:sanctum')->group(function () {
         ]);
 
 
-Route::get('/doctor/patient/{patient_id}', [PatientController::class, 'doctorView']);
+    Route::get('/doctor/patient/{patient_id}', [PatientController::class, 'doctorView']);
 
 
-// Statistics Routes
-Route::get('/statistics/totals', [StatisticsController::class, 'totals']);
+    // Statistics Routes
+    Route::get('/statistics/totals', [StatisticsController::class, 'totals']);
 
-// appointment APIs
-Route::get('/appointments', [AppointmentController::class, 'index']);
-Route::patch('/appointments/{appointment}/confirm', [AppointmentController::class, 'confirmAppointment']);
-Route::patch('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancelAppointment']);
-
-
+    // appointment APIs
+    Route::get('/appointments', [AppointmentController::class, 'index']);
+    Route::patch('/appointments/{appointment}/confirm', [AppointmentController::class, 'confirmAppointment']);
+    Route::patch('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancelAppointment']);
 
 
-//Route::post('/logout', [AuthController::class, 'logout']);
+
+
+
+    //Route::post('/logout', [AuthController::class, 'logout']);
 });
 
 
@@ -147,11 +172,8 @@ Route::get('/user', function (Request $request) {
 Route::get('/top-rated-doctors', TopRatedDoctorsController::class);
 
 
-//AbdulGaffar APIs
+
 // doctors searching
-
-
-
 Route::get('/doctors/search', [DoctorSearchController::class, 'search']);
 
 
@@ -182,4 +204,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // profile settings
     Route::put('/user/profile-settings', [SettingController::class, 'updateProfile']);
+
 });
