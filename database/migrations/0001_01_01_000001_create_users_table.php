@@ -15,14 +15,18 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('phone')->nullable()->unique();
+            $table->string('profile_picture')->nullable();
+            $table->enum('gender', ['male', 'female'])->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->enum('role', ['admin', 'doctor', 'patient'])->default('patient');
-            $table->string('profile_picture')->nullable();
-            $table->enum('gender', ['male', 'female'])->nullable();
             $table->boolean('is_active')->default(true);
+<<<<<<< HEAD:database/migrations/0001_01_01_000001_create_users_table.php
             $table->string('phone')->nullable()->unique();
             $table->foreignId('language_id')->nullable()->constrained('languages')->onDelete('set null');
+=======
+>>>>>>> 9411dd6 (payment  update):database/migrations/0001_01_01_000000_create_users_table.php
             $table->rememberToken();
             $table->timestamps();
         });
