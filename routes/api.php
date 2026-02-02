@@ -118,6 +118,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // show doctor withdrawals
     Route::get('doctor/{doctor}/withdrawals', [WithdrawalController::class, 'index']);
 
+    // show doctor current balance
+    Route::get('doctor/{doctor}/balance', [WithdrawalController::class, 'showBalance']);
+
     // doctor request withdrawal
     Route::post('doctor/{doctor}/request/withdrawal', [WithdrawalController::class, 'store']);
 
