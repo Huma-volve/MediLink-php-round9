@@ -42,7 +42,7 @@ class SettingController extends Controller
             'password' => ['required'],
         ]);
 
-        $user = $request->user();
+        $user = auth()->user();
 
         if (! Hash::check($request->password, $user->password)) {
 
@@ -92,9 +92,10 @@ class SettingController extends Controller
         );
     }
 
-    public function privacySetting(Request $request)
+    public function privacySetting()
     {
-        $user_id = $request->user()->id;
+
+        $user_id = auth()->id();
 
         $privacy_setting = PrivacySetting::where('user_id', $user_id)->first();
 

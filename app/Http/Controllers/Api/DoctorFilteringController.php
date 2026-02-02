@@ -13,7 +13,7 @@ class DoctorFilteringController extends Controller
 {
     public function search(Request $request)
     {
-        $doctors = Doctor::with(['user' , 'spelization' , 'clinic' , 'workingHours'])
+        $doctors = Doctor::with(['user' , 'specialization' , 'clinic' , 'workingHours'])
 
         ->where('is_verified', true)
         ->when($request->search, function ($query) use ($request) {

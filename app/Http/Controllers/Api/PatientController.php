@@ -10,9 +10,10 @@ use App\Helper\ApiResponse;
 
 class PatientController extends Controller
 {
-    public function profile(Request $request)
+    public function profile()
     {
-        $user_id = $request->user()->id;
+        
+        $user_id = auth()->id();
         
         $patient = Patient::where('user_id', $user_id)->first();
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
@@ -9,10 +10,10 @@ use App\Models\Doctor;
 
 class DoctorProfileController extends Controller
 {
-    public function profile(Request $request)
+    public function profile()
     {
-        $user_id = $request->user()->id;
-        
+        $user_id = auth()->id();
+
         $doctor = Doctor::where('user_id', $user_id)->first();
 
         if (!$doctor) {

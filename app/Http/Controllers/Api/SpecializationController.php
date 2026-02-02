@@ -7,7 +7,7 @@ use App\Helper\ApiResponse;
 
 class SpecializationController extends Controller
 {
-      public function show()
+      public function index()
     {
         $specializations = Specialization::all();
            return ApiResponse::sendResponse(

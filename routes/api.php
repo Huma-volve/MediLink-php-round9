@@ -37,8 +37,8 @@ Route::get('/doctor/{id}/reviews', [DoctorFilteringController::class, 'patientRe
 Route::get('/doctor/{id}/doctor-working-hours', [DoctorFilteringController::class, 'workingHours']);
 Route::get('/doctor/{id}/doctor-working-hours_online', [DoctorFilteringController::class, 'workingHoursOnline']);
 
-// show spelizations 
-Route::get('specializations', [SpecializationController::class, 'show']);
+// show specializations 
+Route::get('specializations', [SpecializationController::class, 'index']);
 
 
 Route::prefix('settings')->group(function () {
@@ -54,7 +54,7 @@ Route::prefix('settings')->group(function () {
 
 // Authentication Routes
 Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::middleware('auth:sanctum')->group(function () {
 
@@ -74,10 +74,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('notification/read/{id}', [NotificationController::class, 'isRead']);
 
     // show doctor profile
-    Route::get('doctor/profile', [DoctorProfileController::class, 'profile']);
+    Route::get('doctor/{id}/profile', [DoctorProfileController::class, 'profile']);
 
     // show doctor withdrawals
-    Route::get('doctor/{doctor}/withdrawals', [WithdrawalController::class, 'show']);
+    Route::get('doctor/{doctor}/withdrawals', [WithdrawalController::class, 'index']);
+    
+    // doctor request withdrawal
+    Route::post('doctor/{doctor}/request/withdrawal', [WithdrawalController::class, 'store']);
+
 
     //AbdulGaffar APIs
     // doctor diagnosis summary creation
