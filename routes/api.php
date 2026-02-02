@@ -16,6 +16,11 @@ use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\SettingController;
 
 
+
+
+
+
+
 use App\Http\Controllers\Api\PrescriptionController;
 use App\Http\Controllers\Api\RecentActivitiesController;
 
@@ -123,6 +128,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // doctor request withdrawal
     Route::post('doctor/{doctor}/request/withdrawal', [WithdrawalController::class, 'store']);
 
+
+});
+
     Route::post('/logout', [AuthController::class, 'logout']);
     // current user info
     Route::get('/me', function (Request $request) {
@@ -137,6 +145,7 @@ Route::middleware('auth:sanctum')->get(
     '/statistics/totals',
     [StatisticsController::class, 'totals']
 );
+
 
 
 
