@@ -4,10 +4,9 @@ use App\Http\Controllers\Api\AppointmentController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Request;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\api\v1\GeneralController;
 use App\Http\Controllers\Api\DoctorController;
 
-use App\Http\Controllers\api\SpelizationController;
+use App\Http\Controllers\api\SpecializationController;
 use App\Http\Controllers\api\NotificationController;
 
 use App\Http\Controllers\api\PatientController;
@@ -40,8 +39,9 @@ Route::get('/doctor/{id}/reviews', [DoctorFilteringController::class, 'patientRe
 Route::get('/doctor/{id}/doctor-working-hours', [DoctorFilteringController::class, 'workingHours']);
 Route::get('/doctor/{id}/doctor-working-hours_online', [DoctorFilteringController::class, 'workingHoursOnline']);
 
-// show spelizations
-Route::get('spelizations', [SpelizationController::class, 'show']);
+
+// show specializations 
+Route::get('specializations', [SpecializationController::class, 'index']);
 
 
 Route::prefix('settings')->group(function () {
@@ -86,7 +86,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('doctor/profile', [DoctorProfileController::class, 'profile']);
 
     // show doctor withdrawals
-    Route::get('doctor/{doctor}/withdrawals', [WithdrawalController::class, 'show']);
+    Route::get('doctor/{doctor}/withdrawals', [WithdrawalController::class, 'index']);
+    
+    // doctor request withdrawal
+    Route::post('doctor/{doctor}/request/withdrawal', [WithdrawalController::class, 'store']);
+
+
 
     // APIs
     // doctor diagnosis summary creation
