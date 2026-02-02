@@ -4,9 +4,7 @@ use App\Http\Controllers\Api\AppointmentController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Request;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\api\DoctorProfileController;
-use App\Http\Controllers\api\WithdrawalController;
-use App\Http\Controllers\Api\SettingController;
+
 use App\Http\Controllers\Api\DoctorController;
 
 use App\Http\Controllers\api\SpecializationController;
