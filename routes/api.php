@@ -154,8 +154,8 @@ Route::middleware('auth:sanctum')->group(function () {
             'user' => $request->user()
 
         ]);
-    });
-});
+    
+
 Route::get('/doctor/patient/{patient_id}', [PatientController::class, 'doctorView']);
 
 
@@ -171,7 +171,7 @@ Route::patch('/appointments/{appointment}/cancel', [AppointmentController::class
 
 
 //Route::post('/logout', [AuthController::class, 'logout']);
-// });
+});
 
 
 
@@ -181,9 +181,6 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 
-
-// show spelizations
-//Route::get('spelizations', [SpelizationController::class, 'show']);
 
 
 
