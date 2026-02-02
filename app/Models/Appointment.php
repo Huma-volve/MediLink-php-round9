@@ -7,12 +7,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Patient;
 use App\Models\Doctor;
 use App\Models\Prescription;
+use Illuminate\Database\Eloquent\Builder;
 
 class Appointment extends Model
 {
 
     use HasFactory;
 
+    const STATUS_PENDING = 'pending';
     const STATUS_UPCOMING = 'upcoming';
     const STATUS_COMPLETED = 'completed';
     const STATUS_CANCELLED = 'cancelled';
@@ -47,5 +49,11 @@ class Appointment extends Model
     public function prescriptions()
     {
         return $this->hasMany(Prescription::class);
+    }
+
+
+    public function scopeForDoctor(Builder $query, int $doctorId)
+    {
+        return $query->where('doctor_id', $doctorId);
     }
 }

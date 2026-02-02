@@ -6,18 +6,23 @@ use App\Helper\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AppointmentResource;
 use App\Models\Appointment;
+use App\Services\AppointmentService;
 
 class AppointmentController extends Controller
 {
+    protected AppointmentService $appointmentService;
+
+    public function __construct(AppointmentService $appointmentService)
+    {
+        $this->appointmentService = $appointmentService;
+    }
     public function index()
     {
         // check if this appointment belongs to the authenticated doctor
         $doctor = $this->getAuthenticatedDoctor();
 
-        $appointments = Appointment::where('doctor_id', $doctor->id)
-            ->with(['patient.user'])
-            ->orderBy('appointment_date', 'asc')
-            ->get();
+        // get doctor appointments
+        $appointments = $this->appointmentService->getDoctorAppointments($doctor);
 
         return ApiResponse::sendResponse(
             200,
@@ -26,91 +31,47 @@ class AppointmentController extends Controller
         );
     }
 
-    public function confirmAppointment($appointment)
+    public function confirmAppointment($appointmentId)
     {
         $doctor = $this->getAuthenticatedDoctor();
+        $appointment = Appointment::findOrFail($appointmentId);
 
-        $appointment = Appointment::findOrFail($appointment);
+        $confirmedAppointment = $this->appointmentService->confirmAppointment($appointment, $doctor);
 
-        // check if the appointment does not belong to this doctor
-        if ($appointment->doctor_id !== $doctor->id) {
-            return ApiResponse::sendResponse(
-                400,
-                'Appointment does not belong to this doctor',
-                null
-            );
-        }
-
-        // Check if already completed or cancelled or upcoming
-        if (
-            $appointment->status === Appointment::STATUS_COMPLETED ||
-            $appointment->status === Appointment::STATUS_CANCELLED ||
-            $appointment->status === Appointment::STATUS_UPCOMING
-        ) {
+        if (!$confirmedAppointment) {
             return ApiResponse::sendResponse(
                 400,
                 'Appointment cannot be confirmed',
                 null
             );
         }
-
-        // Check if the appointment date is in the past
-        if ($appointment->appointment_date < now()->toDateString()) {
-            return ApiResponse::sendResponse(
-                400,
-                'Appointment cannot be confirmed',
-                null
-            );
-        }
-
-        $appointment->update([
-            'status' => Appointment::STATUS_UPCOMING,
-        ]);
 
         return ApiResponse::sendResponse(
             200,
             'Appointment confirmed successfully',
-            new AppointmentResource($appointment)
+            new AppointmentResource($confirmedAppointment)
         );
     }
 
-    public function cancelAppointment($appointment)
+    public function cancelAppointment($appointmentId)
     {
-
-        // check if this appointment belongs to the authenticated doctor
         $doctor = $this->getAuthenticatedDoctor();
+        $appointment = Appointment::findOrFail($appointmentId);
 
-        $appointment = Appointment::findOrFail($appointment);
+        $cancelledAppointment = $this->appointmentService->cancelAppointment($appointment, $doctor);
 
-        // check if the appointment does not belong to this doctor
-        if ($appointment->doctor_id !== $doctor->id) {
+        if (!$cancelledAppointment) {
             return ApiResponse::sendResponse(
                 400,
-                'Appointment does not belong to this doctor',
+                'Appointment cannot be cancelled',
                 null
             );
         }
-
-        // Check if already cancelled or completed
-        if (
-            $appointment->status === Appointment::STATUS_CANCELLED ||
-            $appointment->status === Appointment::STATUS_COMPLETED
-        ) {
-            return ApiResponse::sendResponse(
-                400,
-                'Appointment already cancelled or completed',
-                null
-            );
-        }
-
-        $appointment->update([
-            'status' => Appointment::STATUS_CANCELLED,
-        ]);
 
         return ApiResponse::sendResponse(
             200,
             'Appointment cancelled successfully',
-            new AppointmentResource($appointment)
+            new AppointmentResource($cancelledAppointment)
         );
     }
 
