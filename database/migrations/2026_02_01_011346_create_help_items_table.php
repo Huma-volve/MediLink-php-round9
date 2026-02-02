@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('spelizations', function (Blueprint $table) {
+        Schema::create('help_items', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
-            $table->text('description')->nullable();
+            $table->string('faq_url');
+            $table->string('contact_support_url');
+            $table->string('documentation_url');
+            $table->string('video_tutorials_url');
             $table->timestamps();
         });
     }
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('spelizations');
+        Schema::dropIfExists('help_items');
     }
 };

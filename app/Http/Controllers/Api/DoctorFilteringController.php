@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\ApiControllers;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Doctor;
@@ -18,7 +18,9 @@ class DoctorFilteringController extends Controller
             'spelization:id,name',
             'clinic:id,name,address,doctor_id',
             'workingHours:id,doctor_id,day_of_week,opening_time,closing_time,is_closed'
-        ])
+        ]);
+
+        $doctors = Doctor::with(['user' , 'specialization' , 'clinic' , 'workingHours'])
 
         ->select('id','user_id','spelization_id','location','is_verified')
         ->where('is_verified', true)

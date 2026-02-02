@@ -13,6 +13,7 @@ class User extends Authenticatable
     use HasApiTokens, Notifiable;
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
+     use HasApiTokens, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -25,6 +26,7 @@ class User extends Authenticatable
         'phone',
         'password',
         'role',
+        'language_id'
     ];
 
     /**
@@ -50,6 +52,16 @@ class User extends Authenticatable
         ];
     }
 
+    public function privacySetting()
+    {
+        return $this->hasOne(PrivacySetting::class);
+    }
+
+    public function language()
+    {
+        return $this->belongsTo(Language::class);
+    }
+
     public function notifications()
     {
         return $this->hasMany(Notification::class);
@@ -64,6 +76,7 @@ class User extends Authenticatable
     {
         return $this->hasOne(Patient::class);
     }
+
 
     public function isPatient(): bool
     {
