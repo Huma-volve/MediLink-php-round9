@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\PatientController;
+// use App\Http\Controllers\Api\PatientController;
 
 
 
@@ -17,8 +17,8 @@ use App\Http\Controllers\Api\PatientController;
 
 
 
-use Illuminate\Support\Facades\Request;
-use App\Http\Controllers\Api\AuthController;
+// use Illuminate\Support\Facades\Request;
+// use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\api\DoctorProfileController;
 use App\Http\Controllers\api\WithdrawalController;
 use App\Http\Controllers\Api\SettingController;
@@ -31,26 +31,26 @@ use App\Http\Controllers\api\NotificationController;
 use App\Http\Controllers\api\PatientController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\DoctorSearchController;
-use App\Http\Controllers\Api\StatisticsController;
-use App\Http\Controllers\Api\PrescriptionController;
+// use App\Http\Controllers\Api\StatisticsController;
+// use App\Http\Controllers\Api\PrescriptionController;
 use App\Http\Controllers\Api\DoctormanagmentController;
 use App\Http\Controllers\Api\RecentActivitiesController;
 use App\Http\Controllers\Api\DoctorFilteringController;
-use App\Http\Controllers\api\DoctorProfileController;
+// use App\Http\Controllers\api\DoctorProfileController;
 
 use App\Http\Controllers\Api\TopRatedDoctorsController;
-use App\Http\Controllers\api\WithdrawalController;
+// use App\Http\Controllers\api\WithdrawalController;
 use App\Http\Controllers\Api\StatisticsController;
-use App\Http\Controllers\Api\DoctormanagmentController;
+// use App\Http\Controllers\Api\DoctormanagmentController;
 
 
 
 // Abdulgaffr controllers
-use App\Http\Controllers\api\NotificationController;
+// use App\Http\Controllers\api\NotificationController;
 use App\Http\Controllers\Api\PrescriptionController;
-use App\Http\Controllers\Api\PaymentController;
+// use App\Http\Controllers\Api\PaymentController;
 
-use App\Http\Controllers\Api\SettingController;
+// use App\Http\Controllers\Api\SettingController;
 
 // doctors searching
 Route::get('/doctors/search', [DoctorSearchController::class, 'search']);
@@ -127,7 +127,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // show doctor withdrawals
     Route::get('doctor/{doctor}/withdrawals', [WithdrawalController::class, 'index']);
-    
+
     // doctor request withdrawal
     Route::post('doctor/{doctor}/request/withdrawal', [WithdrawalController::class, 'store']);
 
@@ -163,25 +163,24 @@ Route::middleware('auth:sanctum')->group(function () {
 
         ]);
     });
-
 });
 Route::get('/doctor/patient/{patient_id}', [PatientController::class, 'doctorView']);
 
 
-    // Statistics Routes
-    Route::get('/statistics/totals', [StatisticsController::class, 'totals']);
+// Statistics Routes
+Route::get('/statistics/totals', [StatisticsController::class, 'totals']);
 
-    // appointment APIs
-    Route::get('/appointments', [AppointmentController::class, 'index']);
-    Route::patch('/appointments/{appointment}/confirm', [AppointmentController::class, 'confirmAppointment']);
-    Route::patch('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancelAppointment']);
-
-
+// appointment APIs
+Route::get('/appointments', [AppointmentController::class, 'index']);
+Route::patch('/appointments/{appointment}/confirm', [AppointmentController::class, 'confirmAppointment']);
+Route::patch('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancelAppointment']);
 
 
-    //Route::post('/logout', [AuthController::class, 'logout']);
-});
-ain
+
+
+//Route::post('/logout', [AuthController::class, 'logout']);
+// });
+
 
 
 
@@ -192,7 +191,7 @@ Route::get('/user', function (Request $request) {
 
 
 // show spelizations
-Route::get('spelizations', [SpelizationController::class, 'show']);
+//Route::get('spelizations', [SpelizationController::class, 'show']);
 
 
 
@@ -227,12 +226,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // appointment APIs
 
-    Route::get('/appointments', [AppointmentController::class, 'index'])->middleware('auth:sanctum');
-    Route::patch('/appointments/{appointment}/confirm', [AppointmentController::class, 'confirmAppointment'])->middleware('auth:sanctum');
-    Route::patch('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancelAppointment'])->middleware('auth:sanctum');
-   
+    Route::get('/appointments', [AppointmentController::class, 'index']);
     Route::patch('/appointments/{appointment}/confirm', [AppointmentController::class, 'confirmAppointment']);
     Route::patch('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancelAppointment']);
+
+
 
     // profile settings
     Route::put('/user/profile-settings', [SettingController::class, 'updateProfile']);
