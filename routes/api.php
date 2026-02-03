@@ -16,6 +16,11 @@ use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\SettingController;
 
 
+
+
+
+
+
 use App\Http\Controllers\Api\PrescriptionController;
 use App\Http\Controllers\Api\RecentActivitiesController;
 
@@ -69,11 +74,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/{id}/process', [PaymentController::class, 'processPayment']);
         Route::post('/{id}/refund', [PaymentController::class, 'refund']);
 
-        Route::post('/payments/stripe', [PaymentController::class, 'processStripePayment']);
+        Route::get('/doctor/{doctorId}/balance', [PaymentController::class, 'getDoctorBalance']);
+        Route::post('/stripe', [PaymentController::class, 'processStripePayment']);
+        Route::post('/recalculate-balances', [PaymentController::class, 'recalculateAllDoctorsBalance']);
     });
 
     // Patient settings
     Route::prefix('patient')->group(function () {
+
         Route::get('/profile', [SettingPatient::class, 'index']);
         Route::post('/profile/update', [SettingPatient::class, 'updateSettings']);
         Route::post('/change-password', [SettingPatient::class, 'changePassword']);
@@ -83,7 +91,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // doctor diagnosis summary creation
     Route::post('/doctor/prescriptions', [PrescriptionController::class, 'store']);
-    Route::get('/prescriptions/{id}/download', [PrescriptionController::class, 'download']);
+    Route::get('/prescriptions/{id}/download', [PrescriptionController::class, 'download'])
+        ->name('prescriptions.download');
 
     // profile settings
     Route::put('/user/profile-settings', [SettingController::class, 'updateProfile']);
@@ -122,15 +131,16 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // doctor request withdrawal
     Route::post('doctor/{doctor}/request/withdrawal', [WithdrawalController::class, 'store']);
-
-    Route::post('/logout', [AuthController::class, 'logout']);
-    // current user info
-    Route::get('/me', function (Request $request) {
-        return response()->json([
-            'user' => $request->user()
-        ]);
-    });
 });
+
+Route::post('/logout', [AuthController::class, 'logout']);
+// current user info
+Route::get('/me', function (Request $request) {
+    return response()->json([
+        'user' => $request->user()
+    ]);
+});
+
 
 // Statistics Routes
 Route::middleware('auth:sanctum')->get(
@@ -140,7 +150,8 @@ Route::middleware('auth:sanctum')->get(
 
 
 
-    Route::get('/doctors/search', [DoctorSearchController::class, 'search']);
+
+Route::get('/doctors/search', [DoctorSearchController::class, 'search']);
 
 
 Route::get('/doctors', [DoctormanagmentController::class, 'index']);
@@ -166,6 +177,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         ]);
     });
+
     Route::get('/doctor/patient/{patient_id}', [PatientController::class, 'doctorView']);
 
 
@@ -181,19 +193,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/appointments/{appointment}/confirm', [AppointmentController::class, 'confirmAppointment']);
     Route::patch('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancelAppointment']);
 });
-
-
-
-
-
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
 
 //Route::post('/logout', [AuthController::class, 'logout']);
-// });
-
 
 Route::get('/top-rated-doctors', TopRatedDoctorsController::class);
 
