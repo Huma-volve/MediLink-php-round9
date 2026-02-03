@@ -2,11 +2,24 @@
 <html dir="rtl">
 
 <head>
+
+
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <style>
         body {
-            font-family: 'sans-serif';
+            font-family: 'DejaVu Sans', sans-serif;
             direction: rtl;
+            text-align: right;
+        }
+
+        .doctor-info {
+            float: left;
+            width: 45%;
+        }
+
+        .patient-info {
+            float: right;
+            width: 45%;
         }
 
         .header {
@@ -50,6 +63,12 @@
             color: #2D6A4F;
             font-weight: bold;
         }
+
+        body {
+            font-family: 'sans-serif';
+            direction: rtl;
+            text-align: right;
+        }
     </style>
 </head>
 
@@ -59,22 +78,55 @@
         <p>Your Health, Our Priority</p>
     </div>
 
+
+
+
     <div class="doctor-info">
-        <strong>Doctor:</strong> {{ $appointment->doctor->name }} <br>
-        <strong>Specialization:</strong> {{ $appointment->doctor->specialization }}
+        <strong>Doctor:</strong>
+        {{ $appointment->doctor->user->name ?? 'Not Assigned' }} <br>
+
+        <strong>Specialization:</strong>
+        {{ $appointment->doctor->specialization->name ?? 'General' }}
+
     </div>
 
+
     <div class="patient-info">
-        <strong>Patient:</strong> {{ $appointment->patient->user->name }} <br>
-        <strong>Date:</strong> {{ $appointment->appointment_date }}
+        <strong>Patient:</strong> {{ $appointment->patient->user->name ?? 'اسم المريض غير موجود' }} <br>
     </div>
+
+    {{-- {{ gettype($prescription->medications) }} --}}
 
     <div class="clear"></div>
 
     <div class="content">
         <span class="rx">R/</span>
         <p style="margin-top: 20px;">
-            {!! nl2br(e($appointment->prescription_notes)) !!}
+
+        <p><strong>Diagnosis:</strong> {{ $prescription->diagnosis }}</p>
+
+        <p><strong>Medications:</strong></p>
+        <ul>
+
+            @if (is_array($prescription->medications))
+                <ul>
+                    @foreach ($prescription->medications as $med)
+                        <li>{{ $med }}</li>
+                    @endforeach
+                </ul>
+            @else
+                <p>{{ $prescription->medications }}</p>
+            @endif
+
+
+
+        </ul>
+
+        <p><strong>Frequency:</strong> {{ $prescription->frequency }}</p>
+        <p><strong>Duration:</strong> {{ $prescription->duration_days }} days</p>
+
+
+
         </p>
     </div>
 

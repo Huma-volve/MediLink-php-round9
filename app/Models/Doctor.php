@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -89,6 +90,8 @@ class Doctor extends Model
         return $this->belongsTo(Specialization::class);
     }
 
+
+
     public function appointments()
     {
         return $this->hasMany(Appointment::class);
@@ -161,10 +164,9 @@ class Doctor extends Model
 
         return $this->favorites->contains(fn($fav) => $fav->is_favorite);
     }
- 
+
     public function withdrawals()
     {
         return $this->hasMany(Withdrawal::class);
-
     }
 }

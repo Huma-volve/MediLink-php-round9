@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api;
 
-
 use Exception;
 use Stripe\Charge;
 use Stripe\Stripe;
@@ -11,8 +10,8 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Stripe\Exception\ApiErrorException;
-
 use App\Models\Appointment;
+use App\Models\Doctor;
 
 class PaymentController extends Controller
 {
@@ -98,6 +97,11 @@ class PaymentController extends Controller
 
         $payment = Payment::create($validated);
 
+        // إذا كان الدفع مكتمل، قم بتحديث رصيد الدكتور
+        if ($payment->payment_status === 'completed' && $payment->appointment_id) {
+            $this->updateDoctorBalance($payment);
+        }
+
         return response()->json([
             'success' => true,
             'message' => 'Payment created successfully',
@@ -118,7 +122,7 @@ class PaymentController extends Controller
             'stripeToken' => 'required',
         ]);
 
-        // إعداد المفتاح السري
+        // إعداد المفتاح setApiKey
         Stripe::setApiKey(env('STRIPE_SECRET'));
 
         try {
@@ -143,6 +147,9 @@ class PaymentController extends Controller
 
             // تحديث حالة الموعد
             Appointment::where('id', $request->appointment_id)->update(['status' => 'paid']);
+
+            // تحديث رصيد الدكتور
+            $this->updateDoctorBalance($payment);
 
             return response()->json(['success' => true, 'data' => $payment]);
         } catch (Exception $e) {
@@ -177,6 +184,11 @@ class PaymentController extends Controller
             'payment_date' => now()
         ]);
 
+        // تحديث رصيد الدكتور عند إكمال الدفع
+        if ($payment->appointment_id) {
+            $this->updateDoctorBalance($payment);
+        }
+
         return response()->json([
             'success' => true,
             'message' => 'Payment processed successfully',
@@ -209,10 +221,112 @@ class PaymentController extends Controller
             'payment_status' => 'refunded'
         ]);
 
+        // خصم المبلغ من رصيد الدكتور عند الاسترجاع
+        if ($payment->appointment_id) {
+            $this->updateDoctorBalance($payment, true);
+        }
+
         return response()->json([
             'success' => true,
             'message' => 'Payment refunded successfully',
             'data' => $payment->load(['appointment', 'patient', 'patientInsurance'])
+        ], 200);
+    }
+
+
+    private function updateDoctorBalance(Payment $payment, bool $isRefund = false)
+    {
+        $appointment = Appointment::find($payment->appointment_id);
+
+        if (!$appointment || !$appointment->doctor_id) return;
+
+        $doctor = Doctor::find($appointment->doctor_id);
+        if (!$doctor) return;
+
+        if ($isRefund) {
+            $doctor->decrement('current_balance', $payment->amount);
+        } else {
+            $doctor->increment('current_balance', $payment->amount);
+        }
+    }
+
+    // عرض رصيد الدكتور الحالي
+
+    public function getDoctorBalance($doctorId)
+    {
+        $doctor = Doctor::find($doctorId);
+
+        if (!$doctor) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Doctor not found'
+            ], 404);
+        }
+
+        // حساب الرصيد من المدفوعات المكتملة
+        $totalEarnings = Payment::whereHas('appointment', function ($query) use ($doctorId) {
+            $query->where('doctor_id', $doctorId);
+        })
+            ->where('payment_status', 'completed')
+            ->sum('amount');
+
+        // حساب المبالغ المسترجعة
+        $totalRefunded = Payment::whereHas('appointment', function ($query) use ($doctorId) {
+            $query->where('doctor_id', $doctorId);
+        })
+            ->where('payment_status', 'refunded')
+            ->sum('amount');
+
+        $calculatedBalance = $totalEarnings - $totalRefunded;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Doctor balance retrieved successfully',
+            'data' => [
+                'doctor_id' => $doctor->id,
+                'doctor_name' => $doctor->name ?? 'N/A',
+                'current_balance' => $doctor->current_balance,
+                'calculated_balance' => $calculatedBalance,
+                'total_earnings' => $totalEarnings,
+                'total_refunded' => $totalRefunded,
+            ]
+        ], 200);
+    }
+
+    // إعادة حساب رصيد جميع الأطباء من الصفر
+
+    public function recalculateAllDoctorsBalance()
+    {
+        $doctors = Doctor::all();
+        $updated = 0;
+
+        foreach ($doctors as $doctor) {
+            // حساب الرصيد الصحيح
+            $totalEarnings = Payment::whereHas('appointment', function ($query) use ($doctor) {
+                $query->where('doctor_id', $doctor->id);
+            })
+                ->where('payment_status', 'completed')
+                ->sum('amount');
+
+            $totalRefunded = Payment::whereHas('appointment', function ($query) use ($doctor) {
+                $query->where('doctor_id', $doctor->id);
+            })
+                ->where('payment_status', 'refunded')
+                ->sum('amount');
+
+            $correctBalance = $totalEarnings - $totalRefunded;
+
+            // تحديث الرصيد
+            $doctor->update(['current_balance' => $correctBalance]);
+            $updated++;
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'All doctors balances recalculated successfully',
+            'data' => [
+                'doctors_updated' => $updated
+            ]
         ], 200);
     }
 }
