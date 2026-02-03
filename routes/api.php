@@ -38,8 +38,8 @@ Route::get('/doctors/search', [DoctorSearchController::class, 'search']);
 // top rated doctors
 Route::get('/top-rated-doctors', [DoctorSearchController::class, 'topRatedDoctors']);
 
-Route::get('/doctors', [DoctormanagmentController::class, 'index']);
-Route::post('/doctors/{doctor}/favorite', [DoctormanagmentController::class, 'toggleFavorite']);
+
+
 
 // search routes
 Route::get('/doctors_search', [DoctorFilteringController::class, 'search']);
