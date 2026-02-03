@@ -131,18 +131,16 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // doctor request withdrawal
     Route::post('doctor/{doctor}/request/withdrawal', [WithdrawalController::class, 'store']);
-
-
 });
 
-    Route::post('/logout', [AuthController::class, 'logout']);
-    // current user info
-    Route::get('/me', function (Request $request) {
-        return response()->json([
-            'user' => $request->user()
-        ]);
-    });
+Route::post('/logout', [AuthController::class, 'logout']);
+// current user info
+Route::get('/me', function (Request $request) {
+    return response()->json([
+        'user' => $request->user()
+    ]);
 });
+
 
 // Statistics Routes
 Route::middleware('auth:sanctum')->get(
@@ -153,7 +151,7 @@ Route::middleware('auth:sanctum')->get(
 
 
 
-    Route::get('/doctors/search', [DoctorSearchController::class, 'search']);
+Route::get('/doctors/search', [DoctorSearchController::class, 'search']);
 
 
 Route::get('/doctors', [DoctormanagmentController::class, 'index']);
@@ -170,32 +168,31 @@ Route::get('/top-rated-doctors', [DoctorSearchController::class, 'topRatedDoctor
 Route::middleware('auth:sanctum')->group(function () {
 
 
-Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/logout', [AuthController::class, 'logout']);
 
-// current user info
-Route::get('/me', function (Request $request) {
-    return response()->json([
-        'user' => $request->user()
+    // current user info
+    Route::get('/me', function (Request $request) {
+        return response()->json([
+            'user' => $request->user()
 
-    ]);
+        ]);
+    });
+
+    Route::get('/doctor/patient/{patient_id}', [PatientController::class, 'doctorView']);
+
+
+
+    Route::get('/doctor/patient/{patient_id}', [PatientController::class, 'doctorView']);
+
+
+    // Statistics Routes
+    Route::get('/statistics/totals', [StatisticsController::class, 'totals']);
+
+    // appointment APIs
+    Route::get('/appointments', [AppointmentController::class, 'index']);
+    Route::patch('/appointments/{appointment}/confirm', [AppointmentController::class, 'confirmAppointment']);
+    Route::patch('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancelAppointment']);
 });
-Route::get('/doctor/patient/{patient_id}', [PatientController::class, 'doctorView']);
-
-
-
-Route::get('/doctor/patient/{patient_id}', [PatientController::class, 'doctorView']);
-
-
-// Statistics Routes
-Route::get('/statistics/totals', [StatisticsController::class, 'totals']);
-
-// appointment APIs
-Route::get('/appointments', [AppointmentController::class, 'index']);
-Route::patch('/appointments/{appointment}/confirm', [AppointmentController::class, 'confirmAppointment']);
-Route::patch('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancelAppointment']);
-
-
-
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
