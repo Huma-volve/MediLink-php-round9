@@ -23,7 +23,7 @@ class AppointmentSeeder extends Seeder
                     'doctor_id'         => $doctor->id,
                     'appointment_date'  => Carbon::now()->addDays(rand(1, 15))->format('Y-m-d'),
                     'appointment_time'  => rand(9, 17) . ':00:00',
-                    'status'            => 'upcoming',
+                    'status'            => 'pending',
                     'reason_for_visit'  => 'Routine Checkup',
                     'consultation_type' => rand(0, 1) ? 'online' : 'online',
                 ]);
