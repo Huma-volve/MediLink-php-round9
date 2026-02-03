@@ -144,7 +144,7 @@ Route::middleware('auth:sanctum')->get(
 
 
 Route::get('/doctors', [DoctormanagmentController::class, 'index']);
-Route::post('/doctors/{doctor}/favorite', [DoctormanagmentController::class, 'toggleFavorite']);
+Route::post('/doctors/{doctor}/favorite', [DoctormanagmentController::class, 'toggleFavorite'])->middleware("auth:sanctum");
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -170,7 +170,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 
-    Route::get('/doctor/patient/{patient_id}', [PatientController::class, 'doctorView']);
+
 
 
     // Statistics Routes
