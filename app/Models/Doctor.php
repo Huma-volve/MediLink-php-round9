@@ -38,7 +38,7 @@ class Doctor extends Model
 
     public function searchableWith()
     {
-        return ['user', 'spelization', 'workingHours' , 'workingHoursOnline'];
+        return ['user', 'specialization', 'workingHours' , 'workingHoursOnline'];
     }
 
     public function toSearchableArray()
@@ -47,7 +47,7 @@ class Doctor extends Model
             'doctor_id' => $this->id,
             'name' => optional($this->user)->name,
             'email' => optional($this->user)->email,
-            'specialization' => optional($this->spelization)->name,
+            'specialization' => optional($this->specialization)->name,
             'location' => $this->location,
             'working_days' => $this->workingHours
                 ->where('is_closed', false)

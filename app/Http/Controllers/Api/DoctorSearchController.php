@@ -21,7 +21,7 @@ class DoctorSearchController extends Controller
             })
             ->when($request->speciality_id, function ($query) use ($request) {
 
-                $query->where('spelization_id', $request->speciality_id);
+                $query->where('specialization_id', $request->speciality_id);
             })
             ->when($request->city, function ($query) use ($request) {
 

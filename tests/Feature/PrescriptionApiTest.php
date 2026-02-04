@@ -17,42 +17,44 @@ class PrescriptionApiTest extends TestCase
 
     #[Test]
     public function it_can_create_a_prescription_successfully()
-    {
-        // 1. تجهيز البيانات (Acting As Doctor)
-        $user = User::factory()->create();
-        $this->actingAs($user);
+{
+    //  تجهيز البيانات (Acting As Doctor)
+    $user = User::factory()->create(['role' => 'doctor']);
+    $doctor = Doctor::factory()->create(['user_id' => $user->id]);
 
-        // إنشاء موعد موجود في القاعدة (لأن الـ Validation يتطلب exists:appointments,id)
-        $appointment = Appointment::factory()->create();
+    $this->actingAs($user , 'sanctum');
 
-        $payload = [
-            'appointment_id'    => $appointment->id,
-            'medications'       => ['Panadol', 'Antibiotic'],
-            'diagnosis'         => 'Acute Pharyngitis',
-            'frequency'         => '3 times daily',
-            'duration_days'     => 7,
-            'prescription_date' => '2026-01-30',
-        ];
+    // إنشاء موعد موجود في القاعدة
+    $appointment = Appointment::factory()->create(['doctor_id' => $doctor->id]);
 
-        // 2. تنفيذ الطلب
-        $response = $this->postJson('/api/doctor/prescriptions', $payload);
+    $payload = [
+        'appointment_id'    => $appointment->id,
+        'medications'       => ['Panadol', 'Antibiotic'],
+        'diagnosis'         => 'Acute Pharyngitis',
+        'frequency'         => '3 times daily',
+        'duration_days'     => 7,
+        'prescription_date' => '2026-01-30',
+    ];
 
-        // 3. التحقق من النتائج
-        $response->assertStatus(201)
-            ->assertJsonPath('message', 'Diagnosis Summery created successfully');
+    // 2️⃣ تنفيذ الطلب
+    $response = $this->postJson('/api/doctor/prescriptions', $payload);
 
-        // التأكد من تحديث حالة الموعد إلى 'completed'
-        $this->assertDatabaseHas('appointments', [
-            'id' => $appointment->id,
-            'status' => 'completed'
-        ]);
+    // 3️⃣ التحقق من النتائج
+    $response->assertStatus(201)
+             ->assertJsonPath('message', 'Diagnosis Summery created successfully');
 
-        // التأكد من حفظ الروشتة
-        $this->assertDatabaseHas('prescriptions', [
-            'appointment_id' => $appointment->id,
-            'diagnosis' => 'Acute Pharyngitis'
-        ]);
-    }
+    // التأكد من تحديث حالة الموعد إلى 'completed'
+    $this->assertDatabaseHas('appointments', [
+        'id' => $appointment->id,
+        'status' => 'completed'
+    ]);
+
+    // التأكد من حفظ الروشتة
+    $this->assertDatabaseHas('prescriptions', [
+        'appointment_id' => $appointment->id,
+        'diagnosis' => 'Acute Pharyngitis'
+    ]);
+}
 
     #[Test]
    public function it_fails_to_create_prescription_for_non_existent_appointment()

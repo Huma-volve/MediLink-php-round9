@@ -5,27 +5,21 @@ use App\Http\Controllers\Api\DoctorFilteringController;
 use App\Http\Controllers\Api\StatisticsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\SpelizationController;
 use App\Http\Controllers\Api\PatientController;
 use App\Http\Controllers\Api\AuthController;
 
 // Abdulgaffr controllers
-use App\Http\Controllers\Api\DoctorController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PrescriptionController;
 use App\Http\Controllers\Api\DoctormanagmentController;
 use App\Http\Controllers\Api\DoctorProfileController;
 use App\Http\Controllers\Api\PaymentController;
-
 use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\Api\ChattingController;
-use App\Http\Controllers\Api\RecentActivitiesController;
-
 use App\Http\Controllers\Api\DoctorSearchController;
 use App\Http\Controllers\Api\SpecializationController;
 use App\Http\Controllers\Api\TopRatedDoctorsController;
 use App\Http\Controllers\Api\WithdrawalController;
-
 use App\Http\Controllers\SettingPatient;
 
 // doctors searching
@@ -37,13 +31,6 @@ Route::get('/top-rated-doctors', [DoctorSearchController::class, 'topRatedDoctor
 
 Route::get('/doctors', [DoctormanagmentController::class, 'index']);
 Route::post('/doctors/{doctor}/favorite', [DoctormanagmentController::class, 'toggleFavorite']);
-
-// search routes
-Route::get('/doctors_search', [DoctorFilteringController::class, 'search']);
-Route::get('/doctor/{id}', [DoctorFilteringController::class, 'doctorsInformation']);
-Route::get('/doctor/{id}/reviews', [DoctorFilteringController::class, 'patientReviews']);
-Route::get('/doctor/{id}/doctor-working-hours', [DoctorFilteringController::class, 'workingHours']);
-Route::get('/doctor/{id}/doctor-working-hours_online', [DoctorFilteringController::class, 'workingHoursOnline']);
 
 
 
@@ -70,6 +57,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/show/{id}', [PaymentController::class, 'show']);
         Route::post('/{id}/process', [PaymentController::class, 'processPayment']);
         Route::post('/{id}/refund', [PaymentController::class, 'refund']);
+
+        Route::delete('payments/delete/{id}', [PaymentController::class, 'destroy']);
 
         Route::post('/payments/stripe', [PaymentController::class, 'processStripePayment']);
     });
@@ -162,7 +151,6 @@ Route::middleware('auth:sanctum')->get(
 
 
 Route::group(['prefix' => 'v1'], function () {
-    // Route::get('spelizations', [GeneralController::class, 'spelizations']);
     Route::get('/doctors/search', [DoctorSearchController::class, 'search']);
 
     Route::get('/doctors/search', [DoctorSearchController::class, 'search']);
@@ -180,17 +168,6 @@ Route::get('/user', function (Request $request) {
 Route::get('/top-rated-doctors', [DoctorSearchController::class, 'topRatedDoctors']);
 
 
-
-
-    Route::post('/logout', [AuthController::class, 'logout']);
-
-    // current user info
-    Route::get('/me', function (Request $request) {
-        return response()->json([
-            'user' => $request->user()
-
-        ]);
-    });
     Route::get('/doctor/patient/{patient_id}', [PatientController::class, 'doctorView']);
 
 

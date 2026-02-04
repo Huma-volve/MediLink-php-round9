@@ -6,7 +6,7 @@ use App\Models\Specialization;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Spelization>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\specialization>
  */
 class SpecializationFactory extends Factory
 {
