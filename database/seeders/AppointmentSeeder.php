@@ -12,8 +12,16 @@ class AppointmentSeeder extends Seeder
 {
     public function run(): void
     {
-        for ($i = 0; $i < 10; $i++) {
+        // تأكد من وجود بيانات
+        if (Doctor::count() === 0) {
+            \App\Models\Doctor::factory(5)->create();
+        }
 
+        if (Patient::count() === 0) {
+            \App\Models\Patient::factory(10)->create();
+        }
+
+        for ($i = 0; $i < 10; $i++) {
             $doctor = Doctor::inRandomOrder()->first();
             $patient = Patient::inRandomOrder()->first();
 
@@ -23,9 +31,9 @@ class AppointmentSeeder extends Seeder
                     'doctor_id'         => $doctor->id,
                     'appointment_date'  => Carbon::now()->addDays(rand(1, 15))->format('Y-m-d'),
                     'appointment_time'  => rand(9, 17) . ':00:00',
-                    'status'            => 'upcoming',
+                    'status'            => 'pending', // واحد من ['pending','completed','cancelled','paid']
                     'reason_for_visit'  => 'Routine Checkup',
-                    'consultation_type' => rand(0, 1) ? 'online' : 'online',
+                    'consultation_type' => rand(0, 1) ? 'online' : 'in_person',
                 ]);
             }
         }

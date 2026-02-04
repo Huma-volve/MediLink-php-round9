@@ -10,12 +10,13 @@ use App\Models\Review;
 
 use Illuminate\Http\Request;
 
+
 class PatientController extends Controller
 {
     public function profile()
     {
         $user_id = auth()->id();
-        
+
         $patient = Patient::where('user_id', $user_id)->first();
 
         if (!$patient) {
