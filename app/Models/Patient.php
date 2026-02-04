@@ -51,16 +51,14 @@ class Patient extends Model
         'date_of_birth' => 'date',
     ];
 
-<<<<<<< HEAD
-    public function appointments()
-=======
+
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
     public function appointments(): HasMany
->>>>>>> 1a0b25265edd72a2b03c8142f34ecf1c5a6e4a33
+
     {
         return $this->hasMany(Appointment::class);
     }
