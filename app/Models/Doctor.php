@@ -1,13 +1,15 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Laravel\Scout\Searchable;
 use App\Models\User;
 use App\Models\Review;
 use App\Models\Clinic;
+
 use App\Models\Specialization;
+
 use App\Models\Appointment;
 use App\Models\MedicalHistory;
 use App\Models\Prescription;
@@ -17,8 +19,7 @@ use App\Models\DoctorWorking;
 
 class Doctor extends Model
 {
-    use Searchable ,  HasFactory;
-
+    use HasFactory;
     protected $fillable = [
         'user_id',
         'license_number',
@@ -65,9 +66,7 @@ class Doctor extends Model
         ];
     }
 
-
     protected $appends = ['is_favorite'];
-
     public function favorites()
     {
         return $this->hasMany(Favorite::class);
@@ -83,11 +82,12 @@ class Doctor extends Model
     }
 
 
-
     public function specialization()
     {
         return $this->belongsTo(Specialization::class);
     }
+
+
 
     public function appointments()
     {
@@ -118,12 +118,6 @@ class Doctor extends Model
     public function workingHours()
     {
         return $this->hasMany(DoctorWorking::class);
-    }
-
-
-    public function workingHoursOnline()
-    {
-        return $this->hasMany(DoctorWorkingHoursOnline::class);
     }
 
     public function scopeFilter($query, $request)
@@ -161,10 +155,9 @@ class Doctor extends Model
 
         return $this->favorites->contains(fn($fav) => $fav->is_favorite);
     }
- 
+
     public function withdrawals()
     {
         return $this->hasMany(Withdrawal::class);
-
     }
 }
