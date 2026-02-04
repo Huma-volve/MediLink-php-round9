@@ -18,8 +18,6 @@ use App\Http\Controllers\Api\PaymentController;
 
 use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\Api\ChattingController;
-
-use App\Http\Controllers\Api\PrescriptionController;
 use App\Http\Controllers\Api\RecentActivitiesController;
 
 use App\Http\Controllers\Api\DoctorSearchController;
