@@ -4,12 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 use App\Models\User;
 use App\Models\Review;
 use App\Models\Clinic;
-
 use App\Models\Specialization;
-
 use App\Models\Appointment;
 use App\Models\MedicalHistory;
 use App\Models\Prescription;
@@ -19,7 +18,8 @@ use App\Models\DoctorWorking;
 
 class Doctor extends Model
 {
-    use HasFactory;
+    use Searchable ,  HasFactory;
+
     protected $fillable = [
         'user_id',
         'license_number',
@@ -35,7 +35,40 @@ class Doctor extends Model
         'current_balance'
     ];
 
+
+
+    public function searchableWith()
+    {
+        return ['user', 'spelization', 'workingHours' , 'workingHoursOnline'];
+    }
+
+    public function toSearchableArray()
+    {
+        return [
+            'doctor_id' => $this->id,
+            'name' => optional($this->user)->name,
+            'email' => optional($this->user)->email,
+            'specialization' => optional($this->spelization)->name,
+            'location' => $this->location,
+            'working_days' => $this->workingHours
+                ->where('is_closed', false)
+                ->pluck('day_of_week')
+                ->unique()
+                ->values()
+                ->toArray(),
+
+            'working_days_online' => $this->workingHoursOnline
+                ->where('is_closed', false)
+                ->pluck('day_of_week')
+                ->unique()
+                ->values()
+                ->toArray(),
+        ];
+    }
+
+
     protected $appends = ['is_favorite'];
+
     public function favorites()
     {
         return $this->hasMany(Favorite::class);
@@ -49,6 +82,7 @@ class Doctor extends Model
     {
         return $this->hasMany(Clinic::class);
     }
+
 
 
     public function specialization()
@@ -87,6 +121,12 @@ class Doctor extends Model
     public function workingHours()
     {
         return $this->hasMany(DoctorWorking::class);
+    }
+
+
+    public function workingHoursOnline()
+    {
+        return $this->hasMany(DoctorWorkingHoursOnline::class);
     }
 
     public function scopeFilter($query, $request)

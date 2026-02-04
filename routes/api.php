@@ -6,20 +6,18 @@ use App\Http\Controllers\Api\StatisticsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PatientController;
-
 use App\Http\Controllers\Api\AuthController;
+
+// Abdulgaffr controllers
+use App\Http\Controllers\Api\DoctorController;
+use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\PrescriptionController;
 use App\Http\Controllers\Api\DoctormanagmentController;
 use App\Http\Controllers\Api\DoctorProfileController;
-use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PaymentController;
 
 use App\Http\Controllers\Api\SettingController;
-
-
-
-
-
-
+use App\Http\Controllers\Api\ChattingController;
 
 use App\Http\Controllers\Api\PrescriptionController;
 use App\Http\Controllers\Api\RecentActivitiesController;
@@ -133,6 +131,33 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('doctor/{doctor}/request/withdrawal', [WithdrawalController::class, 'store']);
 });
 
+    Route::post('/logout', [AuthController::class, 'logout']);
+    // current user info
+    Route::get('/me', function (Request $request) {
+        return response()->json([
+            'user' => $request->user()
+        ]);
+    });
+
+
+    // search routes
+    Route::get('/doctors_search', [DoctorFilteringController::class, 'search']);
+    Route::get('/doctor/{id}', [DoctorFilteringController::class, 'doctorsInformation']);
+    Route::get('/doctor/{id}/doctor-working-hours', [DoctorFilteringController::class, 'workingHours']);
+    Route::get('/doctor/{id}/doctor-working-hours_online', [DoctorFilteringController::class, 'workingHoursOnline']);
+
+    // create working hours
+    Route::post('/doctor/{id}/create-working-hours', [DoctorFilteringController::class, 'createWorkingDays']);
+
+    // patient reviews
+    Route::get('/doctor/{id}/reviews', [PatientController::class, 'patientReviews']);
+    Route::post('/create_review', [PatientController::class, 'createReview']);
+
+    // Apis For Chat
+    Route::post('/chat/send' , [ChattingController::class , 'createMessage']);
+    Route::get('/chat/{userId}' , [ChattingController::class, 'showMessage']);
+    Route::post('/chat/read/{userId}' , [ChattingController::class, 'markAsRead']);
+    Route::get('/chat/count_unread_messages/{userId}' , [ChattingController::class, 'countMessage']);
 Route::post('/logout', [AuthController::class, 'logout']);
 // current user info
 Route::get('/me', function (Request $request) {
@@ -192,6 +217,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/appointments', [AppointmentController::class, 'index']);
     Route::patch('/appointments/{appointment}/confirm', [AppointmentController::class, 'confirmAppointment']);
     Route::patch('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancelAppointment']);
+
 });
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -208,13 +234,19 @@ Route::get('/doctors/search', [DoctorSearchController::class, 'search']);
 
 Route::middleware('auth:sanctum')->group(function () {
 
-    // appointment APIs
+    // profile settings
+    Route::put('/user/profile-settings', [SettingController::class, 'updateProfile']);
 
+
+
+
+    // appointment APIs
+    Route::get('/appointments', [AppointmentController::class, 'index'])->middleware('auth:sanctum');
+    Route::patch('/appointments/{appointment}/confirm', [AppointmentController::class, 'confirmAppointment'])->middleware('auth:sanctum');
+    Route::patch('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancelAppointment'])->middleware('auth:sanctum');
+    // profile settings
+    Route::put('/user/profile-settings', [SettingController::class, 'updateProfile']);
     Route::get('/appointments', [AppointmentController::class, 'index']);
     Route::patch('/appointments/{appointment}/confirm', [AppointmentController::class, 'confirmAppointment']);
     Route::patch('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancelAppointment']);
 });
-
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');

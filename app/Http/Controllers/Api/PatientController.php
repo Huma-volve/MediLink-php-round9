@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helper\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PatientResource;
 use App\Models\Patient;
+use App\Models\Review;
 
 use Illuminate\Http\Request;
-use App\Helper\ApiResponse;
-
 
 
 class PatientController extends Controller
@@ -35,6 +35,47 @@ class PatientController extends Controller
             $data
         );
     }
+
+    public function createReview(Request $request)
+    {
+        $patient = $request->user()->patient; 
+
+        $request->validate([
+            'doctor_id' => 'required|exists:doctors,id',
+            'rating' => 'required|integer|min:1|max:5',
+            'review' => 'required|string',
+        ]);
+
+        $review = Review::create([
+            'doctor_id' => $request->doctor_id,
+            'patient_id' => $patient->id,
+            'rating' => $request->rating,
+            'review' => $request->review,
+        ]);
+
+        return ApiResponse::sendResponse(200 , "review added successfully" , $review);
+    }
+
+    public function patientReviews($id)
+    {
+        $reviews = Review::with(['patient.user' => function($query)
+        {
+            $query->select('id' , 'name');
+        }])
+        
+        ->where('doctor_id' , $id)
+        ->paginate();
+
+        if ($reviews->isEmpty()) {
+
+            return ApiResponse::error(404 , 'Reviews Not Found');
+
+        } else {
+
+            return ApiResponse::sendResponse(200 , 'Patients Reviews' , $reviews);
+        }
+    }
+    
     public function doctorView($patient_id)
     {
         $patient = Patient::with([
