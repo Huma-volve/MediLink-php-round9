@@ -21,13 +21,13 @@ class PatientControllerTest extends TestCase
     #[Test]
     public function doctor_can_view_patient_details()
     {
-        // 1. أنشئ doctor user و doctor
+
         $doctorUser = User::factory()->create(['role' => 'doctor']);
         $doctor = Doctor::factory()->create([
             'user_id' => $doctorUser->id
         ]);
 
-        // 2. أنشئ patient user و patient
+
         $patientUser = User::factory()->create(['role' => 'patient']);
         $insurance = Insurance::factory()->create();
         $patient = Patient::factory()->create([
@@ -35,7 +35,7 @@ class PatientControllerTest extends TestCase
             'insurance_id' => $insurance->id
         ]);
 
-        // 3. أنشئ appointment مرتبط بالdoctor و patient
+
         $appointment = Appointment::factory()->create([
             'patient_id' => $patient->id,
             'doctor_id' => $doctor->id,
@@ -46,12 +46,12 @@ class PatientControllerTest extends TestCase
             'consultation_type' => 'in_person'
         ]);
 
-        // 4. أنشئ prescription مرتبط بالappointment
+
         $prescription = Prescription::factory()->create([
             'appointment_id' => $appointment->id
         ]);
 
-        // 5. أنشئ medical history مرتبط بالdoctor و patient و prescription
+
         $medicalHistory = MedicalHistory::factory()->create([
             'patient_id' => $patient->id,
             'doctor_id' => $doctor->id,
@@ -61,16 +61,15 @@ class PatientControllerTest extends TestCase
             'previous_surgeries' => 'Appendectomy',
         ]);
 
-        // تسجيل دخول doctor
+
         Sanctum::actingAs($doctorUser, ['*']);
 
-        // أرسل GET request للـ route
+
         $response = $this->getJson("/api/doctor/patient/{$patient->id}");
 
-        // تحقق من status
+
         $response->assertStatus(200);
 
-        // تحقق من JSON structure
         $response->assertJsonStructure([
             'patient' => [
                 'id',
@@ -97,10 +96,10 @@ class PatientControllerTest extends TestCase
             'insurance_id' => $insurance->id
         ]);
 
-        // بدون تسجيل دخول
+
         $response = $this->getJson("/api/doctor/patient/{$patient->id}");
 
-        $response->assertStatus(401); // auth:sanctum middleware
+        $response->assertStatus(401);
     }
 
     #[Test]
@@ -109,7 +108,7 @@ class PatientControllerTest extends TestCase
         $doctorUser = User::factory()->create(['role' => 'doctor']);
         Sanctum::actingAs($doctorUser, ['*']);
 
-        $response = $this->getJson("/api/doctor/patient/999"); // ID غير موجود
+        $response = $this->getJson("/api/doctor/patient/999");
 
         $response->assertStatus(404);
         $response->assertJson([
