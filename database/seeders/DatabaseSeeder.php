@@ -29,8 +29,8 @@ class DatabaseSeeder extends Seeder
 
 
 
-           
-           
+
+
             DoctorsAndPatientsSeeder::class,
             PrescriptionSeeder::class,
             AppointmentSeeder::class,

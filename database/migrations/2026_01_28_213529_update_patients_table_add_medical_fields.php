@@ -13,12 +13,6 @@ return new class extends Migration
     {
         Schema::table('patients', function (Blueprint $table) {
 
-
-            $table->enum('gender', ['male', 'female'])
-                ->nullable()
-                ->after('date_of_birth');
-
-
             $table->unique('user_id');
 
 

@@ -2,129 +2,68 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\User;
 use App\Models\Doctor;
 use App\Models\Patient;
-use App\Models\Favorite;
+use App\Models\Specialization;
+use App\Models\User;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DoctorsAndPatientsSeeder extends Seeder
 {
     public function run(): void
     {
-        // إنشاء مستخدمين مرضى
-        $patientUser1 = User::firstOrCreate(
-            ['email' => 'patient1@example.com'],
+        // 1) Ensure specialization exists
+        $spec = Specialization::firstOrCreate(
+            ['name' => 'General Medicine'],
+            ['name' => 'General Medicine']
+        );
+
+        // 2) Create doctor user
+        $doctorUser = User::firstOrCreate(
+            ['email' => 'doctor@example.com'],
             [
-                'name' => 'Patient One',
-                'password' => bcrypt('password'),
-                'role' => 'patient'
+                'name' => 'Dr Demo',
+                'password' => Hash::make('password'),
+                'role' => 'doctor',
+                'is_active' => true,
             ]
         );
 
-        $patientUser2 = User::firstOrCreate(
-            ['email' => 'patient2@example.com'],
-            [
-                'name' => 'Patient Two',
-                'password' => bcrypt('password'),
-                'role' => 'patient'
-            ]
-        );
-
-        $patient1 = Patient::firstOrCreate(
-            ['user_id' => $patientUser1->id],
-            [
-                'date_of_birth' => '1990-01-01',
-                'blood_group' => 'O+'
-            ]
-        );
-
-        $patient2 = Patient::firstOrCreate(
-            ['user_id' => $patientUser2->id],
-            [
-                'date_of_birth' => '1992-05-10',
-                'blood_group' => 'A+'
-            ]
-        );
-
-        $doctorUser1 = User::firstOrCreate(
-            ['email' => 'doctor1@example.com'],
-            [
-                'name' => 'Doctor One',
-                'password' => bcrypt('password'),
-                'role' => 'doctor'
-            ]
-        );
-
-        $doctorUser2 = User::firstOrCreate(
-            ['email' => 'doctor2@example.com'],
-            [
-                'name' => 'Doctor Two',
-                'password' => bcrypt('password'),
-                'role' => 'doctor'
-            ]
-        );
-
-        $doctorUser3 = User::firstOrCreate(
-            ['email' => 'doctor3@example.com'],
-            [
-                'name' => 'Doctor Three',
-                'password' => bcrypt('password'),
-                'role' => 'doctor'
-            ]
-        );
-
-        $doctor1 = Doctor::firstOrCreate(
-            ['user_id' => $doctorUser1->id],
+        // 3) Create doctor profile using the real specialization id
+        Doctor::updateOrCreate(
+            ['user_id' => $doctorUser->id],
             [
                 'license_number' => 'D001',
                 'experience_years' => 10,
-                'specialization_id' => 1,
+                'specialization_id' => $spec->id,
                 'location' => 'Cairo',
                 'is_verified' => true,
-                'current_balance' => 1000
+                'current_balance' => 1000,
             ]
         );
 
-        $doctor2 = Doctor::firstOrCreate(
-            ['user_id' => $doctorUser2->id],
+        // 4) Create patient user
+        $patientUser = User::firstOrCreate(
+            ['email' => 'patient@example.com'],
             [
-                'license_number' => 'D002',
-                'experience_years' => 5,
-                'specialization_id' => 2,
-                'location' => 'Giza',
-                'is_verified' => true,
-                'current_balance' => 2000
-
+                'name' => 'Patient Demo',
+                'password' => Hash::make('password'),
+                'role' => 'patient',
+                'is_active' => true,
             ]
         );
 
-        $doctor3 = Doctor::firstOrCreate(
-            ['user_id' => $doctorUser3->id],
+        // 5) Create patient profile
+        Patient::updateOrCreate(
+            ['user_id' => $patientUser->id],
             [
-                'license_number' => 'D003',
-                'experience_years' => 8,
-                'specialization_id' => 1,
-                'location' => 'Cairo',
-                'is_verified' => false,
-                'current_balance' => 3000
-
+                'date_of_birth' => '1999-01-01',
+                'blood_group' => 'O+',
+                'emergency_contact_name' => 'Emergency Person',
+                'emergency_contact_phone' => '01000000000',
+                'emergency_contact_relationship' => 'Brother',
             ]
-        );
-
-        Favorite::updateOrCreate(
-            ['patient_id' => $patient1->id, 'doctor_id' => $doctor1->id],
-            ['is_favorite' => true]
-        );
-
-        Favorite::updateOrCreate(
-            ['patient_id' => $patient1->id, 'doctor_id' => $doctor3->id],
-            ['is_favorite' => true]
-        );
-
-        Favorite::updateOrCreate(
-            ['patient_id' => $patient2->id, 'doctor_id' => $doctor2->id],
-            ['is_favorite' => true]
         );
     }
 }

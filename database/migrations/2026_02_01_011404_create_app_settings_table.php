@@ -20,6 +20,10 @@ return new class extends Migration
             $table->string('privacy_url')->nullable();
             $table->string('license_url')->nullable();
             $table->string('release_notes_url')->nullable();
+            $table->string('support_email')->nullable();
+            $table->string('website_url')->nullable();
+            $table->string('company_address')->nullable();
+            $table->string('app_logo')->nullable();
             $table->timestamps();
         });
     }

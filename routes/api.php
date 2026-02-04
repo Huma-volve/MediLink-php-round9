@@ -154,47 +154,47 @@ Route::middleware('auth:sanctum')->group(function () {
             'user' => $request->user()
 
         ]);
-    
-
-Route::get('/doctor/patient/{patient_id}', [PatientController::class, 'doctorView']);
 
 
-// Statistics Routes
-Route::get('/statistics/totals', [StatisticsController::class, 'totals']);
-
-// appointment APIs
-Route::get('/appointments', [AppointmentController::class, 'index']);
-Route::patch('/appointments/{appointment}/confirm', [AppointmentController::class, 'confirmAppointment']);
-Route::patch('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancelAppointment']);
+        Route::get('/doctor/patient/{patient_id}', [PatientController::class, 'doctorView']);
 
 
+        // Statistics Routes
+        Route::get('/statistics/totals', [StatisticsController::class, 'totals']);
+
+        // appointment APIs
+        Route::get('/appointments', [AppointmentController::class, 'index']);
+        Route::patch('/appointments/{appointment}/confirm', [AppointmentController::class, 'confirmAppointment']);
+        Route::patch('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancelAppointment']);
 
 
-//Route::post('/logout', [AuthController::class, 'logout']);
+
+
+        //Route::post('/logout', [AuthController::class, 'logout']);
+    });
+
+
+
+
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    })->middleware('auth:sanctum');
+
+
+
+
+
+
+    Route::get('/top-rated-doctors', TopRatedDoctorsController::class);
+
+
+    //AbdulGaffar APIs
+    // doctors searching
+
+
+
+    Route::get('/doctors/search', [DoctorSearchController::class, 'search']);
 });
-
-
-
-
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
-
-
-
-
-
-
-Route::get('/top-rated-doctors', TopRatedDoctorsController::class);
-
-
-//AbdulGaffar APIs
-// doctors searching
-
-
-
-Route::get('/doctors/search', [DoctorSearchController::class, 'search']);
-
 
 Route::middleware('auth:sanctum')->group(function () {
     // doctor diagnosis summary creation

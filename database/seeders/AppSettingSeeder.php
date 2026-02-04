@@ -21,6 +21,10 @@ class AppSettingSeeder extends Seeder
             'privacy_url' => 'https://example.com/privacy',
             'license_url' => 'https://example.com/license',
             'release_notes_url' => 'https://example.com/release-notes',
+            'support_email' => '[EMAIL_ADDRESS]',
+            'website_url' => 'https://example.com',
+            'company_address' => '123 Main St, Anytown, USA',
+            'app_logo' => 'app-settings/logo.png',
         ]);
     }
 }
