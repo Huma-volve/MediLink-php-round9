@@ -10,12 +10,13 @@ use Illuminate\Http\Request;
 use App\Helper\ApiResponse;
 
 
+
 class PatientController extends Controller
 {
     public function profile()
     {
         $user_id = auth()->id();
-        
+
         $patient = Patient::where('user_id', $user_id)->first();
 
         if (!$patient) {
