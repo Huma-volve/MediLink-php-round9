@@ -16,13 +16,9 @@ class AppSettingForm
             Section::make('Application')
                 ->columns(2)
                 ->schema([
-                    // لو تبي app_name من env فقط (غير قابل للحفظ)
                     TextInput::make('app_name')
                         ->default(env('APP_NAME'))
                         ->required(),
-
-                    // أو لو تبي تخليه من DB (احذف disabled/dehydrated(false))
-                    // TextInput::make('app_name')->required(),
 
                     TextInput::make('app_version')
                         ->required()
