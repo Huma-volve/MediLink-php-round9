@@ -12,8 +12,6 @@ class EditAppSetting extends EditRecord
 
     protected function getHeaderActions(): array
     {
-        return [
-            // لا Delete
-        ];
+        return [];
     }
 }

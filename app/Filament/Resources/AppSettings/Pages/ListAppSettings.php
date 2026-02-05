@@ -20,7 +20,5 @@ class ListAppSettings extends ListRecords
             $this->redirect(AppSettingResource::getUrl('edit', ['record' => $record]));
             return;
         }
-
-        // إذا ما في سجل (احتياط): خليه يعرض الليست (أو أنشئ واحد تلقائيًا)
     }
 }
