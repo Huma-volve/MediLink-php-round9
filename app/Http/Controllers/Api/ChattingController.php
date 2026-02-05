@@ -74,6 +74,6 @@ class ChattingController extends Controller
         ->where('is_read' , false)
         ->count();
 
-        return ApiResponse::sendResponse(200 , 'count unread messages id ' , $countUnread);
+        return ApiResponse::sendResponse(200 , 'count unread messages' , $countUnread);
     }
 }

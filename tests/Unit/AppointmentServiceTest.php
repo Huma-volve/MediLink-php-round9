@@ -80,8 +80,8 @@ class AppointmentServiceTest extends TestCase
     public function test_doctor_can_confirm_appointment()
     {
 
-        $spelization = Specialization::create([
-            'name' => 'Test Spelization',
+        $specialization = Specialization::create([
+            'name' => 'Test specialization',
         ]);
         // Create user
         $user = User::create([
@@ -95,7 +95,7 @@ class AppointmentServiceTest extends TestCase
         $doctor = Doctor::create([
             'user_id' => $user->id,
             'license_number' => 'DOC12345',
-            'specialization_id' => $spelization->id,
+            'specialization_id' => $specialization->id,
         ]);
 
         // Create patient user
@@ -131,8 +131,8 @@ class AppointmentServiceTest extends TestCase
 
     public function test_doctor_can_cancel_appointment()
     {
-        $spelization = Specialization::create([
-            'name' => 'Test  cancel Spelization',
+        $specialization = Specialization::create([
+            'name' => 'Test  cancel specialization',
         ]);
         // Create user
         $user = User::create([
@@ -146,7 +146,7 @@ class AppointmentServiceTest extends TestCase
         $doctor = Doctor::create([
             'user_id' => $user->id,
             'license_number' => 'DOC12d345',
-            'specialization_id' => $spelization->id,
+            'specialization_id' => $specialization->id,
         ]);
 
         // Create patient user
