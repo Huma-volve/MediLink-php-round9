@@ -21,12 +21,12 @@ class PaymentController extends Controller
 
         $query = Payment::with(['appointment', 'patient', 'patientInsurance']);
 
-        // Filter by patient
+        // Filter by patient_id
         if ($request->filled('patient_id')) {
             $query->where('patient_id', $request->patient_id);
         }
 
-        // Filter by appointment
+        // Filter by appointment_id
         if ($request->filled('appointment_id')) {
             $query->where('appointment_id', $request->appointment_id);
         }
@@ -36,7 +36,7 @@ class PaymentController extends Controller
             $query->where('payment_status', $request->payment_status);
         }
 
-        // Filter by payment method
+        // Filter by payment method stripe- credit_card...
         if ($request->filled('payment_method')) {
             $query->where('payment_method', $request->payment_method);
         }
@@ -97,7 +97,7 @@ class PaymentController extends Controller
 
         $payment = Payment::create($validated);
 
-        // إذا كان الدفع مكتمل، قم بتحديث رصيد الدكتور
+        // إذا كان الدفع مكتمل، يتم تحديث رصيد الدكتور
         if ($payment->payment_status === 'completed' && $payment->appointment_id) {
             $this->updateDoctorBalance($payment);
         }
@@ -110,8 +110,6 @@ class PaymentController extends Controller
     }
 
 
-    // Stripe::setApiKey(config('services.stripe.secret') ?? env('STRIPE_SECRET'));
-
     // stripe integration
     public function processStripePayment(Request $request)
     {
@@ -122,7 +120,7 @@ class PaymentController extends Controller
             'stripeToken' => 'required',
         ]);
 
-        // إعداد المفتاح setApiKey
+        //setApiKey    إعداد المفتاح
         Stripe::setApiKey(env('STRIPE_SECRET'));
 
         try {

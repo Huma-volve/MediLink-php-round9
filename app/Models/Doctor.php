@@ -29,7 +29,8 @@ class Doctor extends Model
         'education',
         'consultation_fee_online',
         'consultation_fee_inperson',
-        'specialization_id',
+        // 'specialization_id',
+        'spelization_id',
         'location',
         'is_verified',
         'current_balance'
@@ -51,12 +52,15 @@ class Doctor extends Model
     }
 
 
+    // public function specialization()
+    // {
+    //     return $this->belongsTo(Specialization::class);
+    // }
+
     public function specialization()
     {
-        return $this->belongsTo(Specialization::class);
+        return $this->belongsTo(Specialization::class, 'spelization_id');
     }
-
-
 
     public function appointments()
     {
