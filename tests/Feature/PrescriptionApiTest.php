@@ -16,6 +16,31 @@ class PrescriptionApiTest extends TestCase
 
     #[Test]
     public function it_can_create_a_prescription_successfully()
+{
+    //  تجهيز البيانات (Acting As Doctor)
+    $user = User::factory()->create(['role' => 'doctor']);
+    $doctor = Doctor::factory()->create(['user_id' => $user->id]);
+
+    $this->actingAs($user , 'sanctum');
+
+    // إنشاء موعد موجود في القاعدة
+    $appointment = Appointment::factory()->create(['doctor_id' => $doctor->id]);
+
+    $payload = [
+        'appointment_id'    => $appointment->id,
+        'medications'       => ['Panadol', 'Antibiotic'],
+        'diagnosis'         => 'Acute Pharyngitis',
+        'frequency'         => '3 times daily',
+        'duration_days'     => 7,
+        'prescription_date' => '2026-01-30',
+    ];
+
+    // 2️⃣ تنفيذ الطلب
+    $response = $this->postJson('/api/doctor/prescriptions', $payload);
+
+    // 3️⃣ التحقق من النتائج
+    $response->assertStatus(201)
+             ->assertJsonPath('message', 'Diagnosis Summery created successfully');
     {
         //  إنشاء طبيب ومستخدم مرتبط به لتجاوز الاوثنتكيشن
         $user = User::factory()->create(['role' => 'doctor']);
@@ -45,11 +70,18 @@ class PrescriptionApiTest extends TestCase
         $response->assertStatus(201)
             ->assertJsonPath('message', 'Diagnosis summary created successfully');
 
-        // التأكد من تحديث حالة الموعد إلى 'completed'
-        $this->assertDatabaseHas('appointments', [
-            'id' => $appointment->id,
-            'status' => 'completed'
-        ]);
+    // التأكد من تحديث حالة الموعد إلى 'completed'
+    $this->assertDatabaseHas('appointments', [
+        'id' => $appointment->id,
+        'status' => 'completed'
+    ]);
+
+    // التأكد من حفظ الروشتة
+    $this->assertDatabaseHas('prescriptions', [
+        'appointment_id' => $appointment->id,
+        'diagnosis' => 'Acute Pharyngitis'
+    ]);
+}
 
         // التأكد من حفظ الروشتة في الداتابيز
         $this->assertDatabaseHas('prescriptions', [

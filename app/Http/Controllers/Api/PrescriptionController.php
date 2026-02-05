@@ -16,15 +16,15 @@ class PrescriptionController extends Controller
      */
     public function search(Request $request)
     {
-        $doctors = Doctor::with(['user:id,name', 'spelization:id,name'])
+        $doctors = Doctor::with(['user:id,name', 'specialization:id,name'])
             ->where('is_verified', true)
             ->when($request->name, function ($query) use ($request) {
                 $query->whereHas('user', function ($q) use ($request) {
                     $q->where('name', 'like', '%' . $request->name . '%');
                 });
             })
-            ->when($request->spelization_id, function ($query) use ($request) {
-                $query->where('spelization_id', $request->spelization_id);
+            ->when($request->specialization->id, function ($query) use ($request) {
+                $query->where('specialization->id', $request->specialization->id);
             })
             ->when($request->city, function ($query) use ($request) {
                 $query->where('location', 'like', '%' . $request->city . '%');

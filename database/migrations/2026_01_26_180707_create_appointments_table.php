@@ -21,7 +21,7 @@ return new class extends Migration
                 ->onDelete('cascade');
             $table->date('appointment_date');
             $table->time('appointment_time');
-            $table->enum('status', ['pending', 'completed', 'cancelled', 'paid'])->default('pending');
+            $table->enum('status', ['pending', 'completed', 'upcoming' , 'cancelled', 'paid'])->default('pending');
             $table->text('reason_for_visit')->nullable();
             $table->enum('consultation_type', ['in_person', 'online'])->default('in_person');
             $table->timestamps();

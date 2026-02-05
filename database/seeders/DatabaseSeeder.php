@@ -29,15 +29,14 @@ class DatabaseSeeder extends Seeder
 
 
 
-
            SpecializationSeeder::class,
             DoctorsAndPatientsSeeder::class,
+            PatientSeeder::class,
             PrescriptionSeeder::class,
             AppointmentSeeder::class,   // PatientSeeder::class,
- PatientSeeder::class,
-PrescriptionItemSeeder::class,
-MedicalHistorySeeder::class,
-
+            MessageSeeder::class,
+            PrescriptionItemSeeder::class,
+            MedicalHistorySeeder::class,
 
         ]);
 
