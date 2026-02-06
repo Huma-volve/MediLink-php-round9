@@ -35,6 +35,37 @@ class Doctor extends Model
         'current_balance'
     ];
 
+
+
+    public function searchableWith()
+    {
+        return ['user', 'specialization', 'workingHours' , 'workingHoursOnline'];
+    }
+
+    public function toSearchableArray()
+    {
+        return [
+            'doctor_id' => $this->id,
+            'name' => optional($this->user)->name,
+            'email' => optional($this->user)->email,
+            'specialization' => optional($this->specialization)->name,
+            'location' => $this->location,
+            'working_days' => $this->workingHours
+                ->where('is_closed', false)
+                ->pluck('day_of_week')
+                ->unique()
+                ->values()
+                ->toArray(),
+
+            'working_days_online' => $this->workingHoursOnline
+                ->where('is_closed', false)
+                ->pluck('day_of_week')
+                ->unique()
+                ->values()
+                ->toArray(),
+        ];
+    }
+
     protected $appends = ['is_favorite'];
     public function favorites()
     {
@@ -55,6 +86,8 @@ class Doctor extends Model
     {
         return $this->belongsTo(Specialization::class);
     }
+
+
 
     public function appointments()
     {
