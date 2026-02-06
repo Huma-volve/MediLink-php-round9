@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Helper\ApiResponse;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\DoctorResource;
 use App\Models\Doctor;
-use App\Services\DoctorService;
 use Illuminate\Http\Request;
 
 class DoctorSearchController extends Controller
@@ -24,7 +21,7 @@ class DoctorSearchController extends Controller
             })
             ->when($request->speciality_id, function ($query) use ($request) {
 
-                $query->where('spelization_id', $request->speciality_id);
+                $query->where('specialization_id', $request->speciality_id);
             })
             ->when($request->city, function ($query) use ($request) {
 

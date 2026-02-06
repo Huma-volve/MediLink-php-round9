@@ -16,15 +16,15 @@ class PrescriptionController extends Controller
      */
     public function search(Request $request)
     {
-        $doctors = Doctor::with(['user:id,name', 'spelization:id,name'])
+        $doctors = Doctor::with(['user:id,name', 'specialization:id,name'])
             ->where('is_verified', true)
             ->when($request->name, function ($query) use ($request) {
                 $query->whereHas('user', function ($q) use ($request) {
                     $q->where('name', 'like', '%' . $request->name . '%');
                 });
             })
-            ->when($request->spelization_id, function ($query) use ($request) {
-                $query->where('spelization_id', $request->spelization_id);
+            ->when($request->specialization->id, function ($query) use ($request) {
+                $query->where('specialization->id', $request->specialization->id);
             })
             ->when($request->city, function ($query) use ($request) {
                 $query->where('location', 'like', '%' . $request->city . '%');
@@ -42,6 +42,14 @@ class PrescriptionController extends Controller
      */
     public function store(Request $request)
     {
+        // عشان تتأكد من العلاقة بين الدكتور والموعد
+        // $appointment = Appointment::with('doctor')
+        //     ->findOrFail($request->appointment_id);
+        // return response()->json([
+        //     'logged_in_user_id' => auth()->id(),
+        //     'doctor_associated_with_appointment' => $appointment->doctor->user_id
+        // ]);
+
         $request->validate([
             'appointment_id'     => 'required|exists:appointments,id',
             'medications'        => 'required|array',
@@ -66,7 +74,8 @@ class PrescriptionController extends Controller
         $prescription = Prescription::create([
             'appointment_id'      => $appointment->id,
             'prescription_number' => 'RX-' . strtoupper(uniqid()),
-            'medications'         => $request->medications,
+            'medications' => $request->medications,
+
             'diagnosis'           => $request->diagnosis,
             'frequency'           => $request->frequency,
             'duration_days'       => $request->duration_days,
@@ -81,7 +90,7 @@ class PrescriptionController extends Controller
             'success' => true,
             'message' => 'Diagnosis summary created successfully',
             'data' => $prescription,
-            'download_url' => route('prescriptions.download', $prescription->id)
+            // 'download_url' => route('prescriptions.download', $prescription->id)
         ], 201);
     }
 
@@ -90,30 +99,25 @@ class PrescriptionController extends Controller
      */
     public function download($id)
     {
+        // تحميل العلاقات بشكل متسلسل
+
         $prescription = Prescription::with([
             'appointment.doctor.user',
+            'appointment.doctor.specialization',
             'appointment.patient.user'
         ])->findOrFail($id);
 
-        //  السماح للطبيب أو المريض فقط
-        $userId = auth()->id();
 
-        if (
-            $prescription->appointment->doctor->user_id !== $userId &&
-            $prescription->appointment->patient->user_id !== $userId
-        ) {
-            return response()->json([
-                'success' => false,
-                'message' => 'غير مصرح لك بتحميل هذه الروشتة'
-            ], 403);
-        }
 
-        $pdf = Pdf::loadView('pdf.prescription', [
-            'prescription' => $prescription
+        $pdf = \PDF::loadView('pdf.prescription', [
+            'prescription' => $prescription,
+            'appointment'  => $prescription->appointment
         ]);
 
-        return $pdf->download(
-            "Prescription-{$prescription->prescription_number}.pdf"
-        );
+        // عشان يدعم اللغة العربية
+        $pdf->getDomPDF()->set_option("enable_remote", true);
+        $pdf->getDomPDF()->set_option("defaultFont", "DejaVu Sans");
+
+        return $pdf->download("prescription_{$id}.pdf");
     }
 }

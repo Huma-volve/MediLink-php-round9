@@ -2,57 +2,35 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helper\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Doctor;
 use App\Models\DoctorWorking;
 use App\Models\DoctorWorkingHoursOnline;
-use App\Models\Review;
 use Illuminate\Http\Request;
 
 class DoctorFilteringController extends Controller
 {
     public function search(Request $request)
     {
-        $doctors = Doctor::with([
-            'user:id,name,email',
-            'spelization:id,name',
-            'clinic:id,name,address,doctor_id',
-            'workingHours:id,doctor_id,day_of_week,opening_time,closing_time,is_closed'
+        $request->validate([
+            'search' => 'required|string',
         ]);
 
-        $doctors = Doctor::with(['user' , 'specialization' , 'clinic' , 'workingHours'])
+        $doctors = Doctor::search($request->search)
+            ->query(function ($query) {
+                $query->with(['user:id,name,email', 'specialization:id,name']);
+            })
+            ->paginate(10);
 
-        ->select('id','user_id','spelization_id','location','is_verified')
-        ->where('is_verified', true)
-        
-        ->when($request->search, function ($query) use ($request) {
-            $query->where(function ($q) use ($request) {
+        if ($doctors->isEmpty()) {
 
-                $q->whereHas('user', function ($srch) use ($request) {
-                    $srch->where('name', 'like', "%{$request->search}%");
-                })
+            return ApiResponse::error(404 , 'No Doctors Found');
 
-                // OR البحث باسم التخصص
-                ->orWhereHas('spelization', function ($sp) use ($request) {
-                    $sp->where('name', 'like', "%{$request->search}%");
-                })
+        } else {
 
-                ->orWhere('location' ,  'like' , "%{$request->search}%")
-
-                ->orWhereHas('workingHours', function ($hour) use ($request) {
-                    $hour->where('day_of_week', $request->search)
-                    ->where('is_closed', false);
-                });
-            });
-        })
-
-        ->get();
-
-        return response()->json([
-            'status' => true,
-            'message' => 'Doctor Is Found',
-            'data' => $doctors,
-        ]);
+            return ApiResponse::sendResponse(200 , 'Doctors Search' , $doctors);
+        }
     }
 
     public function doctorsInformation($id)
@@ -60,53 +38,49 @@ class DoctorFilteringController extends Controller
         $doctor = Doctor::with([
             'user:id,name,email,phone',
             'clinic:id,name,address',
-            'spelization:id,name'
+            'specialization:id,name'
         ])->findOrFail($id);
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Doctors Informations',
-            'data' => $doctor
+        if ($doctor->isEmpty()) {
+
+            return ApiResponse::error(404 , 'Doctors Informations Not Found');
+
+        } else {
+
+            return ApiResponse::sendResponse(200 , 'Doctors Informations' , $doctor);
+        }
+    }
+
+
+    public function createWorkingDays(Request $request)
+    {
+        $request->validate([
+            'doctor_workings' => 'required|array',
+            'doctor_workings.*.day_of_week' => 'required|string|in:Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday',
+            'doctor_workings.*.opening_time' => 'required|date_format:H:i',
+            'doctor_workings.*.closing_time' => 'required|date_format:H:i|after:working_days.*.opening_time',
+            'doctor_workings.*.is_closed' => 'required|boolean',
         ]);
 
+        $doctor = $request->user()->doctor;
+
+        foreach ($request->doctor_workings as $day) {
+
+            DoctorWorking::updateOrCreate(
+                [
+                    'doctor_id' => $doctor->id,
+                    'day_of_week' => $day['day_of_week'],
+                ],
+                [
+                    'opening_time' => $day['opening_time'],
+                    'closing_time' => $day['closing_time'],
+                    'is_closed' => $day['is_closed'],
+                ]
+            );
+        }
+
+        return ApiResponse::sendResponse(200 , 'Doctors Working Days Added Successfully');
     }
-
-    public function patientReviews($id)
-    {
-        $reviews = Review::with(['patient.user' => function($query)
-        {
-            $query->select('id' , 'name');
-        }])
-        
-        ->where('doctor_id' , $id)
-        ->paginate();
-
-        return response()->json([
-            'status' => true,
-            'message' => 'Patients Reviews',
-            'data' => $reviews,
-        ] , 200);
-    }
-
-    // public function createWorkingDays(Request $request)
-    // {
-    //     $days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
-
-    //     foreach ($days as $day) {
-    //         DoctorWorking::create([
-    //             'doctor_id' => 1,
-    //             'day_of_week' => $day,
-    //             'opening_time' => '05:00:00',
-    //             'closing_time' => '10:00:00',
-    //             'is_closed' => 0,
-    //         ]);
-    //     }
-
-    //     return response()->json([
-    //         'status' => true,
-    //         'message' => 'Working days created successfully'
-    //     ]);
-    // }
 
     public function workingHours(Request $request , $id)
     {
@@ -121,17 +95,21 @@ class DoctorFilteringController extends Controller
             'Thursday','Friday','Saturday','Sunday')")
         ->get();
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Doctors Working Hours',
-            'data' => $hours
-        ]);
+
+        if ($hours->isEmpty()) {
+
+            return ApiResponse::error(404 , 'Doctors Working Hours Not Found');
+
+        } else {
+
+            return ApiResponse::sendResponse(200 , 'Doctors Working Hours Is Found' , $hours);
+        }
     }
 
 
     public function workingHoursOnline($id)
     {
-        $onlineHours = DoctorWorking::with(['doctor.user' => function($query)
+        $onlineHours = DoctorWorkingHoursOnline::with(['doctor.user' => function($query)
         {
             $query->select('id' , 'name');
         }])
@@ -140,12 +118,19 @@ class DoctorFilteringController extends Controller
         ->orderByRaw("FIELD(day_of_week,
             'Monday','Tuesday','Wednesday',
             'Thursday','Friday','Saturday','Sunday')")
-        ->get();
+        ->get()
+        
+        ->map(function($item) {
+            return array_merge($item->toArray(), ['online' => true]);
+        });
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Doctors Working Hours Online',
-            'data' => $onlineHours,
-        ]);
+        if ($onlineHours->isEmpty()) {
+
+            return ApiResponse::error(404 , 'Doctors Online Working Hours Are Not Found');
+
+        } else {
+
+            return ApiResponse::sendResponse(200 , 'Doctors Online Working Hours Are Found' , $onlineHours);
+        }
     }
 }

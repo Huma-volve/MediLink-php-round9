@@ -29,15 +29,18 @@ class DatabaseSeeder extends Seeder
 
 
 
-           
            SpecializationSeeder::class,
             DoctorsAndPatientsSeeder::class,
+            PatientSeeder::class,
             PrescriptionSeeder::class,
             AppointmentSeeder::class,   // PatientSeeder::class,
- PatientSeeder::class,
+            MessageSeeder::class,
+            PrescriptionItemSeeder::class,
+            MedicalHistorySeeder::class,
 
         ]);
 
         // User::factory()->count(5)->create();
     }
 }
+
