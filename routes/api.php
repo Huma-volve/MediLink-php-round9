@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PatientController;
 use App\Http\Controllers\Api\AuthController;
-
+use App\Http\Controllers\Api\BookingController;
 // Abdulgaffr controllers
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PrescriptionController;
@@ -22,16 +22,10 @@ use App\Http\Controllers\Api\TopRatedDoctorsController;
 use App\Http\Controllers\Api\WithdrawalController;
 use App\Http\Controllers\SettingPatient;
 
-// doctors searching
-Route::get('/doctors/search', [DoctorSearchController::class, 'search']);
 
 
 // top rated doctors
 Route::get('/top-rated-doctors', [DoctorSearchController::class, 'topRatedDoctors']);
-
-
-
-
 
 
 // show specializations
@@ -90,7 +84,28 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
+
+Route::prefix('doctor')->group(function () {
+    // show doctor schedules
+    Route::get('{id}/schedules', [BookingController::class, 'doctorSchedules']);
+
+    // show doctor available slots 
+    Route::get('{id}/slots', [BookingController::class, 'getSlots']);
+});
+
 Route::middleware('auth:sanctum')->group(function () {
+    // patient booking an appointment 
+    Route::post('doctor/{id}/booking', [BookingController::class, 'store']);
+
+    // patient confirm booking  
+    Route::patch('appointments/{id}/confirm', [BookingController::class, 'confirm']);
+
+    // patient cancel appointment 
+    Route::patch('appointments/{id}/cancel', [BookingController::class, 'cancel']);
+
+    //show all patient appointments
+    Route::get('patient/appointments', [BookingController::class, 'showAppointments']);
+
 
     // settings privacy & security
     Route::get('settings/privacy-settings', [SettingController::class, 'privacySetting']);
@@ -120,7 +135,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('doctor/{doctor}/request/withdrawal', [WithdrawalController::class, 'store']);
 });
 
-    Route::post('/logout', [AuthController::class, 'logout']);
     // current user info
     Route::get('/me', function (Request $request) {
         return response()->json([
@@ -163,13 +177,6 @@ Route::middleware('auth:sanctum')->get(
 );
 
 
-Route::group(['prefix' => 'v1'], function () {
-    Route::get('/doctors/search', [DoctorSearchController::class, 'search']);
-
-
-Route::get('/doctors/search', [DoctorSearchController::class, 'search']);
-
-
 Route::get('/doctors', [DoctormanagmentController::class, 'index']);
 Route::post('/doctors/{doctor}/favorite', [DoctormanagmentController::class, 'toggleFavorite'])->middleware("auth:sanctum");
 
@@ -197,11 +204,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/doctor/patient/{patient_id}', [PatientController::class, 'doctorView']);
 
-
-
-
-
-
     // Statistics Routes
     Route::get('/statistics/totals', [StatisticsController::class, 'totals']);
 
@@ -216,8 +218,6 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 
-//Route::post('/logout', [AuthController::class, 'logout']);
-
 Route::get('/top-rated-doctors', TopRatedDoctorsController::class);
 
 // doctors searching
@@ -229,13 +229,6 @@ Route::middleware('auth:sanctum')->group(function () {
     // profile settings
     Route::put('/user/profile-settings', [SettingController::class, 'updateProfile']);
 
-
-
-
-    // appointment APIs
-    Route::get('/appointments', [AppointmentController::class, 'index'])->middleware('auth:sanctum');
-    Route::patch('/appointments/{appointment}/confirm', [AppointmentController::class, 'confirmAppointment'])->middleware('auth:sanctum');
-    Route::patch('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancelAppointment'])->middleware('auth:sanctum');
     // profile settings
     Route::put('/user/profile-settings', [SettingController::class, 'updateProfile']);
     Route::get('/appointments', [AppointmentController::class, 'index']);
