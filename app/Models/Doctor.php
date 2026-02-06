@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -80,10 +81,14 @@ class Doctor extends Model
         return $this->hasMany(Review::class);
     }
 
-
     public function workingHours()
     {
         return $this->hasMany(DoctorWorking::class);
+    }
+
+    public function workingHoursOnline()
+    {
+        return $this->hasMany(DoctorWorkingHoursOnline::class);
     }
 
     public function scopeFilter($query, $request)
@@ -121,10 +126,9 @@ class Doctor extends Model
 
         return $this->favorites->contains(fn($fav) => $fav->is_favorite);
     }
- 
+
     public function withdrawals()
     {
         return $this->hasMany(Withdrawal::class);
-
     }
 }

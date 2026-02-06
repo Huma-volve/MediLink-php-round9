@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Builder;
 
 class Appointment extends Model
 {
-
     use HasFactory;
 
     const STATUS_PENDING = 'pending';

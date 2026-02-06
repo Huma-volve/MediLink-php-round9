@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PatientController;
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\DoctormanagmentController;
 use App\Http\Controllers\Api\DoctorProfileController;
 use App\Http\Controllers\Api\NotificationController;
@@ -94,7 +95,28 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
+
+Route::prefix('doctor')->group(function () {
+    // show doctor schedules
+    Route::get('{id}/schedules', [BookingController::class, 'doctorSchedules']);
+
+    // show doctor available slots 
+    Route::get('{id}/slots', [BookingController::class, 'getSlots']);
+});
+
 Route::middleware('auth:sanctum')->group(function () {
+    // patient booking an appointment 
+    Route::post('doctor/{id}/booking', [BookingController::class, 'store']);
+
+    // patient confirm booking  
+    Route::patch('appointments/{id}/confirm', [BookingController::class, 'confirm']);
+
+    // patient cancel appointment 
+    Route::patch('appointments/{id}/cancel', [BookingController::class, 'cancel']);
+
+    //show all patient appointments
+    Route::get('patient/appointments', [BookingController::class, 'showAppointments']);
+
 
     // settings privacy & security
     Route::get('settings/privacy-settings', [SettingController::class, 'privacySetting']);
@@ -123,6 +145,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // doctor request withdrawal
     Route::post('doctor/{doctor}/request/withdrawal', [WithdrawalController::class, 'store']);
 
+
+
     Route::post('/logout', [AuthController::class, 'logout']);
     // current user info
     Route::get('/me', function (Request $request) {
@@ -140,7 +164,7 @@ Route::middleware('auth:sanctum')->get(
 
 
 
-    Route::get('/doctors/search', [DoctorSearchController::class, 'search']);
+Route::get('/doctors/search', [DoctorSearchController::class, 'search']);
 
 
 Route::get('/doctors', [DoctormanagmentController::class, 'index']);
