@@ -87,7 +87,7 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::prefix('doctor')->group(function () {
     // show doctor schedules
-    Route::get('{id}/schedules', [BookingController::class, 'doctorSchedules']);
+    Route::get('{id}/schedules', [BookingController::class, 'getDoctorSchedules']);
 
     // show doctor available slots 
     Route::get('{id}/slots', [BookingController::class, 'getSlots']);

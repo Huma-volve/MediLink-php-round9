@@ -26,6 +26,9 @@ class Appointment extends Model
         'status',
         'reason_for_visit',
         'consultation_type',
+        'patient_name',
+        'patient_email',
+        'patient_phone'
     ];
 
     public function patient()
