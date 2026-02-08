@@ -9,23 +9,34 @@ use App\Http\Requests\BookingRequest;
 use App\Models\Appointment;
 use App\Models\DoctorWorking;
 use App\Helper\ApiResponse;
+use App\Http\Resources\AppointmentDetailResource;
 use App\Http\Resources\DoctorWorkingResource;
+use App\Http\Resources\PatientAppointmentResource;
 use App\Models\Doctor;
 use App\Models\DoctorWorkingHoursOnline;
 use Carbon\Carbon;
 
 class BookingController extends Controller
 {
+    private function getAuthenticatedPatient()
+    {
+        $patient = Patient::where('user_id', auth()->id())->first();
+
+        if (!$patient) {
+            abort(403, 'Only patients allowed');
+        }
+        return $patient;
+    }
 
     // show the doctor schedules 
-    public function doctorSchedules(Request $request, string $id)
+    public function getDoctorSchedules(Request $request, string $id)
     {
         $appointment_type = $request->appointment_type;
 
         if ($appointment_type == 'online') {
 
             $doctorOnlineHours = DoctorWorkingHoursOnline::where('doctor_id', $id)
-                ->where('is_closed', 0)->paginate(10);
+                ->where('is_closed', 0)->get();
 
             $data = [
                 'doctor hours' => DoctorWorkingResource::collection($doctorOnlineHours)
@@ -33,7 +44,7 @@ class BookingController extends Controller
         } else if ($appointment_type == 'in_person') {
 
             $doctorHours = DoctorWorking::where('doctor_id', $id)
-                ->where('is_closed', 0)->paginate(10);
+                ->where('is_closed', 0)->get();
 
             $data = [
                 'doctor hours' => DoctorWorkingResource::collection($doctorHours)
@@ -55,18 +66,19 @@ class BookingController extends Controller
     // Get available time slots for a doctor on a given date
     public function getSlots(Request $request, string $id)
     {
+        $doctor = Doctor::findOrFail($id);
         $appointment_type = $request->appointment_type;
         $dayName = Carbon::parse($request->date)->format('l');
 
-        if ($appointment_type == 'online') {
-            $schedule = DoctorWorkingHoursOnline::where('doctor_id', $id)->where('day_of_week', $dayName)
-                ->where('is_closed', 0)
-                ->first();
-        } else if ($appointment_type == 'in_person') {
-            $schedule = DoctorWorking::where('doctor_id', $id)->where('day_of_week', $dayName)
-                ->where('is_closed', 0)
-                ->first();
-        }
+        $scheduleRelation = $appointment_type === 'online'
+            ? 'workingHoursOnline'
+            : 'workingHours';
+
+        $schedule = $doctor->$scheduleRelation()
+            ->where('day_of_week', $dayName)
+            ->where('is_closed', 0)
+            ->first();
+
 
         if (!$schedule) {
             return ApiResponse::sendResponse(
@@ -81,7 +93,6 @@ class BookingController extends Controller
         $end = Carbon::parse($schedule->closing_time);
 
         $slots = [];
-        $doctor = Doctor::findOrFail($id);
 
         while ($start->copy()->addMinutes($slotDuration) <= $end) {
 
@@ -116,50 +127,19 @@ class BookingController extends Controller
     // book appointment 
     public function store(BookingRequest $request, string $id)
     {
-        $user_id = auth()->id();
-        $patient = Patient::where('user_id', $user_id)->first();
-        if (!$patient) {
-            return ApiResponse::sendResponse(
-                403,
-                'Only patients can book appointments',
-                null
-            );
-        }
-
-        $appointmentTime = Carbon::parse($request->appointment_time);
-
-        if ($appointmentTime->minute % 30 !== 0) {
-            return ApiResponse::sendResponse(
-                422,
-                'Invalid slot time',
-                null
-            );
-        }
-
+        $patient = $this->getAuthenticatedPatient();
         $dayName = Carbon::parse($request->appointment_date)->format('l');
         $doctor = Doctor::findOrFail($id);
         $consultation_type = $request->consultation_type;
 
-        if ($consultation_type == 'in_person') {
+        $scheduleRelation = $consultation_type === 'online'
+            ? 'workingHoursOnline'
+            : 'workingHours';
 
-            $schedule = $doctor->workingHours()
-                ->where('day_of_week', $dayName)
-                ->where('is_closed', 0)
-                ->first();
-        } else if ($consultation_type == 'online') {
-
-            $schedule = $doctor->workingHoursOnline()
-                ->where('day_of_week', $dayName)
-                ->where('is_closed', 0)
-                ->first();
-        } else {
-            return ApiResponse::sendResponse(
-                422,
-                'Invalid consultation type',
-                null
-            );
-        }
-
+        $schedule = $doctor->$scheduleRelation()
+            ->where('day_of_week', $dayName)
+            ->where('is_closed', 0)
+            ->first();
 
         if (!$schedule) {
             return ApiResponse::sendResponse(
@@ -169,17 +149,6 @@ class BookingController extends Controller
             );
         }
 
-        if (
-            $appointmentTime->lt($schedule->opening_time) ||
-            $appointmentTime->gte($schedule->closing_time)
-        ) {
-
-            return ApiResponse::sendResponse(
-                422,
-                'Appointment time is outside doctor working hours',
-                null
-            );
-        }
 
         $exists = Appointment::where('doctor_id', $id)
             ->whereDate('appointment_date', $request->appointment_date)
@@ -195,19 +164,16 @@ class BookingController extends Controller
             );
         }
 
-        $alreadyBooked = Appointment::where('patient_id', $patient->id)
-            ->where('doctor_id', $doctor->id)
-            ->whereDate('appointment_date', $request->appointment_date)
-            ->exists();
-
-        if ($alreadyBooked) {
-            return ApiResponse::sendResponse(
-                409,
-                'You already have an appointment with this doctor',
-                null
-            );
-        }
         $validated = $request->validated();
+        $booking_type = $validated['booking_type'];
+
+
+        if ($booking_type == 'myself') {
+            $validated['patient_name'] = $patient->name;
+            $validated['patient_email'] = $patient->email;
+            $validated['patient_phone'] = $patient->phone;
+        }
+        unset($validated['booking_type']);
 
         $appointment = $patient->appointments()->create(array_merge($validated, [
             'status' => 'pending',
@@ -224,20 +190,11 @@ class BookingController extends Controller
     // confirm booking 
     public function confirm(string $id)
     {
-        $user_id = auth()->id();
-        $patient = Patient::where('user_id', $user_id)->first();
-        if (!$patient) {
-            return ApiResponse::sendResponse(
-                403,
-                'Only patients allowed',
-                null
-            );
-        }
+        $patient = $this->getAuthenticatedPatient();
 
-        $exists = $patient->appointments()
-            ->where('id', $id)->exists();
+        $appointment = $patient->appointments()->find($id);
 
-        if (!$exists) {
+        if (!$appointment) {
             return ApiResponse::sendResponse(
                 403,
                 'Patient is not authorized to confirm this appointment',
@@ -245,44 +202,33 @@ class BookingController extends Controller
             );
         }
 
-        $appointment = Appointment::findOrFail($id);
-
         $appointment->update([
             'status' => 'upcoming'
         ]);
 
+        $data = [
+            'appointment details' => new AppointmentDetailResource($appointment)
+        ];
         return ApiResponse::sendResponse(
             201,
             'Appointment booked successfully',
-            $appointment
+            $data
         );
     }
 
     // cancel appointment 
     public function cancel(string $id)
     {
-        $user_id = auth()->id();
-        $patient = Patient::where('user_id', $user_id)->first();
+        $patient = $this->getAuthenticatedPatient();
+        $appointment = $patient->appointments()->find($id);
 
-        if (!$patient) {
-            return ApiResponse::sendResponse(
-                403,
-                'Only patients allowed',
-                null
-            );
-        }
-        $exists = $patient->appointments()
-            ->where('id', $id)->exists();
-
-        if (!$exists) {
+        if (!$appointment) {
             return ApiResponse::sendResponse(
                 403,
                 'Patient is not authorized to cancel this appointment',
                 null
             );
         }
-
-        $appointment = Appointment::findOrFail($id);
 
         $appointment->update([
             'status' => 'cancelled'
@@ -298,42 +244,27 @@ class BookingController extends Controller
     // show all patient appointments
     public function showAppointments(Request $request)
     {
+        $patient = $this->getAuthenticatedPatient();
         $status = $request->status;
-        $user_id = auth()->id();
-        $patient = Patient::where('user_id', $user_id)->first();
 
-        if (!$patient) {
-            return ApiResponse::sendResponse(
-                403,
-                'Only patients allowed',
-                null
-            );
+        $allowedStatuses = ['completed', 'upcoming', 'cancelled'];
+
+        if (!in_array($status, $allowedStatuses)) {
+            return ApiResponse::sendResponse(422, 'Invalid status', null);
         }
 
-        if ($status == 'completed') {
-            $patient_appointments = Appointment::where('patient_id', $patient->id)
-                ->where('status', 'completed')
-                ->get();
-        } else if ($status == 'upcoming') {
-            $patient_appointments = Appointment::where('patient_id', $patient->id)
-                ->where('status', 'upcoming')
-                ->get();
-        } else if ($status == 'cancelled') {
-            $patient_appointments = Appointment::where('patient_id', $patient->id)
-                ->where('status', 'cancelled')
-                ->get();
-        } else {
-            return ApiResponse::sendResponse(
-                422,
-                'invalid status',
-                null
-            );
-        }
+        $patient_appointments = Appointment::where('patient_id', $patient->id)
+            ->where('status', $status)
+            ->get();
+
+        $data = [
+            'my_appointments' => PatientAppointmentResource::collection($patient_appointments)
+        ];
 
         return ApiResponse::sendResponse(
             200,
             null,
-            $patient_appointments
+            $data
         );
     }
 }

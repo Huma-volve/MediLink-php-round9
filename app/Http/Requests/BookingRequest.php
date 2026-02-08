@@ -24,6 +24,28 @@ class BookingRequest extends FormRequest
     {
 
         return [
+            'booking_type' => [
+                'required',
+                Rule::in(['myself', 'other'])
+            ],
+
+            'patient_name' => [
+                'required_if:booking_type,other',
+                'string',
+                'min:2',
+                'max:100',
+            ],
+            'patient_phone' => [
+                'required_if:booking_type,other',
+                'string'
+            ],
+
+            'patient_email' => [
+                'required_if:booking_type,other',
+                'string',
+                'email',
+                'max:255',
+            ],
 
             'appointment_date' => [
                 'required',
