@@ -18,6 +18,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'paid.only' => \App\Http\Middleware\EnsureAppointmentIsPaid::class,
         ]);
     })
+       ->withProviders([
+    App\Providers\Filament\AdminPanelProvider::class,
+])
     ->withExceptions(function (Exceptions $exceptions): void {
         //
     })->create();
+
