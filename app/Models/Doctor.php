@@ -67,6 +67,12 @@ class Doctor extends Model
     }
 
     protected $appends = ['is_favorite'];
+    
+    public function getTitleAttribute(): string
+    {
+        return $this->user->name;
+    }
+
     public function favorites()
     {
         return $this->hasMany(Favorite::class);
@@ -81,13 +87,10 @@ class Doctor extends Model
         return $this->hasMany(Clinic::class);
     }
 
-
     public function specialization()
     {
         return $this->belongsTo(Specialization::class);
     }
-
-
 
     public function appointments()
     {

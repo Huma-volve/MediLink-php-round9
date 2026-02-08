@@ -1,26 +1,27 @@
 <?php
 
 use App\Http\Controllers\Api\AppointmentController;
-use App\Http\Controllers\Api\DoctorFilteringController;
-use App\Http\Controllers\Api\StatisticsController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\PatientController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ChattingController;
+use App\Http\Controllers\Api\DoctorFilteringController;
+use App\Http\Controllers\Api\DoctormanagmentController;
+use App\Http\Controllers\Api\DoctorProfileController;
+use App\Http\Controllers\Api\DoctorSearchController;
 use App\Http\Controllers\Api\BookingController;
 // Abdulgaffr controllers
 use App\Http\Controllers\Api\NotificationController;
-use App\Http\Controllers\Api\PrescriptionController;
-use App\Http\Controllers\Api\DoctormanagmentController;
-use App\Http\Controllers\Api\DoctorProfileController;
+use App\Http\Controllers\Api\PatientController;
 use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\PrescriptionController;
 use App\Http\Controllers\Api\SettingController;
-use App\Http\Controllers\Api\ChattingController;
-use App\Http\Controllers\Api\DoctorSearchController;
 use App\Http\Controllers\Api\SpecializationController;
+use App\Http\Controllers\Api\StatisticsController;
 use App\Http\Controllers\Api\TopRatedDoctorsController;
 use App\Http\Controllers\Api\WithdrawalController;
 use App\Http\Controllers\SettingPatient;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
 
 
 

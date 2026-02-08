@@ -30,6 +30,10 @@ class Patient extends Model
 
 
 
+    public function getTitleAttribute(): string
+    {
+        return $this->user->name;
+    }
 
     public function insurance()
     {
