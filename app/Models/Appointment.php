@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Builder;
 
 class Appointment extends Model
 {
-
     use HasFactory;
 
     const STATUS_PENDING = 'pending';
@@ -27,6 +26,9 @@ class Appointment extends Model
         'status',
         'reason_for_visit',
         'consultation_type',
+        'patient_name',
+        'patient_email',
+        'patient_phone'
     ];
 
     public function patient()

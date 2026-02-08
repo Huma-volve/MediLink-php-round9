@@ -114,10 +114,14 @@ class Doctor extends Model
         return $this->hasMany(Review::class);
     }
 
-
     public function workingHours()
     {
         return $this->hasMany(DoctorWorking::class);
+    }
+
+    public function workingHoursOnline()
+    {
+        return $this->hasMany(DoctorWorkingHoursOnline::class);
     }
 
     public function scopeFilter($query, $request)
