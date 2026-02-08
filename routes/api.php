@@ -99,6 +99,31 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
+Route::prefix('auth')->group(function () {
+
+
+    // Google OAuth routes
+    Route::get('/google/url', [AuthController::class, 'googleAuthUrl']);      // Get Google login URL
+    Route::get('/google/callback', [AuthController::class, 'googleCallback']); // Handle Google cal
+
+    Route::middleware('auth:sanctum')->group(function () {
+        // User management
+        Route::get('/user', [AuthController::class, 'user']);
+        Route::post('/logout', [AuthController::class, 'logout']);
+        Route::post('/logout-all', [AuthController::class, 'logoutAll']);
+
+        // Google account linking (optional)
+        Route::post('/google/link', [AuthController::class, 'linkGoogleAccount']);
+        Route::post('/google/unlink', [AuthController::class, 'unlinkGoogleAccount']);
+        Route::get('/google/check', [AuthController::class, 'checkGoogleLinked']);
+
+
+
+        // Your other protected API routes here...
+    });
+});
+
+
 Route::middleware('auth:sanctum')->group(function () {
 
     // settings privacy & security
@@ -129,33 +154,33 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('doctor/{doctor}/request/withdrawal', [WithdrawalController::class, 'store']);
 });
 
-    Route::post('/logout', [AuthController::class, 'logout']);
-    // current user info
-    Route::get('/me', function (Request $request) {
-        return response()->json([
-            'user' => $request->user()
-        ]);
-    });
+Route::post('/logout', [AuthController::class, 'logout']);
+// current user info
+Route::get('/me', function (Request $request) {
+    return response()->json([
+        'user' => $request->user()
+    ]);
+});
 
 
-    // search routes
-    Route::get('/doctors_search', [DoctorFilteringController::class, 'search']);
-    Route::get('/doctor/{id}', [DoctorFilteringController::class, 'doctorsInformation']);
-    Route::get('/doctor/{id}/doctor-working-hours', [DoctorFilteringController::class, 'workingHours']);
-    Route::get('/doctor/{id}/doctor-working-hours_online', [DoctorFilteringController::class, 'workingHoursOnline']);
+// search routes
+Route::get('/doctors_search', [DoctorFilteringController::class, 'search']);
+Route::get('/doctor/{id}', [DoctorFilteringController::class, 'doctorsInformation']);
+Route::get('/doctor/{id}/doctor-working-hours', [DoctorFilteringController::class, 'workingHours']);
+Route::get('/doctor/{id}/doctor-working-hours_online', [DoctorFilteringController::class, 'workingHoursOnline']);
 
-    // create working hours
-    Route::post('/doctor/{id}/create-working-hours', [DoctorFilteringController::class, 'createWorkingDays']);
+// create working hours
+Route::post('/doctor/{id}/create-working-hours', [DoctorFilteringController::class, 'createWorkingDays']);
 
-    // patient reviews
-    Route::get('/doctor/{id}/reviews', [PatientController::class, 'patientReviews']);
-    Route::post('/create_review', [PatientController::class, 'createReview']);
+// patient reviews
+Route::get('/doctor/{id}/reviews', [PatientController::class, 'patientReviews']);
+Route::post('/create_review', [PatientController::class, 'createReview']);
 
-    // Apis For Chat
-    Route::post('/chat/send' , [ChattingController::class , 'createMessage']);
-    Route::get('/chat/{userId}' , [ChattingController::class, 'showMessage']);
-    Route::post('/chat/read/{userId}' , [ChattingController::class, 'markAsRead']);
-    Route::get('/chat/count_unread_messages/{userId}' , [ChattingController::class, 'countMessage']);
+// Apis For Chat
+Route::post('/chat/send', [ChattingController::class, 'createMessage']);
+Route::get('/chat/{userId}', [ChattingController::class, 'showMessage']);
+Route::post('/chat/read/{userId}', [ChattingController::class, 'markAsRead']);
+Route::get('/chat/count_unread_messages/{userId}', [ChattingController::class, 'countMessage']);
 Route::post('/logout', [AuthController::class, 'logout']);
 // current user info
 Route::get('/me', function (Request $request) {
@@ -215,11 +240,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/appointments', [AppointmentController::class, 'index']);
     Route::patch('/appointments/{appointment}/confirm', [AppointmentController::class, 'confirmAppointment']);
     Route::patch('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancelAppointment']);
-
 });
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+// Route::get('/user', function (Request $request) {
+//     return $request->user();
+// })->middleware('auth:sanctum');
 
 
 //Route::post('/logout', [AuthController::class, 'logout']);

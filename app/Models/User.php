@@ -30,7 +30,10 @@ class User extends Authenticatable
         'phone',
         'password',
         'role',
-        'language_id'
+        'language_id',
+        'google_id',
+        'avatar',
+        'provider',
     ];
 
     /**

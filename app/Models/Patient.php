@@ -24,7 +24,6 @@ class Patient extends Model
         'emergency_contact_relationship',
         'insurance_id',
         'date_of_birth',
-        'gender',
         'blood_group',
     ];
 

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Model;
 
 class AppSetting extends Model
@@ -15,5 +16,9 @@ class AppSetting extends Model
         'privacy_url',
         'license_url',
         'release_notes_url',
+        'support_email',
+        'website_url',
+        'company_address',
+        'app_logo',
     ];
 }
