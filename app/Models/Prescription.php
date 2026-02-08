@@ -39,8 +39,16 @@ class Prescription extends Model
 
     public function patient()
     {
-        return $this->appointment->patient();
+        return $this->hasOneThrough(
+            Patient::class,
+            Appointment::class,
+            'id',
+            'id',
+            'appointment_id',
+            'patient_id'
+        );
     }
+
 
     public function doctor()
     {
